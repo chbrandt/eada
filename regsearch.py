@@ -128,18 +128,20 @@ class RegSearch(object):
 def checkUCD(votable,ucds):
     from astropy.io.votable import ucd
     t = votable
-    tucds = set()
+    tucds = []
     for f in t.fielddesc():
-        fucds = set([ str(u) for u in ucd.parse_ucd(f.ucd) ])
-        tucds.update(fucds)
-    return any( filter(lambda u: u in ucds, tucds) )
+        if not f.ucd: continue
+        fucds = []
+        for u in ucd.parse_ucd(f.ucd):
+            fucds.append(str(u[1]))    # I'm taking the 2nd ucd-parsed element, because the 1st one is bla :P
+        tucds.extend(fucds)
+    return any( filter(lambda u: u in ucds, set(tucds)) )
 
 def checkUnit(votable,units):
-    from astropy import units
     t = votable
-    tunt = set()
+    tunt = []
     for f in t.fielddesc():
-        funt = set([ set(u) for u in f.unit ])
-        tunt.update(funt)
-    return any( filter(lambda u: u in units, tunt) )
+        if not f.unit: continue
+        tunt.append(str(f.unit).replace(" ",""))
+    return any( filter(lambda u: u in units, set(tunt)) )
 
