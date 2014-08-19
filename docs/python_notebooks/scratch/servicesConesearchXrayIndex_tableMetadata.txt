@@ -1,0 +1,638 @@
+Sloan Digital Sky Survey Quasars Detected by Chandra
+name                 :                        ID_MAIN : None                 : Source Designation
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+imag                 :              phot.mag;em.opt.I : mag                  : SDSS i Band PSF Magnitude (Dereddened)
+redshift             :                   src.redshift : None                 : Best Redshift
+counts               :                  phot;em.X-ray : ct                   : Net Counts in the 0.3-8keV range
+counts_error         :       stat.error;phot;em.X-ray : None                 : RMS Uncertainty for Net Counts
+flux                 :             phot.flux;em.X-ray : erg/s/cm^2           : 0.5-8keV Flux (erg/cm^2/s)
+Search_Offset        :                           None : None                 : None
+-----
+
+CHAMP/SDSS Nearby Low-Luminosity AGN Catalog
+name                 :                        ID_MAIN : None                 : ChaMP X-Ray Source Identification (CXOMP JHHMMSS.s+DDMMSS)
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension of the ChaMP X-Ray Source
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination of the ChaMP X-Ray Source
+sdss_id              :                        meta.id : None                 : SDSS Unique Object Identifier
+sdss_ra              :                      pos.eq.ra : deg                  : Right Ascension of the SDSS Object
+sdss_dec             :                     pos.eq.dec : deg                  : Declination of the SDSS Object
+redshift             :                   src.redshift : None                 : Spectroscopic Redshift
+counts               :                  phot;em.X-ray : ct                   : Net 0.5-8keV Source Counts
+flux                 :             phot.flux;em.X-ray : erg/s/cm^2           : X-Ray Flux (0.5-8keV)
+log_lx               :                           None : log                  : Logarithm X-Ray Luminosity (0.5-8keV) in erg/s
+opt_class            :                      src.class : None                 : Optical Spectral Classification
+Search_Offset        :                           None : None                 : None
+-----
+
+M 31 Central Region Chandra X-Ray Point Source Catalog
+name                 :                        ID_MAIN : None                 : Chandra Source Designation (CXOM31 JHHMMSS.s+DDMMSS)
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+error_radius         :                 stat.error;pos : arcs                 : Positional Error (arcsec)
+count_rate           :            phot.count;em.X-ray : ct / s               : Count Rate (ct/s)
+count_rate_error     : stat.error;phot.count;em.X-ray : ct / s               : Error in Count Rate (ct/s)
+counts               :                           None : ct                   : Net Counts
+Search_Offset        :                           None : None                 : None
+-----
+
+Sloan Digital Sky Survey (DR5)/XMM-Newton Quasar Survey Catalog
+name                 :                        ID_MAIN : None                 : Source Designation
+xmm_obsid            :                    meta.id;obs : None                 : XMM-Newton Observation Identifier
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+counts               :                  phot;em.X-ray : ct                   : Net Source Counts
+snr                  :                       stat.snr : None                 : X-Ray Signal-to-Noise Ratio
+rest_frame_sb_lx     :  phys.luminosity;em.X-ray.soft : erg / s              : Rest-Frame Luminosity in 0.5-2 keV Band
+rest_frame_hb_lx     : phys.luminosity;em.X-ray.medium : erg / s              : Rest-Frame Luminosity in 2-10 keV Band
+Search_Offset        :                           None : None                 : None
+-----
+
+XMM-Newton Bright Serendipitous Survey: AGN X-Ray Spectral Properties
+name                 :                        ID_MAIN : None                 : Source Designation (XBS JHHMMSS.s+DDMMSS)
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+epic_counts          :                  phot;em.X-ray : ct                   : Total EPIC Counts (pn+MOS1+MOS2)
+redshift             :                   src.redshift : None                 : Redshift
+agn_class            :                      src.class : None                 : Source Classification (AGN1, AGN2, or BL Lac)
+photon_index         :                    spect.index : None                 : Photon Index (Gamma)
+nh_int_limit         :   meta.code;phys.columnDensity : None                 : Limit Flag for Intrinsic Column Density
+nh_int               :             phys.columnDensity : cm^-2                : Intrinsic Column Density
+log_lx               :                           None : log                  : Intrinsic Luminosity in the 2-10keV Band
+sample               :                      meta.code : None                 : BSS Sample to Which the Source Belongs
+Search_Offset        :                           None : None                 : None
+-----
+
+XMM-Newton 2XMMi-DR3 Selected Source Classifications Catalog
+name                 :                        ID_MAIN : None                 : 2XMMi-DR3 Source Designation
+srcid                :                    meta.id;src : None                 : Unique Source Identifier
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+object_type          :                      src.class : None                 : Source Type
+r1_mag               :              phot.mag;em.opt.R : mag                  : R1 Magnitude
+jmag                 :               phot.mag;em.IR.J : mag                  : 2MASS J Magnitude (1.2-Micron)
+log_fx_fo            : phot.flux;arith.ratio;em.X-ray;em.opt : None                 : Logarithm of the X-Ray-to-Optical Flux Ratio
+flux_var_factor_8    : phot.flux;arith.ratio;em.X-ray : None                 : Flux Variation Factor in 0.2-12.0keV Band
+Search_Offset        :                           None : None                 : None
+-----
+
+AGN-Host Galaxy Connection (Povic+, 2012)
+_r                   :                pos.angDistance : deg                  : Distance from center (000.00000+00.00000)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+ID                   :                        ID_MAIN : None                 : [1/1121] Identification number [datatype=short]
+RAJ2000              :                      pos.eq.ra : deg                  : X-ray Right ascension (J2000)
+DEJ2000              :                     pos.eq.dec : deg                  : X-ray Declination (J2000)
+FS                   :             phot.flux;em.X-ray : mW / m2              : ? X-ray flux in the soft (0.5-2keV) band
+FH                   :        phot.flux;em.X-ray.hard : mW / m2              : ? X-ray flux in the hard (2-4.5keV) band
+FVH                  :             phot.flux;em.X-ray : mW / m2              : ? X-ray flux in the veryhard (4.5-10keV) band
+FTot                 :             phot.flux;em.X-ray : mW / m2              : X-ray flux in the total (0.5-10keV) band
+SXDS                 :                        meta.id : None                 : Object name in the SXDS optical catalogue (Furusawa et al. 2008ApJS..176....1F)
+Rc                   :              phot.mag;em.opt.R : mag                  : ? Rc apparent AB magnitude
+zph                  :                   src.redshift : None                 : ? Photometric redshift
+BMAG                 :           phys.magAbs;em.opt.B : mag                  : ? Absolute magnitude in B band
+B-V                  :   phot.color;em.opt.B;em.opt.V : mag                  : ? Rest-frame B-V colour
+X/O                  :          phot.flux;arith.ratio : None                 : ? X-ray-to-optical flux ratio
+HR                   :          phot.flux;arith.ratio : None                 : ? (2-4.5/0.5-2 keV) hardness ratio
+S/G                  :                     stat.param : None                 : [0/1]? SExtractor CLASS STAR parameter (1)
+-----
+
+SED of the Fermi blazars (Li+, 2010)
+_r                   :                pos.angDistance : deg                  : Distance from center (000.00000+00.00000)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+0FGL                 :                        ID_MAIN : None                 : Fermi/LAT designation (JHHMM.m+DDMM); from Abdo et al., 2009, Cat. J/ApJ/700/597
+z                    :                   src.redshift : None                 : ? Redshift
+Fo                   :     phot.flux.density;em.opt.V : mJy                  : V-band optical flux (F_0_)
+Fx                   :             phot.flux;em.X-ray : uJy                  : 1keV X-ray flux (F_x_)
+Fg                   : phot.flux.density;em.gamma.hard : nJy                  : {gamma}-ray flux at 100MeV, (F_{gamma}_)
+aox                  :                    spect.index : None                 : Two-point spectral index {alpha}_ox_
+axox                 :                    spect.index : None                 : Composite spectral index {alpha}_xox_
+OName                :                        meta.id : None                 : Other name
+Class                :                      src.class : None                 : Class of the source (2)
+ax                   :                    spect.index : None                 : Spectral index for the X-ray band ({alpha}_x_)
+ag                   :                    spect.index : None                 : Spectral index for the {gamma}-ray band ({alpha}_{gamma}_)
+axg                  :                    spect.index : None                 : Spectral index {alpha}_x{gamma}_
+agxg                 :                    spect.index : None                 : Composite spectral index {alpha}_{gamma}x{gamma}_
+Simbad               :                      DATA_LINK : None                 : ask the {\bf\fg{FireBrick}Simbad} data-base about this object
+NED                  :                      DATA_LINK : None                 : ask the {\bf\fg{FireBrick}NED} data-base about this object
+_RA                  :                      pos.eq.ra : deg                  : Positions from SIMBAD database (right ascension part)
+_DE                  :                     pos.eq.dec : deg                  : Positions from SIMBAD database (declination part)
+-----
+
+ROSAT Radio-Loud Quasars Catalog
+iau_name             :                        ID_MAIN : None                 : IAU Designation of the Object
+alt_name             :                        meta.id : None                 : Alternate Designation from VERON93
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+redshift             :                   src.redshift : None                 : Redshift
+appmag               :                phot.mag;em.opt : None                 : Optical Magnitude from VERON93
+Search_Offset        :                           None : None                 : None
+-----
+
+Chandra Archive Of Galaxies Ultraluminous X-Ray Source Catalog
+galaxy_name          :                           None : None                 : Galaxy Designation
+name                 :                        ID_MAIN : None                 : Catalog Designation ([SGT2004] JHHMMSS.SS+DDMMSS.S)
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+lx                   :                           None : erg / s              : Intrinsic Luminosity (erg/s)
+lx_error             :                           None : erg / s              : Uncertainty in Intrinsic Luminosity (erg/s)
+lx_flag              :                           None : None                 : Flag [d] Indicates Intrinsic Luminosity from Fit of Thermal Emission-Line Model
+Search_Offset        :                           None : None                 : None
+-----
+
+CDFs AGNs X-ray power-law photon index (Saez+, 2008)
+_r                   :                pos.angDistance : deg                  : Distance from center (000.00000+00.00000)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+n_CXO                :                      meta.note : None                 : [OR] Type of fit (1)
+CXO                  :                        ID_MAIN : None                 : The X-ray identification, CXOJHHMMSS.ss+DDMMSS.s \linkRole{data from CDF by Alexander et al. 2003, Cat. J/AJ/126/539}
+z                    :                   src.redshift : None                 : Redshift from the literature (see Sec. 2)
+f_z                  :                      meta.code : None                 : [sp] spectroscopic or photometric redshift
+Cts                  :            phot.count;em.X-ray : ct                   : Background subtracted source counts (3)
+Gamma                : meta.code;spect.index;em.X-ray : None                 : X-ray power-law photon index {Gamma}
+E_Gamma              :            stat.error;stat.max : None                 : Upper limit error in Gamma
+e_Gamma              :                     stat.error : None                 : Lower limit error in Gamma
+NH                   :             phys.columnDensity : 1e+22 / cm2          : ? Hydrogen column density
+logL                 :       phys.luminosity;em.X-ray : [10-7W]              : Log of the 2-10keV X-ray luminosity, in units of erg/s
+Cstat                :                 stat.fit.param : None                 : Cash (1979ApJ...228..939C) C-statistic
+dof                  :                   stat.fit.dof : None                 : Degrees of freedom
+Type                 :                      src.class : None                 : Source classification (4)
+Model                :      instr.setup;meta.modelled : None                 : Model used (5)
+SimbadName           :                        meta.id : None                 : Designation understandable by the {\bf\fg{FireBrick}Simbad} data-base
+_RA                  :                      pos.eq.ra : deg                  : Positions from CXO name (right ascension part)
+_DE                  :                     pos.eq.dec : deg                  : Positions from CXO name (declination part)
+-----
+
+Spectra of 29 Swift/BAT optical counterparts (Parisi+, 2012)
+_r                   :                pos.angDistance : deg                  : Distance from center (00 00 00.0+00 00 00)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+Name                 :                        ID_MAIN : None                 : Source name
+RAJ2000              :                      pos.eq.ra : "h:m:s"              : Right ascension (J2000)
+DEJ2000              :                     pos.eq.dec : "d:m:s"              : Declination (J2000)
+FITS                 :                   meta.ref.url : None                 : Download FITS file
+sp                   :                   meta.ref.url : None                 : Plot the spectrum
+Simbad               :                       meta.ref : None                 : ask the {\bf\fg{FireBrick}Simbad} data-base about this object
+FileName             :              meta.id;meta.fits : None                 : Name of the FITS file in subdirectory sp
+-----
+
+XTE Archived Public Slew Data
+obsid                :                        ID_MAIN : None                 : Unique ID of Observation
+target_name          :                           None : None                 : Target Designation
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension of Target
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination of Target
+start_time           :                 time.start;obs : mjd                  : Start Time of Observation
+stop_time            :                           None : mjd                  : End Time of Observation
+pi_name              :                     meta.id.PI : None                 : Principal Investigator of Observation
+Search_Offset        :                           None : None                 : None
+-----
+
+AGN in XMM-Newton Hard Bright Survey (Della Ceca+, 2008)
+_r                   :                pos.angDistance : deg                  : Distance from center (000.0000+00.0000)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+recno                :                        ID_MAIN : None                 : Record number assigned by the VizieR team. Should Not be used for identification. [datatype=int]
+XBS                  :              meta.id;meta.main : None                 : XBS source name (JHHMMSS.s+DDMMSS)
+CRate                :            phot.count;em.X-ray : ct / ks              : Source MOS2 count rate, (4.5-7.5keV band)
+e_CRate              :                     stat.error : ct / ks              : One sigma error on CRate
+z                    :                   src.redshift : None                 : Redshift of the source
+Gamma                : meta.code;spect.index;em.X-ray : None                 : X-ray photon index
+e_Gamma              :                     stat.error : None                 : ? 90% lower error on Gamma (1)
+E_Gamma              :            stat.error;stat.max : None                 : ? 90% upper error on Gamma (1)
+l_Nh                 :                meta.code.error : None                 : Limit flag on Nh
+Nh                   :             phys.columnDensity : 1e+22 / cm2          : Absorbing column density at the source redshift
+e_Nh                 :                     stat.error : 1e+22 / cm2          : ? 90% lower error on Nh (2)
+E_Nh                 :            stat.error;stat.max : 1e+22 / cm2          : ? 90% upper error on Nh (2)
+F2-10                :      phot.flux;em.X-ray.medium : fW / m2              : Observed 2-10keV flux corrected for Galactic absorption
+logL2-10             :       phys.luminosity;em.X-ray : [10+35W]             : Log of the intrinsic (i.e. de-absorbed) 2-10keV luminosity
+Simbad               :                      DATA_LINK : None                 : ask the {\bf\fg{FireBrick}Simbad} data-base about this object
+_RA                  :                      pos.eq.ra : deg                  : Position derived from {\em XBS} name (right ascension part)
+_DE                  :                     pos.eq.dec : deg                  : Position derived from {\em XBS} name (declination part)
+-----
+
+AGN Torus model comparison of AGN in the CDFS (Buchner+, 2014)
+_r                   :                pos.angDistance : deg                  : Distance from center (00 00 00.00+00 00 00.00)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+recno                :                        ID_MAIN : None                 : Record number assigned by the VizieR team. Should Not be used for identification. [datatype=int]
+XID                  :              meta.id;meta.main : None                 : Source identification
+RAJ2000              :                      pos.eq.ra : "h:m:s"              : Hour of Right Ascension (J2000)
+DEJ2000              :                     pos.eq.dec : "d:m:s"              : Degree of Declination (J2000)
+Ct                   :            phot.count;em.X-ray : ct                   : Full-band counts at 0.5-8keV
+z                    :                   src.redshift : None                 : Redshift (z, median)
+logLX                :       phys.luminosity;em.X-ray : [10-7W]              : Logarithm of intrinsic luminosity in the 1- 9 keV restframe band (L, median)
+logNH                :             phys.columnDensity : [cm-2]               : Logarithm of neutral hydrogen equivalent column density (NH, median)
+Gamma                :          meta.code;spect.index : None                 : Intrinsic photon index (Gamma, median)
+fscat                :                 stat.fit.param : %                    : Scattering fraction (f_scat)
+R                    :                 stat.fit.param : None                 : Reflection component, relative normalisation (R, median)
+KLNH                 :                 stat.fit.param : None                 : Information gain for column density parameter (KL) in ban units
+Notes                :                      meta.note : None                 : Notes (1)
+-----
+
+XMM-Newton 2XMMi-DR3 Selected Source Detections Catalog
+srcid                :                        meta.id : None                 : Unique Source Identifier
+name                 :                        ID_MAIN : None                 : 2XMMi-DR3 Source Designation
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+obsid                :                    meta.id;obs : None                 : Observation Identifier
+m1_3_rate            :       phot.count;em.X-ray.soft : ct / s               : R3 MOS1-Medium-Filter Equivalent Count Rate in 1.0-2.0 keV
+m1_3_rate_error      : stat.error;phot.count;em.X-ray.soft : ct / s               : Error in R3
+m1_4_rate            :     phot.count;em.X-ray.medium : ct / s               : R4 MOS1-Medium-Filter Equivalent Count Rate in 2.0-4.5 keV
+m1_4_rate_error      : stat.error;phot.count;em.X-ray.medium : ct / s               : Error in R4
+m1_5_rate            :     phot.count;em.X-ray.medium : ct / s               : R5 MOS1-Medium-Filter Equivalent Count Rate in 4.5-12 keV
+m1_5_rate_error      : stat.error;phot.count;em.X-ray.medium : ct / s               : Error in R5
+flux                 :             phot.flux;em.X-ray : erg/s/cm^2           : PL Fit 0.2-12 keV Flux
+flux_lower           :    phot.flux;em.X-ray;stat.min : erg/s/cm^2           : Lower 90% Confidence Bound of Flux
+flux_upper           :    phot.flux;em.X-ray;stat.max : erg/s/cm^2           : Upper 90% Confidence Bound of Flux
+Search_Offset        :                           None : None                 : None
+-----
+
+XMM-Newton Large-Scale Structure Optical Identifications Catalog
+name                 :                        ID_MAIN : None                 : XLSS Source Designation (XLSS JHHMMSS.s+DDMMSS)
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Optical Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Optical Declination
+off_set              : pos.angDistance;em.X-ray;em.opt : arcs                 : Angular Separation between the XMM and Optical Positions (arcsec)
+gmag                 :              phot.mag;em.opt.B : mag                  : SDSS g-prime Magnitude
+redshift             :                   src.redshift : None                 : Redshift
+broad_type           :                      src.class : None                 : Spectroscopic Identification
+Search_Offset        :                           None : None                 : None
+-----
+
+INTEGRAL IBIS Hard X-Ray Survey of Galactic Center
+name                 :                        ID_MAIN : None                 : Identification with Known Source
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+flux                 :        phot.flux;em.X-ray.hard : mCrab                : Flux for 18-60keV Energy Band (mCrab)
+flux_error           : stat.error;phot.flux;em.X-ray.hard : mCrab                : Mean Error on Flux (mCrab)
+source_type          :                      src.class : None                 : Class of Identified Object
+Search_Offset        :                           None : None                 : None
+-----
+
+ROSAT Results Archive Sources for the PSPC with Filter
+name                 :                        ID_MAIN : None                 : Source Designation (2RXF Jhhmmss.s+ddmmss)
+seqid                :           meta.id;obs.sequence : None                 : ROSAT Sequence Identifier
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+count_rate           :       phot.count;em.X-ray.soft : ct / s               : Estimate of Net Count Rate
+count_rate_error     : stat.error;phot.count;em.X-ray.soft : ct / s               : Uncertainty in Net Count Rate
+exposure             :     time.duration;obs.exposure : s                    : Exposure Time
+off_axis             :                   instr.offset : arcm                 : Off-Axis Angle Averaged over Observation
+srcflags             :                 meta.code.qual : None                 : [cdefislmnpavw.] Source Flags
+seqflags             :                 meta.code.qual : None                 : [DABEFMSX.] Sequence Flags
+Search_Offset        :                           None : None                 : None
+-----
+
+Soft X-ray properties of Seyfert galaxies (Pfefferkorn+, 2001)
+_r                   :                pos.angDistance : deg                  : Distance from center (00 00 00.0+00 00 00)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+Name                 :                        ID_MAIN : None                 : Galaxy name [datatype=char]
+ROSAT                :                        meta.id : None                 : ROSAT name of the galaxy
+RAJ2000              :                      pos.eq.ra : "h:m:s"              : Right ascension (J2000) (1)
+DEJ2000              :                     pos.eq.dec : "d:m:s"              : Declination (J2000) (1)
+Pcount               :            phot.count;em.X-ray : ct / s               : ? Source count rate, pointing obs.
+FileName             :              meta.id;meta.file : None                 : Associated image name stored here
+-----
+
+SSA22 Field Chandra X-Ray Point Source Catalog
+name                 :                        ID_MAIN : None                 : Source Designation
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+error_radius         :                 stat.error;pos : arcs                 : Positional Error (arcsec)
+off_axis             :                   instr.offset : arcm                 : Off-Axis Angle (arcmin)
+fb_counts_limit      :        meta.code;phot;em.X-ray : None                 : Limit Flag for Full-Band Counts
+fb_counts            :                  phot;em.X-ray : ct                   : Full-Band Counts
+fb_counts_pos_err    :       stat.error;phot;em.X-ray : ct                   : Full-Band Counts Upper Uncertainty
+fb_counts_neg_err    :       stat.error;phot;em.X-ray : ct                   : Full-Band Counts Lower Uncertainty
+fb_flux_limit        :   meta.code;phot.flux;em.X-ray : None                 : Limit Flag for Full-Band Flux
+fb_flux              :             phot.flux;em.X-ray : erg/s/cm^2           : Full-Band Flux (erg/s/cm^2)
+Search_Offset        :                           None : None                 : None
+-----
+
+HEAO 1 A2 Piccinotti Catalog
+catalog_designation  :                           None : None                 : HEAO A2 Catalog Source Name
+name                 :                        ID_MAIN : None                 : Optical Source Identification
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+count_rate           :            phot.count;em.X-ray : ct / s               : R15 (counts/s), 1st 6-month Pass
+count_rate_error     : stat.error;phot.count;em.X-ray : ct / s               : Error on First Count Rate
+class                :                      src.class : None                 : Browse Object Classification
+Search_Offset        :                           None : None                 : None
+-----
+
+X-ray+Radio sources in XBootes (El Bouchefry, 2009)
+_r                   :                pos.angDistance : deg                  : Distance from center (00 00 00.0+00 00 00.0)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+Seq                  :                        ID_MAIN : None                 : Sequential number <[E2009] NN> in Simbad [datatype=short]
+Name                 :                        meta.id : None                 : X-ray object name (X-ray counterparts to FIRST radio sources), JHHMMSS.s+DDMMSS
+S1.4                 : phot.flux.density;em.radio.750-1500MHz : mJy                  : Radio flux at 1.4GHz
+Flux                 :             phot.flux;em.X-ray : aW / m2              : Full band (0.5-7keV) X-ray flux (2)
+HR                   :          phot.flux;arith.ratio : None                 : [-1,1] Hardness ratio (1)
+log(FX/Fo)           :          phot.flux;arith.ratio : [-]                  : X-ray to optical flux ratio
+logLX                :       phys.luminosity;em.X-ray : [10-7W]              : ? X-ray luminosity in full band, 0.5-7keV
+logL1.4              : phys.luminosity;em.radio.750-1500MHz : [W/Hz]               : 1.4GHz radio luminosity (radio power)
+Rmag                 :              phot.mag;em.opt.R : mag                  : ? Apparent R magnitude
+R-K                  :    phot.color;em.opt.R;em.IR.K : mag                  : ? R-K colour index
+stell                :           src.class.starGalaxy : None                 : Source SExtractor stellarity parameter used to classify sources into point-like objects and extended sources (0=extended, 1=star)
+zph                  :                   src.redshift : None                 : Photometric redshift as derived from hyperz
+n_zph                :                      meta.note : None                 : [s] s when spectroscopic redshift
+Xclass               :                meta.code.class : None                 : Class of object obtained from the X-ray characteristics (based on the X-ray luminosity and the hardness ratio HR)
+RAJ2000              :                      pos.eq.ra : "h:m:s"              : Radio right ascension (J2000.0)
+DEJ2000              :                     pos.eq.dec : "d:m:s"              : Radio declination (J2000.0)
+-----
+
+XMM-Newton survey in COSMOS field. IV. (Mainieri+, 2007)
+_r                   :                pos.angDistance : deg                  : Distance from center (00 00 00.00+00 00 00.00)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+XMMC                 :                        ID_MAIN : None                 : XMMC designation (JHHMMSS.ss+DDMMSS.s) [datatype=char]
+XID                  :                        meta.id : None                 : Internal reference number, from Hasinger et al., Cat. <J/ApJS/172/29>, XMMC NNNN in Simbad
+n_XID                :                      meta.note : None                 : [i] Individual note (1)
+RAJ2000              :                      pos.eq.ra : "h:m:s"              : X-ray right ascension (J2000.0)
+DEJ2000              :                     pos.eq.dec : "d:m:s"              : X-ray declination (J2000.0)
+z                    :                   src.redshift : None                 : Spectroscopic redshift of the most likely optical counterpart (2)
+FXs                  :             phot.flux;em.X-ray : aW / m2              : X-ray flux from the spectral fit in the soft (0.5-2keV) rest-frame energy band
+FXh                  :             phot.flux;em.X-ray : aW / m2              : X-ray flux from the spectral fit in the hard (2-10keV) rest-frame energy band
+FXtot                :             phot.flux;em.X-ray : aW / m2              : X-ray flux from the spectral fit in the total (0.5-10keV) rest-frame energy band
+logLXtot             :       phys.luminosity;em.X-ray : [10-7W]              : Absorption-corrected X-ray luminosities in the 0.5-10keV rest-frame energy band
+-----
+
+Second INTEGRAL AGN Catalog
+name                 :                        ID_MAIN : None                 : Source Designation
+class                :                      src.class : None                 : Browse Object Classification
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+redshift             :                   src.redshift : None                 : Redshift
+sb_flux              :        phot.flux;em.X-ray.hard : erg/s/cm^2           : 20-40keV Flux
+hb_flux              :        phot.flux;em.X-ray.hard : erg/s/cm^2           : 40-100keV Flux
+vmag                 :              phot.mag;em.opt.V : mag                  : Median V Magnitude
+Search_Offset        :                           None : None                 : None
+-----
+
+ROSAT Complete Results Archive Sources for the PSPC with Filter
+name                 :                        ID_MAIN : None                 : Source Designation (2RXF Jhhmmss.s+ddmmss)
+seqid                :           meta.id;obs.sequence : None                 : ROSAT Sequence Identifier
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+count_rate           :       phot.count;em.X-ray.soft : ct / s               : Estimate of Net Count Rate
+count_rate_error     : stat.error;phot.count;em.X-ray.soft : ct / s               : Uncertainty in Net Count Rate
+exposure             :     time.duration;obs.exposure : s                    : Exposure Time
+off_axis             :                   instr.offset : arcm                 : Off-Axis Angle Averaged over Observation
+srcflags             :                 meta.code.qual : None                 : [cdefislmnpavw.] Source Flags
+seqflags             :                 meta.code.qual : None                 : [DABEFMSX.] Sequence Flags
+Search_Offset        :                           None : None                 : None
+-----
+
+Atlas of Radio/X-Ray Associations (ARXA)
+name                 :                        ID_MAIN : None                 : Source Identification from the Literature
+alt_name             :                        meta.id : None                 : Alternative Source Designation
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+bmag                 :              phot.mag;em.opt.B : mag                  : Blue Optical Magnitude
+rmag                 :              phot.mag;em.opt.R : mag                  : Red Optical Magnitude
+redshift             :                   src.redshift : None                 : Redshift from the Literature
+chandra_id           :         meta.id.assoc;em.X-ray : None                 : Chandra X-Ray Identification, If Any
+rass_id              :         meta.id.assoc;em.X-ray : None                 : ROSAT RASS X-Ray Identification, If Any
+Search_Offset        :                           None : None                 : None
+-----
+
+XTE Target Index Catalog
+target_id            :                        ID_MAIN : None                 : Unique Target Identifier (Proposal Number + Target Number)
+max_status           :                  meta.code;obs : None                 : Maximum Status of Component Observations
+scan_flag            :                  meta.code;obs : None                 : Flag Indicates Whether Observation Is Scan or Raster
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+target_name          :                    meta.id;src : None                 : Target Designation
+start_time           :                 time.start;obs : mjd                  : Date of First Observation
+end_time             :                   time.end;obs : mjd                  : Date of Last Observation
+total_exposure       :     time.duration;obs.exposure : s                    : Total Good Time of the Observation (s)
+num_obs              :                meta.number;obs : None                 : Number of Observations
+pi_lname             :                     meta.id.PI : None                 : Principal Investigator Last Name
+class                :                      src.class : None                 : Browse Object Classification (Based on Subject Category)
+prnb                 :                    meta.id;obs : None                 : RXTE Proposal Number
+gain                 :                    instr.setup : None                 : Gain Level(s) of Component Observations
+max_obs_offset       :                           None : arcm                 : Maximum Positional Deviation of Component Observations (arcmin)
+Search_Offset        :                           None : None                 : None
+-----
+
+LALA Cetus Field Chandra X-Ray Point Source Catalog
+source_number        :                    meta.id;src : None                 : Sequential Identification Number for Each Source in Catalog
+name                 :                        ID_MAIN : None                 : Source Designation (CXOLALA2 JHHMMSS.s+DDMMSS.s)
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+error_radius         :                 stat.error;pos : arcs                 : 3-Sigma Uncertainties of Centroid Position as Given by WAVDETECT
+fb_counts            :                  phot;em.X-ray : ct                   : Total Band (0.5-10keV) Net Counts
+fb_counts_pos_err    :       stat.error;phot;em.X-ray : ct                   : Upper Error on Total Band (0.5-10keV) Net Counts
+fb_counts_neg_err    :       stat.error;phot;em.X-ray : ct                   : Lower Error on Total Band (0.5-10keV) Net Counts
+rmag_limit           :    meta.code;phot.mag;em.opt.R : None                 : Limit Flag for r-prime Band Magnitude
+rmag                 :              phot.mag;em.opt.R : mag                  : r-prime Band Magnitude from AUTO SExtractor
+rmag_error           :   stat.error;phot.mag;em.opt.R : mag                  : RMS Uncertainty on r-prime Band Magnitude
+Search_Offset        :                           None : None                 : None
+-----
+
+ROSAT Radio-Quiet Quasars Catalog
+iau_name             :                        ID_MAIN : None                 : IAU Designation of the Object
+alt_name             :                        meta.id : None                 : Alternate Designation from VERON93
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+redshift             :                   src.redshift : None                 : Redshift
+appmag               :                           None : None                 : Optical Magnitude from VERON93
+Search_Offset        :                           None : None                 : None
+-----
+
+Chandra Deep Field South AGN Spectral Properties Catalog
+name                 :                        ID_MAIN : None                 : Source Designation, [GZW2002] XID NNN in SIMBAD
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+redshift             :                   src.redshift : None                 : Redshift
+sb_lx                :  phys.luminosity;em.X-ray.soft : erg / s              : Soft-Band (0.5-2keV) Luminosity (erg/s)
+hb_lx                : phys.luminosity;em.X-ray.medium : erg / s              : Hard-Band (2-10keV) Luminosity (erg/s)
+spectral_index       :           spect.index;em.X-ray : None                 : Spectral Slope (1.8 = Fixed Value)
+Search_Offset        :                           None : None                 : None
+-----
+
+RIXOS source sample X-ray spectra (Mittaz+, 1999)
+_r                   :                pos.angDistance : deg                  : Distance from center (000.0000+00.0000)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+recno                :                        ID_MAIN : None                 : Record number assigned by the VizieR team. Should Not be used for identification. [datatype=int]
+FID                  :              meta.id;obs.field : None                 : [110/305] Field identification number (1)
+SRC                  :              meta.id;obs.field : None                 : Source identification number in the field \linkRole{details from RIXOS } (1)
+NH                   :             phys.columnDensity : 1e+20 / cm2          : Hydrogen column density
+Obs                  :                 time.epoch;obs : "Y:M:D"              : Observation date
+Exp                  :     time.duration;obs.exposure : ks                   : Exposure time of the field in ks.
+Rad                  :                   phys.angSize : arcm                 : [0.3/0.9] Extraction radius for the source counts
+Fx0                  :             phot.flux;em.X-ray : 1e-17 W / m2         : Original flux (0.5-2keV), assuming an absorbed power law of slope 1 (in units of (10^-14^erg/cm^2^/s)
+C1                   :            phot.count;em.X-ray : ct                   : Extracted total counts in band S1 (2)
+C2                   :            phot.count;em.X-ray : ct                   : Extracted total counts in band H1 (2)
+C3                   :            phot.count;em.X-ray : ct                   : Extracted total counts in band H2 (2)
+B1                   :               instr.background : ct                   : Estimated background counts within the extraction circle for band S1 (2)
+B2                   :               instr.background : ct                   : Estimated background counts within the extraction circle for band H1 (2)
+B3                   :               instr.background : ct                   : Estimated background counts within the extraction circle for band H2 (2)
+alpha                :                    spect.index : None                 : Marginalized power-law slope {alpha}_1D_
+Norm2                :             phot.flux;em.X-ray : 0.1/keV/m2/s         : Normalization of the best fit N_2D_ (in units of 10^-5^photon/keV/cm^2^/s)
+alpha2               :                    spect.index : None                 : Best-fitting slope {alpha}_2D_
+Fx2                  :             phot.flux;em.X-ray : 1e-17 W / m2         : Flux (0.5-2keV) determined from the best-fitting data (2D) (10^-14^erg/cm^2^/s)
+Type                 :                      src.class : None                 : Object type (3)
+u_Type               :                      meta.note : None                 : Uncertainty flag on Type
+z                    :                   src.redshift : None                 : ? Redshift (if applicable)
+u_z                  :   meta.code.error;src.redshift : None                 : Uncertainty flag on z
+Simbad               :                       meta.ref : None                 : ask the {\bf\fg{FireBrick}Simbad} data-base about this object
+_RA                  :                      pos.eq.ra : deg                  : Position, from RIXOS catalogue (Mason et al. 2000, Cat. J/MNRAS/311/456) (right ascension part)
+_DE                  :                     pos.eq.dec : deg                  : Position, from RIXOS catalogue (Mason et al. 2000, Cat. J/MNRAS/311/456) (declination part)
+-----
+
+ROSAT PSPC M31 Source Catalog
+name                 :                        ID_MAIN : None                 : RXJ Source Name
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+error_radius         :                 stat.error;pos : arcs                 : 1-Sigma Positional Error
+rate_b_flag          :                           None : None                 : Limit Flag on Broad Rate
+rate_b               :                           None : ct / s               : Count Rate 0.1-2.0 keV
+rate_b_error         :                           None : ct / s               : 1-Sigma Error in Broad Rate
+Search_Offset        :                           None : None                 : None
+-----
+
+X-ray and radio emission of type 1 AGNs (Ballo+, 2012)
+_r                   :                pos.angDistance : deg                  : Distance from center (000.00000+00.00000)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+XMM                  :                        ID_MAIN : None                 : ? XMM source ID number, SRCID_XMM (G1) [datatype=int]
+f_XMM                :                      meta.code : None                 : Arbitrary ID number for X-ray undetected sources, NNX
+RAJ2000              :                      pos.eq.ra : deg                  : XMM Right ascension (J2000)
+DEJ2000              :                     pos.eq.dec : deg                  : XMM Declination (J2000)
+l_FX                 :                meta.code.error : None                 : [l] If upper limit in X-ray
+FX                   :             phot.flux;em.X-ray : 1e-17 W / m2         : X-ray flux (0.2-12keV) (10^-14^erg/cm^2^/s)
+z                    :                   src.redshift : None                 : SDSS redshift
+gmag                 :              phot.mag;em.opt.B : mag                  : SDSS g-filter magnitude
+rmag                 :              phot.mag;em.opt.R : mag                  : SDSS r-filter magnitude
+imag                 :              phot.mag;em.opt.I : mag                  : SDSS i-filter magnitude
+FR                   : phot.flux.density;em.radio.750-1500MHz : mJy                  : ? FIRST (Cat. VIII/71) integrated radio flux at 1.5GHz
+W(Mg)                :               spect.line.width : km / s               : FWHM of the MgII emission line
+logMBH               :                      phys.mass : [Msun]               : Mass of the central black hole
+l_logLx              :                meta.code.error : None                 : [l] If upper limit in logLx
+logLx                :       phys.luminosity;em.X-ray : [10-7W]              : X-ray luminosity log(L(2-10keV))
+l_logLbol            :                meta.code.error : None                 : [l] If upper limit in the logLbol
+logLbol              :                phys.luminosity : [10-7W]              : Bolometric luminosity log(L_bol_)
+F2500                :                phot.flux;em.UV : mJy                  : Flux at 2500{AA} rest frame
+l_aox                :                meta.code.error : None                 : [l-] If upper limit in X-ray
+aox                  :                    spect.index : None                 : X-ray to optical spectral index
+Class                :                meta.code.class : None                 : ? Radio classification (3)
+Sloan                :                   meta.ref.url : None                 : Display the SDSS data for this AGN
+FIRST                :                   meta.ref.url : None                 : Display the FIRST data for this AGN
+-----
+
+M31 XMM-Newton Spectral Survey X-Ray Point Source Catalog
+name                 :                        ID_MAIN : None                 : Source Designation
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+spectral_model       :  meta.code;spect;meta.modelled : None                 : Best-Fit Model
+spectral_index       :           spect.index;em.X-ray : keV                  : Gamma or kT Value
+nh                   :             phys.columnDensity : cm^-2                : Hydrogen Column Density
+lx_1                 :       phys.luminosity;em.X-ray : erg / s              : X-Ray Luminosity
+lx_1_error           : stat.error;phys.luminosity;em.X-ray : erg / s              : RMS Uncertainty in X-Ray Luminosity
+Search_Offset        :                           None : None                 : None
+-----
+
+Soft X-ray properties of Seyfert galaxies (Pfefferkorn+, 2001)
+_r                   :                pos.angDistance : deg                  : Distance from center (00 00 00.0+00 00 00)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+Name                 :                        ID_MAIN : None                 : Galaxy name [datatype=char]
+ROSAT                :                        meta.id : None                 : ROSAT name of the galaxy
+RAJ2000              :                      pos.eq.ra : "h:m:s"              : Right ascension (J2000) (1)
+DEJ2000              :                     pos.eq.dec : "d:m:s"              : Declination (J2000) (1)
+Pcount               :            phot.count;em.X-ray : ct / s               : ? Source count rate, pointing obs.
+FileName             :              meta.id;meta.file : None                 : Associated image name stored here
+-----
+
+X-ray studies of stars in the Pleiades (Micela+, 1990)
+_r                   :                pos.angDistance : deg                  : Distance from center (23 57 26-00 16 42)[FK4/B1950]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+Name                 :                        ID_MAIN : None                 : Star name (1) [datatype=char]
+RAB1950              :                      pos.eq.ra : "h:m:s"              : Right Ascension (B1950)
+DEB1950              :                     pos.eq.dec : "d:m:s"              : Declination (B1950)
+Vmag                 :              phot.mag;em.opt.V : mag                  : ? Apparent Visual magnitude (2)
+Sp                   :                     src.spType : None                 : Spectral type (2)
+notes                :                      meta.note : None                 : Notes on the source (4)
+Lx                   :       phys.luminosity;em.X-ray : [10-7W]              : log of X-ray luminosity from 0.16-4.0 keV (5)
+_RA.icrs             :                      pos.eq.ra : "h:m:s"              : Right ascension (ICRS) (computed by VizieR, not part of the original data)
+_DE.icrs             :                     pos.eq.dec : "d:m:s"              : Declination (ICRS) (computed by VizieR, not part of the original data)
+-----
+
+Spectral analysis of Lockman Hole (Mainieri+, 2002)
+_r                   :                pos.angDistance : deg                  : Distance from center (00 00 00.0+00 00 00)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+[MBH2002]            :                        ID_MAIN : None                 : [1/98] Source sequential number [datatype=short]
+ROSAT                :                        meta.id : None                 : Source ROSAT number
+Type                 :                      src.class : None                 : [1/9] Type (1)
+RAJ2000              :                      pos.eq.ra : "h:m:s"              : Right ascension (J2000.0)
+DEJ2000              :                     pos.eq.dec : "d:m:s"              : Declination (J2000.0)
+Off-axis             :                   instr.offset : arcm                 : Off-axis angle
+Counts               :            phot.count;em.X-ray : ct                   : Counts in the [0.5-7]keV rest-frame band
+F[0.5-2]             :             phot.flux;em.X-ray : 1e-17 W / m2         : Flux in the [0.5-2]keV rest-frame band
+F[2-10]              :             phot.flux;em.X-ray : 1e-17 W / m2         : Flux in the [2-10]keV rest-frame band
+F[5-10]              :             phot.flux;em.X-ray : 1e-17 W / m2         : Flux in the [5-10]keV rest-frame band
+-----
+
+Spitzer Wide-Area IR Extra-Galactic Survey Chandra X-Ray Sources
+name                 :                        ID_MAIN : None                 : Source Designation
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+flux_3p6um           :                           None : mJy                  : IRAC 3.6-Micron Flux Density (mJy)
+flux_3p6um_error     :                           None : mJy                  : Uncertainty in IRAC 3.6-Micron Flux Density (mJy)
+flux                 :             phot.flux;em.X-ray : erg/s/cm^2           : Chandra (0.5-8keV) Flux (erg/s/cm^2)
+flux_error           :  stat.error;phot.flux;em.X-ray : erg/s/cm^2           : Uncertainty in Chandra (0.5-8keV) Flux (erg/s/cm^2)
+Search_Offset        :                           None : None                 : None
+-----
+
+M31 Chandra X-ray point sources (Kong+, 2002)
+_r                   :                pos.angDistance : deg                  : Distance from center (00 00 00.000+00 00 00.00)[FK5/J2000]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+[KGP2002]            :                        ID_MAIN : None                 : Object identification [datatype=char]
+RAJ2000              :                      pos.eq.ra : "h:m:s"              : Hour of Right Ascension (J2000)
+DEJ2000              :                     pos.eq.dec : "d:m:s"              : Degree of Declination (J2000)
+NCts                 :            phot.count;em.X-ray : ct                   : The net counts
+CRate                :            phot.count;em.X-ray : 0.01 ct / s          : The count rate in units of 10^-2^ct/s
+e_CRate              :                     stat.error : 0.01 ct / s          : Error in CRate
+HR1                  :          phot.flux;arith.ratio : None                 : The first hardness ratio (1)
+HR2                  :          phot.flux;arith.ratio : None                 : The second hardness ratio (2)
+LXray                :       phys.luminosity;em.X-ray : 1e+30 W              : The 0.3-7keV luminosity in units of 10^37^erg/s (3)
+Notes                :                      meta.note : None                 : Additional notes (4)
+-----
+
+X-ray studies of stars in the Pleiades (Micela+, 1990)
+_r                   :                pos.angDistance : deg                  : Distance from center (23 57 26-00 16 42)[FK4/B1950]
+_RAJ2000             :                 POS_EQ_RA_MAIN : deg                  : Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+_DEJ2000             :                POS_EQ_DEC_MAIN : deg                  : Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of the original data)
+Name                 :                        ID_MAIN : None                 : Star name (1) [datatype=char]
+RAB1950              :                      pos.eq.ra : "h:m:s"              : Right Ascension (B1950)
+DEB1950              :                     pos.eq.dec : "d:m:s"              : Declination (B1950)
+Vmag                 :              phot.mag;em.opt.V : mag                  : ? Apparent Visual magnitude (2)
+Sp                   :                     src.spType : None                 : Spectral type (2)
+notes                :                      meta.note : None                 : Notes on the source (4)
+Lx                   :       phys.luminosity;em.X-ray : [10-7W]              : log of X-ray luminosity from 0.16-4.0 keV (5)
+_RA.icrs             :                      pos.eq.ra : "h:m:s"              : Right ascension (ICRS) (computed by VizieR, not part of the original data)
+_DE.icrs             :                     pos.eq.dec : "d:m:s"              : Declination (ICRS) (computed by VizieR, not part of the original data)
+-----
+
+CGRO/BATSE 5B Gamma-Ray Burst Spectral Catalog
+trigger_num          :                        meta.id : None                 : BATSE Trigger Number
+name                 :                        ID_MAIN : None                 : BATSE Catalog Burst Name
+ra                   :                 POS_EQ_RA_MAIN : deg                  : Right Ascension
+dec                  :                POS_EQ_DEC_MAIN : deg                  : Declination
+trigger_time         :                     time.epoch : mjd                  : Burst Trigger Time (UT)
+t90                  :                  time.interval : s                    : 90% Burst Duration
+t90_error            :       stat.error;time.interval : s                    : Uncertainty in T90 Duration
+pflx_band_ampl       :               stat.param;spect : photon/s/cm^2/keV    : Amplitude
+pflx_band_ampl_error :    stat.error;stat.param;spect : photon/s/cm^2/keV    : Uncertainty in Amplitude
+pflx_band_flux       :                      phot.flux : erg/s/cm^2           : Energy Flux
+pflx_band_flux_error :           stat.error;phot.flux : erg/s/cm^2           : Uncertainty in Energy Flux
+Search_Offset        :                           None : None                 : None
+-----
+
