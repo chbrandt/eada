@@ -1,7 +1,6 @@
 
 """ Module for logging facilities """
 
-import sys;
 import logging;
 
 ##@package log
@@ -55,4 +54,3 @@ def init( logfile='logging.log', debug=False, verbose=False ):
 
     return logging;
 
-log_init = init;
