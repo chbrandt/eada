@@ -18,6 +18,14 @@ def check_availability(service_url):
     Checks whether the given (service) url is reachable
     '''
     pr = urlparse.urlparse(service_url)
-    
     serverUp = check_server(pr.netloc)
+    return serverUp
     
+from zyxw.vo import servcheck as sc
+def main():
+    '''
+    '''
+    
+if __name__ == '__main__':
+    
+    if is 
