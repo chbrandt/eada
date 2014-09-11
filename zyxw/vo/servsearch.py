@@ -47,12 +47,12 @@ class CatalogValidator(object):
         s = self._record.to_service()
         return s.search(pos=self._nullPos, radius=self._nullRad)
         
-    def title(self):
-        return self._record.title
-        
     def sync(self):
         if not(self._table):
-            t = self._getTable()
+            try:
+                t = self._getTable()
+            except:
+                return
             self._table.update(t)
         assert(self._table)
         
@@ -94,6 +94,31 @@ class CatalogValidator(object):
         self.sync()
         return self._checkUCDs and self._checkUnits
         
+    def summary(self):
+        out= {}
+        out['description']  = self.description()
+        out['url']          = self.url()
+        out['title']        = self.title()
+        out['publisher']    = self.publisher()
+        out['ivoid']        = self.ivoid()
+        return out.copy()
+        
+    def description(self):
+        return self._record.get('description')
+        
+    def url(self):
+        return self._record.accessurl
+        
+    def title(self):
+        return self._record.title
+        
+    def publisher(self):
+        return self._record.publisher
+        
+    def ivoid(self):
+        return self._record.ivoid
+        
+    
     
     
 # --- Auxiliary functions ---
@@ -181,31 +206,31 @@ def main(waveband,keyword='',service='conesearch',registry='US'):
     loginf("Number of services found: %d" % (records.nrecs))
     
     # Let's get --first-- empty tables from the retrieved records/services
-    catalogues = {}
+    catalogues = []
     cnt = 0
     _failed = []
     for r in records:
         cv = CatalogValidator(r)
-        loginf("Retrieving (empty) table '%s'" % (cv.title))
+        loginf("Retrieving table '%s'" % (cv.title()))
         cv.sync()
         if not cv:
             _failed.append(r)
             continue
         cv.setUCDs = ucds
         cv.setUnits = units
-        catalogues[r] = cv
+        catalogues.append(cv)
         cnt += 1
     loginf("%d tables were retrieved.")
     if len(_failed):
         _fn = [ f.title for f in _failed ]
-        logwrn("%d tables were in a NULL state. They are: %s" % (_fn))
+        logwrn("%d tables were in a NULL state. They are: %s" % (len(_fn),_fn))
         del _fn
     del _failed
     
     cnt = 0
-    for k,v in catalogues.iteritems():
-        if v.isValid():
-            print v.title()
+    for cv in catalogues:
+        if cv.isValid():
+            print cv.title()
             cnt += 1
     print("%d valid catalogues" % cnt)
     
