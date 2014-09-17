@@ -12,6 +12,8 @@ def getUCD(tab):
     for f in tab.fields():
         if not f.ucd:
             continue
+        if not ucd.check_ucd(f.ucd):
+            continue
         l2 = []
         for u in ucd.parse_ucd(f.ucd):
             _u = str(u[1])

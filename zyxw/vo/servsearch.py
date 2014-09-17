@@ -14,11 +14,11 @@ import metadata
 
 # Wavebands available to search for catalogue data
 # (for convenience I relate the UCD words used)
-BANDS = {'Radio'        : 'em.radio',
-         'Millimeter'   : 'em.mm',
-         'Infrared'     : 'em.IR',
-         'Optical'      : 'em.opt',
-         'UV'           : 'em.UV',
+BANDS = {'radio'        : 'em.radio',
+         'millimeter'   : 'em.mm',
+         'infrared'     : 'em.IR',
+         'optical'      : 'em.opt',
+         'uv'           : 'em.UV',
          'xray'         : 'em.X-ray'}
 
 from pyvo.dal.scs import SCSResults
@@ -179,28 +179,41 @@ def _retrieveTable(record):
 def selectCatalogs(records,ucds,units):
     '''
     '''
+    def printProgress(_progress):
+        i = _progress[0][0]
+        n = _progress[1][0]
+        s = _progress[2][0]
+        prog = int(100*float(i)/n)
+        sys.stdout.write("\r[%d%% - %d/%d] %s" % (prog,i,n,s))
+        sys.stdout.flush()
+        
     catalogues = []
     cnt = 0
     _failed = []
     _unwanted = []
-    for r in records:
+    _progress = ([0],[0],[''])
+    for i,r in enumerate(records):
+        _progress[0][0] = i+1
+        _progress[1][0] = records.nrecs
+        printProgress(_progress)
         cv = CatalogValidator(r)
         loginf("Retrieving table '%s'" % (cv.title()))
         cv.sync()
         if not cv:
             _failed.append(r)
-            print "x",
+            _progress[2][0] += 'x'
             continue
         cv.setUCDs(ucds)
         cv.setUnits(units)
         if not cv.isValid():
             _unwanted.append(cv)
-            print "-",
+            _progress[2][0] += '-'
             continue
         catalogues.append(cv)
-        print ".",
+        _progress[2][0] += 'o'
         cnt += 1
-        sys.stdout.flush()
+        
+    printProgress(_progress)
     print('\n')
     assert(len(catalogues)+len(_failed)+len(_unwanted)==records.nrecs)
 

@@ -32,22 +32,43 @@ desc = """
  Units: %s
  """ % (ucds,units)
 
+import sys
+import os
+
 from zyxw.vo import servsearch
 from zyxw.io import config
 
 import logging
 LOGLEVEL = logging.DEBUG
 
-
-def writeCatalogs(catalogues):
+def writeCatalogs(catalogues,at=''):
+    localDir = './'
+    if not at:
+        at = localDir
+    if not (os.path.exists(at) or at is localDir):
+        try:
+            os.mkdir(at)
+        except:
+            print >> sys.stderr, "Not able to create directory '%s'. Check your permissions." % at
+            sys.exit(1)
+    
+    try:
+        fp = open(at+'/README.txt','w')
+    except:
+        print >> sys.stderr, "Not able to write to directory '%s'. Check your permissions." % at
+    
     print("\nCatologues selected [%d]:" % len(catalogues))
     out = {}
     for c in catalogues:
         out[c.shortname()] = c.summary()
-        with open(c.shortname()+'.txt','w') as fp:
+        with open(at+'/'+c.shortname()+'.txt','w') as fp:
             for f in c.fielddesc():
-                fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f[0],f[1],f[2],f[3]))
-    config.write_ini(out,'catalogs.ini')
+                f0 = unicode(f[0]).enconde('utf-8')
+                f1 = unicode(f[1]).enconde('utf-8')
+                f2 = unicode(f[2]).enconde('utf-8')
+                f3 = unicode(f[3]).enconde('utf-8')
+                fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
+    config.write_ini(out,at+'/CATALOGS.ini')
     
 # Lets put a cli here, so that the script can work with free parameters
 #
@@ -85,5 +106,5 @@ if __name__ == '__main__':
     # Run
     catalogues = servsearch.main(args.band, args.keywords, ucds, units)
     
-    writeCatalogs(catalogues)
+    writeCatalogs(catalogues,args.band)
     
