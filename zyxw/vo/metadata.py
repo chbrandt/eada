@@ -10,28 +10,41 @@ def getUCD(tab):
     from astropy.io.votable import ucd
     l1 = []
     for f in tab.fields():
-        if not f.ucd: continue
+        if not f.ucd:
+            continue
         l2 = []
         for u in ucd.parse_ucd(f.ucd):
-            l2.append(str(u[1]))
+            _u = str(u[1])
+            if not _u in l1:
+                l2.append(_u)
         l1.extend(l2)
-    return l1[:]
+    return l1
 
-def checkUCDs(tab,UCDs=[]):
+import string
+def checkUCDs(tab,UCDs=[],substring=False):
     """Returns a True if tab has one of the given UCDs; False otherwise"""
     if tab is None:
         return None
     l = getUCD(tab)
-    ok = any( filter(lambda u:u in UCDs, set(l)) )
+    if not substring:
+        ok = any( filter(lambda u:u in UCDs, set(l)) )
+    else:
+        ok = []
+        for u in l:
+            ok.append(any( [ string.find(u,ucd)>=0 for ucd in UCDs ] ))
+        ok = any(ok)
     return ok
     
 def getUnit(tab):
     """Returns a list of units from a table"""
     l = []
     for f in tab.fields():
-        if not f.unit: continue
-        l.append(str(f.unit).replace(' ',''))
-    return l[:]
+        if not f.unit:
+            continue
+        _u = str(f.unit).replace(' ','')
+        if not _u in l:
+            l.append(_u)
+    return l
 
 def checkUnits(tab,Units=[]):
     """Returns a True if tb has one of the given Units; False otherwise"""

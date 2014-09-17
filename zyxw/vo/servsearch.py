@@ -19,7 +19,7 @@ BANDS = {'Radio'        : 'em.radio',
          'Infrared'     : 'em.IR',
          'Optical'      : 'em.opt',
          'UV'           : 'em.UV',
-         'xray'        : 'em.X-Ray'}
+         'xray'         : 'em.X-ray'}
 
 from pyvo.dal.scs import SCSResults
 
@@ -55,7 +55,7 @@ class CatalogValidator(object):
     
     _nullPos = (0,0)
     _nullRad = 0.00001
-    _ucds = []
+    _ucds = {}
     _units = []
     
     def __init__(self,record):
@@ -87,12 +87,8 @@ class CatalogValidator(object):
         assert(self._table)
         
     def setUCDs(self,UCDs):
-        if isinstance(UCDs,list):
-            self._ucds = UCDs[:]
-        elif isinstance(UCDs,str):
-            self._ucds = UCDs.split()
-        else:
-            raise TypeError("UCDs should be str or list")
+        assert(isinstance(UCDs,dict))
+        self._ucds = UCDs.copy()
         
     def setUnits(self,Units):
         if isinstance(Units,list):
@@ -104,20 +100,15 @@ class CatalogValidator(object):
         
     def _checkUCDs(self):
         assert(self._table)
-        ok = metadata.checkUCDs(self._table,self._ucds)
-#        if not ok:
-#            if not self._comments['isvalid']:
-#                self._comments['isvalid'] = []
-#            self._comments['isvalid'].append((ok,'UCDs do not match'))
-        return ok
+        emUCD = self._ucds.keys()
+        assert(len(emUCD)==1)
+        ok1 = metadata.checkUCDs(self._table,emUCD,True)
+        ok2 = metadata.checkUCDs(self._table,self._ucds[emUCD[0]],True)
+        return ok1 and ok2
         
     def _checkUnits(self):
         assert(self._table)
         ok = metadata.checkUnits(self._table,self._units)
-#        if not ok:
-#            if not self._comments['isvalid']:
-#                self._comments['isvalid'] = []
-#            self._comments['isvalid'].append((ok,'Units do not match'))
         return ok
         
     def isValid(self):
@@ -226,7 +217,7 @@ def selectCatalogs(records,ucds,units):
 
 import pyvo
 
-def main(waveband, keyword='', ucds=[], units=[],
+def main(waveband, keyword='', ucds={}, units=[],
          service='conesearch', registry='US'):
     '''
     Search and filter services to be used for SED analysis

@@ -7,7 +7,6 @@ Created on Tue Sep 16 11:09:47 2014
 """
 
 ucds = ['phot.flux',
-        'phot.flux.density',
         'phot.mag',
         'phot.count',
         'phys.luminosity',
@@ -81,7 +80,7 @@ if __name__ == '__main__':
         logging.disable(logging.NOTSET)
 
     _ucd = servsearch.BANDS[args.band]
-    ucds.append(_ucd)
+    ucds = {_ucd:ucds}
     
     # Run
     catalogues = servsearch.main(args.band, args.keywords, ucds, units)
