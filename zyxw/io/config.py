@@ -138,7 +138,7 @@ def write_ini( sections, filename ):
         for k,v in _item[1].items():
             config.set(_section, k, v);
 
-    with open(output_filename,'w') as fp:
+    with open(filename,'w') as fp:
         config.write(fp);
 
     return True;

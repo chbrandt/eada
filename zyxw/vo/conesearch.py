@@ -1,6 +1,7 @@
 #-*- coding:utf-8 -*-
 
 TIMEOUT=20
+CFGFILE='conesearch.cfg'
 
 def conesearch(ra,dec,radius,db_url,timeout=None):
     """

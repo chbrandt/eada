@@ -1,26 +1,56 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-from zyxw.io import log
-logging = log.init()
+import sys
+
+import logging
 logcrt = logging.critical
 logerr = logging.error
 logwrn = logging.warning
 logdbg = logging.debug
 loginf = logging.info
 
+import metadata
+
+# Wavebands available to search for catalogue data
+# (for convenience I relate the UCD words used)
+BANDS = {'Radio'        : 'em.radio',
+         'Millimeter'   : 'em.mm',
+         'Infrared'     : 'em.IR',
+         'Optical'      : 'em.opt',
+         'UV'           : 'em.UV',
+         'xray'        : 'em.X-Ray'}
+
+from pyvo.dal.scs import SCSResults
+
 class CatalogValidator(object):
 
     # --- Auxiliary class ---
     class Table(object):
         def __init__(self):
-            self._table = None
+            self.clear()
+            
+        def clear(self):
+            self._pseudoTable = None
+            self._votableTree = None
+            self._originalTab = None
+            
         def __nonzero__(self):
-            return self._table != None
+            return self._votableTree != None
+            
         def __len__(self):
             return len(self._table)
+            
         def update(self,newTable):
-            self._table = newTable
+            if newTable != None and isinstance(newTable,SCSResults):
+                self._pseudoTable = newTable
+                self._votableTree = newTable.votable
+            else:
+                raise(TypeError,"Instance of SCSResults expected.")
+                
+        def fields(self):
+            return self._votableTree.fields
+            
     # --- /Auxiliary class ---
     
     _nullPos = (0,0)
@@ -74,25 +104,27 @@ class CatalogValidator(object):
         
     def _checkUCDs(self):
         assert(self._table)
-        ok = checkUCDs(self._table,self._ucds)
-        if not ok:
-            if not self._comments['isvalid']:
-                self._comments['isvalid'] = []
-            self._comments['isvalid'].append((ok,'UCDs do not match'))
+        ok = metadata.checkUCDs(self._table,self._ucds)
+#        if not ok:
+#            if not self._comments['isvalid']:
+#                self._comments['isvalid'] = []
+#            self._comments['isvalid'].append((ok,'UCDs do not match'))
         return ok
         
     def _checkUnits(self):
         assert(self._table)
-        ok = checkUnits(self._table,self._units)
-        if not ok:
-            if not self._comments['isvalid']:
-                self._comments['isvalid'] = []
-            self._comments['isvalid'].append((ok,'Units do not match'))
+        ok = metadata.checkUnits(self._table,self._units)
+#        if not ok:
+#            if not self._comments['isvalid']:
+#                self._comments['isvalid'] = []
+#            self._comments['isvalid'].append((ok,'Units do not match'))
         return ok
         
     def isValid(self):
         self.sync()
-        return self._checkUCDs and self._checkUnits
+        ok1 = self._checkUCDs()
+        ok2 = self._checkUnits()
+        return ok1 and ok2
         
     def summary(self):
         out= {}
@@ -118,9 +150,17 @@ class CatalogValidator(object):
     def ivoid(self):
         return self._record.ivoid
         
+    def shortname(self):      
+        _sn = self._record.shortname.split()[0]
+        return filter(str.isalnum,_sn)
     
-    
-    
+    def fielddesc(self):
+        fl = []
+        for f in self._table.fields():
+            fl.append([f.name,f.description,f.ucd,f.unit])
+        return fl
+        
+
 # --- Auxiliary functions ---
 
 #TODO: so far pyvo supports only access to USVAO registry.
@@ -145,52 +185,53 @@ def _retrieveTable(record):
     logdbg("Qyeried URL: '%s'" % (tab.queryurl))
     return tab
 
-def getUCD(tab):
-    """Returns a list with all (valid) UCDs from a table"""
-    from astropy.io.votable import ucd
-    l1 = []
-    for f in tab.fielddesc():
-        if not f.ucd: continue
-        l2 = []
-        for u in ucd.parse_ucd(f.ucd):
-            l2.append(str(u[1]))
-        l1.extend(l2)
-    return l1[:]
+def selectCatalogs(records,ucds,units):
+    '''
+    '''
+    catalogues = []
+    cnt = 0
+    _failed = []
+    _unwanted = []
+    for r in records:
+        cv = CatalogValidator(r)
+        loginf("Retrieving table '%s'" % (cv.title()))
+        cv.sync()
+        if not cv:
+            _failed.append(r)
+            print "x",
+            continue
+        cv.setUCDs(ucds)
+        cv.setUnits(units)
+        if not cv.isValid():
+            _unwanted.append(cv)
+            print "-",
+            continue
+        catalogues.append(cv)
+        print ".",
+        cnt += 1
+        sys.stdout.flush()
+    print('\n')
+    assert(len(catalogues)+len(_failed)+len(_unwanted)==records.nrecs)
 
-def checkUCDs(tab,UCDs=[]):
-    """Returns a True if tab has one of the given UCDs; False otherwise"""
-    if tab is None: return None
-    l = getUCD(tab)
-    ok = any( filter(lambda u:u in UCDs, set(l)) )
-    return ok
+    if len(_failed):
+        _fn = [ f.title for f in _failed ]
+        logwrn("%d tables were in a NULL state. They are:\n%s" % 
+                ( len(_fn), '\n'.join(_fn) ))
+        del _fn
+    del _failed
     
-def getUnit(tab):
-    """Returns a list of units from a table"""
-    l = []
-    for f in tab.fielddesc():
-        if not f.unit: continue
-        l.append(str(f.unit).replace(' ',''))
-    return l[:]
+    return catalogues
 
-def checkUnits(tab,Units=[]):
-    """Returns a True if tb has one of the given Units; False otherwise"""
-    if tab is None: return None
-    l = getUnit(tab)
-    ok = any( filter(lambda u:u in Units, set(l)) )
-    return ok
-    
 # --- /Auxiliary functions ---
 
 import pyvo
 
-def main(waveband,keyword='',service='conesearch',registry='US'):
+def main(waveband, keyword='', ucds=[], units=[],
+         service='conesearch', registry='US'):
     '''
     Search and filter services to be used for SED analysis
     '''
     
-    ucds = ['em.X-ray','phot.flux','phot.flux.density','phot.count','phys.luminosity']
-    units = ['ct/s','erg/s','erg/s/cm2','erg/s/cm^2','mW/m2','1e-17W/m2','ct/ks','mJy','ct','[10-7W]']
-
     if not _validRegistry(registry):
         _regsOK = [ k for k,v in _registries.items() if v ]
         logcrt("Registry not supported. Choices are: %s" % (_regsOK))
@@ -206,33 +247,8 @@ def main(waveband,keyword='',service='conesearch',registry='US'):
     loginf("Number of services found: %d" % (records.nrecs))
     
     # Let's get --first-- empty tables from the retrieved records/services
-    catalogues = []
-    cnt = 0
-    _failed = []
-    for r in records:
-        cv = CatalogValidator(r)
-        loginf("Retrieving table '%s'" % (cv.title()))
-        cv.sync()
-        if not cv:
-            _failed.append(r)
-            continue
-        cv.setUCDs = ucds
-        cv.setUnits = units
-        catalogues.append(cv)
-        cnt += 1
-    loginf("%d tables were retrieved.")
-    if len(_failed):
-        _fn = [ f.title for f in _failed ]
-        logwrn("%d tables were in a NULL state. They are: %s" % (len(_fn),_fn))
-        del _fn
-    del _failed
+    catalogues = selectCatalogs(records,ucds,units)
+    loginf("%d tables were retrieved." % len(catalogues))
+
+    return catalogues
     
-    cnt = 0
-    for cv in catalogues:
-        if cv.isValid():
-            print cv.title()
-            cnt += 1
-    print("%d valid catalogues" % cnt)
-    
-if __name__ == '__main__':
-    main('xray','index')
