@@ -22,11 +22,31 @@ def getUCD(tab):
         l1.extend(l2)
     return l1
 
-import string
+def matchUCDs(tab,UCDs=[],substring=False):
+    """Returns a list with the matching UCDs"""
+    if tab is None:
+        return []
+    names = []
+    for u in UCDs:
+        names.extend(tab.fieldname_with_ucd(u))
+    ns = set(names)
+    return list(ns)
+    
+def matchUnits(tab,units=[],substring=False):
+    """Returns a list with the matching UCDs"""
+    if tab is None:
+        return []
+    names = []
+    for u in units:
+        names.extend(tab.fieldname_with_unit(u))
+    ns = set(names)
+    return list(ns)
+    
 def checkUCDs(tab,UCDs=[],substring=False):
     """Returns a True if tab has one of the given UCDs; False otherwise"""
+    import string
     if tab is None:
-        return None
+        return False
     l = getUCD(tab)
     if not substring:
         ok = any( filter(lambda u:u in UCDs, set(l)) )

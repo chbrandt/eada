@@ -1,0 +1,141 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+
+desc = """
+Verify the availability of given host/service
+"""
+import sys
+import os
+
+import urlparse
+import httplib
+
+from astropy.vo.validator.validate import check_conesearch_sites
+
+from zyxw.io import config
+
+COLOR_OK = '\033[92m'
+COLOR_END = '\033[0m'
+COLOR_FAIL = '\033[91m'
+OUTPUT = {True : (COLOR_OK,'OK'),
+          False: (COLOR_FAIL,'FAIL')}
+          
+def checkServer(hostname):
+    '''
+    Check if a host (www.abc.com) is up
+    '''
+    conn = httplib.HTTPConnection(hostname)
+    conn.request('HEAD','')
+    s = conn.getresponse().status
+    return int(s) < 400
+    
+def isServiceUp(service_url):
+    '''
+    Checks whether the given (service) url is reachable
+    '''
+    pr = urlparse.urlparse(service_url)
+    serverUp = checkServer(pr.netloc)
+    return serverUp
+    
+def pingServices(url_list):
+    status = [ isServiceUp(url) for url in url_list ]
+    return all(status)
+    
+def validateServices(url_list):
+    '''
+    Validate the (quality of the) VO service
+    '''
+    try:
+        check_conesearch_sites(url_list=url_list)
+        return True
+    except:
+        return False
+
+
+verificationType = {'ping'      : pingServices,
+                    'validate'  : validateServices}
+
+def main(url_list,mode='ping'):
+    '''
+    Check if given url' host is up
+    '''
+    f = verificationType[mode]
+    status = f(url_list)
+    return status
+
+
+if __name__ == '__main__':
+
+    import argparse
+    parser = argparse.ArgumentParser(description=desc)
+
+    main_group = parser.add_mutually_exclusive_group()
+    config_grp = main_group.add_argument_group()
+    
+    parser.add_argument('verification',
+                        choices=verificationType.keys(),
+                        help='Kind of service verification.')
+
+    main_group.add_argument('--url', default=None,
+                            help='VO service address to check.')
+    main_group.add_argument('--config', default=None,
+                            help='Configuration (ini) file.')
+    config_grp.add_argument('--catalog', default=None,
+                            help='Catalog name to verify.')
+
+    args,unknown = parser.parse_known_args()
+    if not (args.url or args.config):
+        parser.print_help()
+        sys.exit(1)
+    
+    if args.url:
+        res = main(args.url,args.verification)
+        print("%s[URL]%s\n%s" % (OUTPUT[res][0],COLOR_END,OUTPUT[res][1]))
+        if res:
+            sys.exit(os.EX_OK)
+        else:
+            sys.exit(os.EX_NOHOST)
+
+    # Config was selected
+    cfgfile = args.config
+
+    if not os.path.exists(cfgfile):
+        print >> sys.stderr, "File %s does not exist." % cfgfile
+        sys.exit(os.EX_IOERR)
+
+    try:
+        cp = config.read_ini(cfgfile)
+    except:
+        print >> sys.stderr, "Opening the file raised the following error."
+        sys.exit(os.EX_IOERR)
+
+    caturls = {}
+    if args.catalog:
+        cat = args.catalog
+        try:
+            url = cp.get(cat)['url']
+        except:
+            print >> sys.stderr, "Catalog '%s' could not be found inside config file."
+            sys.exit(os.EX_IOERR)
+        caturls[cat] = url
+    else:
+        for cat in cp.keys():
+            url = cp.get(cat)['url']
+            caturls[cat] = url
+
+    status = main(caturls.values(),args.verification)
+    if not status:
+        sys.exit(os.EX_NOHOST)
+    else:
+        sys.exit(os.EX_OK)
+            
+    status = []
+    for cat,url in caturls:
+        res = main(url,args.verification)
+        print("%s[%s]%s\n%s" % (OUTPUT[res][0],cat,COLOR_END,OUTPUT[res][1]))
+        status.append(res)
+    if not all(status):
+        sys.exit(os.EX_NOHOST)
+    else:
+        sys.exit(os.EX_OK)
+    

@@ -38,6 +38,7 @@ following functions.
 #
 
 import sys;
+import re
 
 #=====================================
 # Read config file (INI) to structure:
@@ -97,6 +98,12 @@ def read_ini( filename, *sections ):
 
         dsect = {};
         for k,v in config.items(_section):
+            # support list syntax "[...]" being read
+            pat = re.compile("^\[(.*)\]$")
+            r = pat.match(v)
+            if r != None:
+                s = r.group(1).split(',')
+                v = [ str(subs).replace(' ','').replace("\'",'') for subs in s ]
             dsect[k] = v;
         out[_section] = dsect;
 

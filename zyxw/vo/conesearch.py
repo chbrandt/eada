@@ -3,6 +3,11 @@
 TIMEOUT=20
 CFGFILE='conesearch.cfg'
 
+import logging
+logwrn = logging.warning
+logdbg = logging.debug
+logerr = logging.error
+
 def conesearch(ra,dec,radius,db_url,timeout=None):
     """
     Search for objects inside the 'radius' around ('ra','dec,)

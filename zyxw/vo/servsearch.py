@@ -10,6 +10,13 @@ logwrn = logging.warning
 logdbg = logging.debug
 loginf = logging.info
 
+import string
+
+from collections import OrderedDict as odict
+
+def _ustr(word):
+    return unicode(word).encode('utf-8')
+    
 import metadata
 
 # Wavebands available to search for catalogue data
@@ -51,17 +58,33 @@ class CatalogValidator(object):
         def fields(self):
             return self._votableTree.fields
             
+        def fieldname_with_ucd(self,ucd):
+            names = []
+            for fld in self._pseudoTable.fieldnames():
+                desc = self._pseudoTable.getdesc(fld)
+                if desc.ucd and string.find(desc.ucd,ucd) >= 0:
+                    names.append(fld)
+            return names
+            
+        def fieldname_with_unit(self,unit):
+            names = []
+            for fld in self._pseudoTable.fieldnames():
+                desc = self._pseudoTable.getdesc(fld)
+                if desc.unit and string.find(str(desc.unit).replace(' ',''),unit) >= 0:
+                    names.append(fld)
+            return names
+            
     # --- /Auxiliary class ---
-    
-    _nullPos = (0,0)
-    _nullRad = 0.00001
-    _ucds = {}
-    _units = []
     
     def __init__(self,record):
         assert(record != None)
         self._record = record
         self._table = self.Table()
+        self._nullPos = (0,0)
+        self._nullRad = 0.00001
+        self._ucds = {}
+        self._units = []
+        self._columns = []
         
     def __nonzero__(self):
         assert(self._record)
@@ -117,14 +140,34 @@ class CatalogValidator(object):
         ok2 = self._checkUnits()
         return ok1 and ok2
         
+    def filterColumns(self):
+        self.sync()
+        ucds = self._ucds.keys()
+        assert(len(ucds)==1)
+        ucds.extend(self._ucds[ucds[0]])
+        nameCols = metadata.matchUCDs(self._table,ucds,True)
+        units = self._units
+        nameCols.extend(metadata.matchUnits(self._table,units,True))
+        _set = set(nameCols)
+        nameCols = list(_set)
+        for field in self._table.fields():
+            for name in nameCols:
+                if field.name is name:
+                    ucd = field.ucd
+                    unit = field.unit
+                    self._columns.append( (name,ucd,unit) )
+        
     def summary(self):
-        out= {}
-        out['description']  = self.description()
-        out['url']          = self.url()
+        out = odict()
         out['title']        = self.title()
-        out['publisher']    = self.publisher()
+        out['url']          = self.url()
         out['ivoid']        = self.ivoid()
-        return out.copy()
+        out['publisher']    = self.publisher()
+        out['description']  = self.description()
+        out['columns_name'] = [ _ustr(col[0]) for col in self._columns ]
+        out['columns_ucd']  = [ _ustr(col[1]) for col in self._columns ]
+        out['columns_unit'] = [ _ustr(col[2]) for col in self._columns ]
+        return out
         
     def description(self):
         return self._record.get('description')
@@ -209,6 +252,7 @@ def selectCatalogs(records,ucds,units):
             _unwanted.append(cv)
             _progress[2][0] += '-'
             continue
+        cv.filterColumns()
         catalogues.append(cv)
         _progress[2][0] += 'o'
         cnt += 1
