@@ -1,0 +1,28 @@
+#%Module1.0#####################################################################
+##
+## Zyxw git repository modulefile
+##
+##
+proc ModulesHelp { } {
+  global version
+
+  puts stderr "\tAdds the git repository to the PYTHONPATH."
+}
+
+module-whatis	"Prepends library repository to PYTHONPATH."
+
+#Tcl
+set version 0.0.1-dev
+
+set home $::env(HOME)
+
+if { [module-info mode load] } {
+  prepend-path  PYTHONPATH  "$home/Projects/zyxw"
+  prepend-path  PATH        "$home/Projects/zyxw/scripts"
+}
+
+if { [module-info mode remove] } {
+  remove-path  PYTHONPATH  "$home/Projects/zyxw"
+  remove-path  PATH        "$home/Projects/zyxw/scripts"
+}
+
