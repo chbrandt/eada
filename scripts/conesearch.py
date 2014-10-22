@@ -3,12 +3,9 @@
 
 from zyxw.vo import conesearch as cs
 
+import logging
 import sys
 import string
-import logging
-logerr = logging.error
-logwrn = logging.warning
-logdbg = logging.debug
 import warnings
 warnings.simplefilter('ignore')
 
@@ -17,6 +14,9 @@ desc = """
     in a given catalog. To see the available catalogs use the '--list' option.
 """
 
+EXIT_OK     = 0
+EXIT_ERROR  = 1
+EXIT_EMPTY  = 10
 
 def list_catalogs(cp):
     """List the available catalogs"""
@@ -27,8 +27,6 @@ def list_catalogs(cp):
             print "| %-10s : %s" % (c,v)
         print ""
 
-# --
-
 def availableCatalogs(cp):
     """
     Get the names of the available catalogs
@@ -36,8 +34,6 @@ def availableCatalogs(cp):
     cats = [ k for k in cp.iterkeys() ]
     return cats
     
-# --
-
 def setupParserOptions(parser,cp):
     """
     Define command line options
@@ -47,24 +43,31 @@ def setupParserOptions(parser,cp):
     #  "url" directly.
     #
     group = parser.add_mutually_exclusive_group(required=True)
+    
     group.add_argument('--list', action='store_true',
                         help="Print the list os catalogs available for the search.")
+
     CATS = availableCatalogs(cp) if cp else []
     group.add_argument('--catalog', dest='cat', metavar='CATALOG',
                         choices = CATS,
                         help="Catalog to search for data. To see your choices use the '--list' option.")
+
     group.add_argument('--url', dest='url',
                         help="Service URL to query. To see some options use the '--list' option.")
 
     # (redundant) Group of options for better organize arguments
     #
     conesearch = parser.add_argument_group('Conesearch','Options for searching catalogues.')
+
     conesearch.add_argument('--ra', dest='ra', type=float, default=0,
                             help="Right Ascension of the object (in degrees by default)")
+
     conesearch.add_argument('--dec', dest='dec', type=float, default=0,
                             help="Declination of the object (in degrees by default)")
+
     conesearch.add_argument('--radius', type=float, dest='radius', default=0.00001,
                             help="Radius (around RA,DEC) to search for object(s)",)
+
     conesearch.add_argument('--runit', dest='runit', metavar='unit', default='degree',
                             choices=['degree','arcmin','arcsec'],
                             help="Unit for radius value. Choices are 'degree','arcmin','arcsec'.")
@@ -84,38 +87,13 @@ def setupParserOptions(parser,cp):
     return parser
 
 # --
-
-def argumentsOK(args):
-    """Check if basic arguments were given"""
-
-    OK = True
-    if args.ra is None:
-        print(" RA not provided.")
-        OK = False
-    if args.dec is None:
-        print(" DEC not provided.")
-        OK = False
-    if args.radius is None:
-        print(" Radius not provided.")
-        OK = False
-    if args.runit is None:
-        print(" Radius unit (runit) not provided.")
-        OK = False
-    if not (args.cat or args.url):
-        print(" Catalog/url not provided.")
-        OK = False
-
-    return OK
-
-# --
-
 def parseArguments(args,cp):
     
     from astropy import units
     
     ra = args.ra
     dec = args.dec
-    logdbg('RA:%s , DEC:%s', ra, dec)
+    logging.debug('RA:%s , DEC:%s', ra, dec)
     
     radius = args.radius
     ru = ''
@@ -126,10 +104,11 @@ def parseArguments(args,cp):
     elif args.runit == 'arcsec':
         ru = units.arcsec
     else:
-        logerr("Radius' unit is not valid. Use 'degree', 'arcmin' or 'arcsec'.")
-        sys.exit(1)
+        logging.error("Radius' unit is not valid. Use 'degree', 'arcmin' or 'arcsec'.")
+        sys.exit(EXIT_ERROR)
+        
     rad = radius*ru
-    logdbg('Radius %s', rad)
+    logging.debug('Radius %s', rad)
     radius = rad.to(units.degree).value # convert the given radius to degrees
     del rad
 
@@ -144,10 +123,10 @@ def parseArguments(args,cp):
     if args.cat:
         cat = args.cat
         url = cp.get(cat)['url']
-        logdbg("Catalog (%s) url: %s", cat, url)
+        logging.debug("Catalog (%s) url: %s", cat, url)
     else:
         url = args.url
-        logdbg("URL to search for sources: %s", url)
+        logging.debug("URL to search for sources: %s", url)
 
     if args.cols:
         if 'asdc' in args.cols:
@@ -164,7 +143,7 @@ def parseArguments(args,cp):
             cols = args.cols
     else:
         cols = []
-    logdbg("Columns to output: %s", cols)
+    logging.debug("Columns to output: %s", cols)
 
     return ra,dec,radius,url,cols
 
@@ -193,12 +172,14 @@ if __name__ == '__main__':
     args,unknown = parser.parse_known_args(sys.argv[:])
 
     # Start the logging
-    if args.log:
+    if not args.log:
+        logging.disable(logging.WARNING)
+#        logging.basicConfig(format='[%(filename)s:%(funcName)20s] %(message)s',
+#                            level=logging.INFO)
+    else:
         logging.basicConfig(filename=args.log, filemode='w',
                             format='[%(filename)s:%(funcName)20s] %(message)s',
-                            level=logging.DEBUG)
-    else:
-        logging.disable(logging.NOTSET)
+                            level=logging.NOTSET)
 
     # Read the db/config file
     import os
@@ -206,7 +187,7 @@ if __name__ == '__main__':
     if args.dbfile:
         dbfile = os.path.abspath(args.dbfile)
     else:
-        logwrn("No DB file given. Using package's default.")
+        logging.warning("No DB file given. Using package's default.")
         import inspect
         dbfile = os.path.join(os.path.dirname(inspect.getfile(cs)), cs.CFGFILE)
         
@@ -216,53 +197,74 @@ if __name__ == '__main__':
         cp = None
     # --------------------------------------------------------------------------
     
+    # Parse the arguments
     parser = setupParserOptions(parser,cp)
-    if not cp:
+    args = parser.parse_args()
+    
+    if not (cp or args.url):
         parser.print_help()
         sys.exit(os.EX_IOERR)
         
-    # Parse the arguments
-    args = parser.parse_args()
-    
     if args.list:
         list_catalogs(cp)
-        sys.exit(0)
+        sys.exit(os.EX_OK)
 
+    # ---
+    def argumentsOK(args):
+        """Check if basic arguments were given"""
+        OK = True
+        if args.ra is None:
+            print(" RA not provided.")
+            OK = False
+        if args.dec is None:
+            print(" DEC not provided.")
+            OK = False
+        if args.radius is None:
+            print(" Radius not provided.")
+            OK = False
+        if args.runit is None:
+            print(" Radius unit (runit) not provided.")
+            OK = False
+        if not (args.cat or args.url):
+            print(" Catalog/url not provided.")
+            OK = False
+        return OK
+    # ---
     if not argumentsOK(args):
-        sys.exit(1)
+        sys.exit(EXIT_ERROR)
         
     # Parse the arguments
     ra,dec,radius,url,cols = parseArguments(args,cp)
     
     # Now, the main function does the search and columns filtering...
-    out = cs.main(ra,dec,radius,url,cols)
-    if not out is None:
-        table,nrows = out
-    else:
+    table = cs.main(ra,dec,radius,url,cols)
+    if table is None:
         if args.short:
             print "Failed"
         else:
             print "---"
             print "\033[91mNot able to access data for source in archive %s\033[0m" % (url)
             print "---"
-        sys.exit(1)
+        sys.exit(EXIT_ERROR)
+    
+    nrows = len(table)
     
     if args.short:
         print "Number of sources found %d" % nrows
-        sys.exit()
+        sys.exit(EXIT_OK)
     
     if nrows == 0:
         print "---"
-        print " No sources found. No output generated."
+        print "\033[91mNo sources found. No output generated.\033[0m"
         print "---"
-        sys.exit(1)
+        sys.exit(EXIT_EMPTY)
         
     outfile = args.outfile
     if args.outfile is '':
-        logwrn("An empty name for output filename was given.")
+        logging.warning("An empty name for output filename was given.")
         outfile = str(ra)+'_'+str(dec)+'_'+str(radius)+'.csv'
-        logwrn("Filename for the output: %s" % outfile)
-    logdbg("Output file %s",outfile)
+        logging.warning("Filename for the output: %s" % outfile)
+    logging.debug("Output file %s",outfile)
     
     if outfile:
         table.write(outfile,format='ascii',delimiter=',')
@@ -272,5 +274,5 @@ if __name__ == '__main__':
     table.pprint(max_width=-1)
     print "---"
 
-    sys.exit()
+    sys.exit(EXIT_OK)
     
