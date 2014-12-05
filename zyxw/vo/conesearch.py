@@ -4,11 +4,12 @@ from zyxw import *
 
 from astropy.table.table import Table
 
-CFGFILE='conesearch.cfg'
-TIMEOUT=20
+TIMEOUT=10
 
 # --
 class Aux:
+    
+    @staticmethod
     def filter_columns(table,columns):
         """
         Verify whether given column names do exist in 'table'

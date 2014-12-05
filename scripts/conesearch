@@ -14,6 +14,8 @@ desc = """
     in a given catalog. To see the available catalogs use the '--list' option.
 """
 
+CFGFILE='conesearch.cfg'
+
 EXIT_OK     = 0
 EXIT_ERROR  = 1
 EXIT_EMPTY  = 10
@@ -189,7 +191,7 @@ if __name__ == '__main__':
     else:
         logging.warning("No DB file given. Using package's default.")
         import inspect
-        dbfile = os.path.join(os.path.dirname(inspect.getfile(cs)), cs.CFGFILE)
+        dbfile = os.path.join(os.path.dirname(__file__), CFGFILE)
         
     if os.path.exists(dbfile):
         cp = config.read_ini(dbfile)

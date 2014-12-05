@@ -27,12 +27,6 @@ else:
     import __builtin__ as builtins
 builtins._ASTROPY_SETUP_ = True
 
-#import astropy
-#from astropy.setup_helpers import (register_commands, adjust_compiler,
-#                                   filter_packages, update_package_files,
-#                                   get_debug_option)
-#from astropy.version_helpers import get_git_devstr, generate_version_py
-
 # Set affiliated package-specific settings
 PACKAGENAME = 'zyxw'
 DESCRIPTION = 'Package for dealing with astronomical data processing'
@@ -44,7 +38,7 @@ higher level interfaces -- you can call it workflows -- for other libraries
 
 AUTHOR = 'Carlos H. Brandt'
 AUTHOR_EMAIL = 'carlos.brandt@asdc.asi.it'
-LICENSE = 'BSD'
+LICENSE = 'GPL'
 URL = ''
 
 # VERSION should be PEP386 compatible (http://www.python.org/dev/peps/pep-0386)
@@ -54,14 +48,13 @@ VERSION = '0.0.1.dev'
 RELEASE = 'dev' not in VERSION
 
 # Treat everything in scripts except README.rst as a script to be installed
-scripts = [fname for fname in glob.glob(os.path.join('scripts', '*'))
-           if os.path.basename(fname) != 'README.rst']
+scripts = [fname for fname in glob.glob(os.path.join('scripts', '*'))]
 
 # Additional C extensions that are not Cython-based should be added here.
 extensions = []
 
 # A dictionary to keep track of all package data to install
-package_data = {PACKAGENAME: ['data/*']}
+package_data = {PACKAGENAME: [os.path.join('data','*')]}
 
 # A dictionary to keep track of extra packagedir mappings
 package_dirs = {}
