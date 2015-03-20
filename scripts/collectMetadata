@@ -19,15 +19,37 @@ from zyxw.vo.conesearch import conesearch
 import warnings
 warnings.simplefilter('ignore')
 
-class UCDs(ucd.UCDWords):
-    '''Define a function to return the list of UCD words currently in use'''
-    def words(self,prefix=None):
-        vals = self._capitalization.values()
-        if prefix:
-            assert(prefix in self._capitalization.keys())
-            vals = [ str(w) for w in vals if string.find(w,prefix)==0 ]
-        vals.sort()
-        return vals
+class Config:
+
+    class WaveBands:
+        # Wavebands found on USVAO conesearch services. Values were collected from
+        #  the JSON files created by Astropy's function 'check_conesearch_sites'.
+        _usvo = set(['EUV',
+                     'Gamma-ray',
+                     'Infrared',
+                     'Optical',
+                     'Radio',
+                     'UV',
+                     'X-ray'])
+
+        def set(self):
+            return self._usvo
+
+
+    class UCDs(ucd.UCDWords):
+        # UCDs defined by ivoa [ http://cdsweb.u-strasbg.fr/UCD/ ]
+        #
+        def words(self,prefix=None):
+            vals = self._capitalization.values()
+            if prefix:
+                assert(prefix in self._capitalization.keys())
+                vals = [ str(w) for w in vals if string.find(w,prefix)==0 ]
+            #vals.sort()
+            return vals
+
+        def set(self):
+            _set = self.words()
+            return set(_set)
 
 def getUCD(SCSresult):
     """Returns a list with all (valid) UCDs from a table"""
@@ -52,94 +74,114 @@ def isAlpha(s):
         return True
     return False
 
-# Wavebands found on USVAO conesearch services. Values were collected from
-#  the JSON files created by Astropy's function 'check_conesearch_sites'.
-WAVEBANDS = ['EUV',
-             'Gamma-ray',
-             'Infrared',
-             'Optical',
-             'Radio',
-             'UV',
-             'X-ray']
-             
+
+
+class JSON:
+
+    def read(jsonfile):
+        """
+        Reads a json file with a 'catalogs' entry, which is returned,
+        otherwise False is returned.
     
-def main(jsonFilename):
-    '''
+        - jsonfile : filename
+        """
+        _key = 'catalogs'
+        try:
+            fp = open(jsonfile)
+            jfile = json.load(fp)
+        except:
+            return None
+
+        if not jfile.has_key(_key):
+            return False
+
+        catalogs = jfile[_key]
+        return catalogs
+
+class Strct:
+
+    class CatalogServices(dict):
+
+        def __init__(self,name=None):
+            self['name'] = name if name else []
+            self['unknown'] = []
+
+        def initFilters(self,initVal=[],confObj):
+            for o in confObj.set():
+                self[o] = initVal
+
+        
+def filterCatalogs(jsonFilename):
+    """
     The JSON file given is the output from Astropy's validate service tool.
     The file contains a set of metadata which we are interested in. The aim 
     of this function is to read these data and build a (csv) file/table.
-    '''
+    """
     
     # First, open the json file
-    try:
-        fp = open(jsonFilename)
-        jfile = json.load(fp)
-        catalogs = jfile['catalogs']
-    except:
-        return False
-        
-    # Information will be stored here, at 'mdata'
-    mdata = OrderedDict()
-    # add an entrance for the service/catalog name
-    mdata['name'] = []
-    # entrances for the supported wavebands
-    for wb in WAVEBANDS:
-        mdata[wb] = []
-    # and entrances for the related UCDs
-    ucds = UCDs()
-    for uw in ucds.words():
-        mdata[uw] = []
+    catalogs = JSON.read(jsonFilename)
 
-    mdata['unknown'] = []
+    # We need a structure to save the parameters of our interests.
+    # 'mdata' will hold the list of catalogs that succeed the filters applied,
+    # so far, "wavebands" and "ucds".
+    mdata = Strct.CatalogServices()
+    mdata.initFilters([],Config.WaveBands())
+    mdata.initFilters([],Config.UCDs())
 
     # Now, let's run over each catalog entry and get the data    
     for name,cat in catalogs.iteritems():
-        # create a temporary box for the current catalog's metadata
-        md = {}
-
-        # the name
-        md['name'] = str(name)
+        # Create a temporary box for the current catalog's metadata
+        md = Strct.CatalogServices(str(name))
+        md.initFilters(False,Config.WaveBands())
+        md.initFilters(False,Config.UCDs())
         
-        # the waveband; first, (null) initialize the entry
-        for wb in WAVEBANDS:
-            md[wb] = False
-        # ..and now, read it, clean and store
+        # Read catalogs' item; read its supported wavebands and
+        # then the ucds available:
+        # - first clean the #-separated string and split it
         s = re.sub('"','',str(cat['waveband']))
-        wband = ''
+        _wband = ''
         for _ in s:
-            wband += _ if isAlpha(_) else ','
-        wband = wband.split(',')
-        wband = [ w for w in wband if w ]
+            _wband += _ if isAlpha(_) else ','
+        _wband = _wband.split(',')
+        _wband = [ w for w in _wband if w ]
         unknown_wb = ''
-        for wb in wband:
-            if md.has_key(wb):
-                md[wb] = True
-            else:
-                unknown_wb = unknown_wb+','+wb if unknown_wb else wb
-            
-        # The UCDs
-        for uw in ucds.words():
-            md[uw] = False
+        # each known band will be flaged True
+        for wb in _wband:
+            if not md.has_key(wb):
+                unknown_wb += wb+','
+                continue
+            md[wb] = True
+        # - then the same for ucds, but now they have to be read from the 
+        # catalog table's metadata, which has to be retrieved from the service 
         url = str(cat['url'])
+        print("Searching %s" % (cat['title']))
         try:
-            print("Searching %s" % (cat['title']))
-            res = conesearch(0,0,0.0001,url)
+            res = conesearch(0,0,0.0001,url)  # Null search for metadata only
         except:
             continue
         if res is None:
+            print("Not a valid table returned.")
             continue
+
         resUCDs = getUCD(res)
         unknown_ucd = ''
         for uw in resUCDs:
-            if md.has_key(uw):
-                md[uw] = True
-            else:
-                unknown_ucd = unknown_ucd+','+uw if unknown_ucd else uw
+            if not md.has_key(uw):
+                unknown_ucd += uw+','
+                continue
+            md[uw] = True
             
+        # Add the verification-value for this catalog to the respective
+        # entries in the master data structure 'mdata'
+        assert(md.keys()==mdata.keys())
         for k in md.keys():
+            assert(isinstance(list,mdata[k]))
             mdata[k].append(md[k])
-        unknown = '#waveband:'+','+unknown_wb
-        unknown += '#ucd:'+','+unknown_ucd
+
+        # Unknown filters (waveband,ucd) go to the so named key, as 
+        # a comma-separated string
+        unknown = '#waveband:'+','+ unknown_wb.strip(',')
+        unknown += '#ucd:'+','+ unknown_ucd.strip(',')
         mdata['unknown'].append(unknown)
 
     tab = Table(mdata)
