@@ -53,7 +53,7 @@ class Aux:
         return cols
 
     @staticmethod
-    def open_file(file,format):
+    def open_spec(file,format):
         """
         Read table from FITS/VOTable file
         """
@@ -69,6 +69,7 @@ class Aux:
             print("Format {} not supported (using Astropy's Table).".format(format))
         return tab
 
+    @staticmethod
     def options(key):
         _options = {
             'format' : """
@@ -87,6 +88,7 @@ class Aux:
             print("Don't know such option. Can be a typo or I'm missing it. Check the docs.")
         print _options[key]
 
+    @staticmethod
     def resolve_name(name):
         """
         Resolve object name, return its ICRS position in degrees
@@ -99,11 +101,13 @@ class Aux:
             pos = None
         return pos
 
-    def download_spec(record,dir='/tmp/ssafiles'):
+    @staticmethod
+    def download_spec(record,dir='ssafiles'):
         from os import mkdir
         from os import path
         f = record.format
-        mkdir(dir)
+        if not path.isdir(dir):
+            mkdir(dir)
         record.cachedataset(dir=dir)
         return path.join(dir,record.make_dataset_filename())
 
@@ -168,10 +172,13 @@ def specsearch(ra,dec,radius,url,format=None,timeout=None):
     return res
 
 def concatenate_tables(tables):
+    """
+    Concatenate (columns) of given tables
+    """
     from astropy.table import vstack
     tab = vstack(tables, join_type='outer')
     return tab
-    
+
 # --
 def main(ra,dec,radius,url,columns=[]):
     """
@@ -230,5 +237,5 @@ def main(ra,dec,radius,url,columns=[]):
         cols = Aux.filter_columns(tab,columns)
         tab.keep_columns(cols)
 
-    logging.info("Retrieved table has %d objects, %d columns." % (nobjs,len(tab.colnames)))
+    logging.info("Retrieved table has %d objects, %d columns." % (len(tab),len(tab.colnames)))
     return tab

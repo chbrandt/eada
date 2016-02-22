@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-from zyxw.vo import conesearch as cs
+from eada.vo import conesearch as cs
 
 import logging
 import sys
@@ -10,7 +10,7 @@ import warnings
 warnings.simplefilter('ignore')
 
 desc = """
-    This script searchs for sources in a given position (RA,DEC) and radius (R) 
+    This script searchs for sources in a given position (RA,DEC) and radius (R)
     in a given catalog. To see the available catalogs use the '--list' option.
 """
 
@@ -35,7 +35,7 @@ def availableCatalogs(cp):
     """
     cats = [ k for k in cp.iterkeys() ]
     return cats
-    
+
 def setupParserOptions(parser,cp):
     """
     Define command line options
@@ -45,7 +45,7 @@ def setupParserOptions(parser,cp):
     #  "url" directly.
     #
     group = parser.add_mutually_exclusive_group(required=True)
-    
+
     group.add_argument('--list', action='store_true',
                         help="Print the list os catalogs available for the search.")
 
@@ -83,20 +83,20 @@ def setupParserOptions(parser,cp):
                          If not given, all columns will be output.")
     output.add_argument('--short', action='store_true',
                         help="Just outputs if at least one source was found.")
-    output.add_argument('-o','--outfile', dest='outfile', nargs='?', const='', 
+    output.add_argument('-o','--outfile', dest='outfile', nargs='?', const='',
                         default=None, help="Filename to write the output, CSV format table file.")
 
     return parser
 
 # --
 def parseArguments(args,cp):
-    
+
     from astropy import units
-    
+
     ra = args.ra
     dec = args.dec
     logging.debug('RA:%s , DEC:%s', ra, dec)
-    
+
     radius = args.radius
     ru = ''
     if args.runit == 'degree':
@@ -108,7 +108,7 @@ def parseArguments(args,cp):
     else:
         logging.error("Radius' unit is not valid. Use 'degree', 'arcmin' or 'arcsec'.")
         sys.exit(EXIT_ERROR)
-        
+
     rad = radius*ru
     logging.debug('Radius %s', rad)
     radius = rad.to(units.degree).value # convert the given radius to degrees
@@ -185,28 +185,28 @@ if __name__ == '__main__':
 
     # Read the db/config file
     import os
-    from zyxw.io import config
+    from eada.io import config
     if args.dbfile:
         dbfile = os.path.abspath(args.dbfile)
     else:
         logging.warning("No DB file given. Using package's default.")
         import inspect
         dbfile = os.path.join(os.path.dirname(__file__), CFGFILE)
-        
+
     if os.path.exists(dbfile):
         cp = config.read_ini(dbfile)
     else:
         cp = None
     # --------------------------------------------------------------------------
-    
+
     # Parse the arguments
     parser = setupParserOptions(parser,cp)
     args = parser.parse_args()
-    
+
     if not (cp or args.url):
         parser.print_help()
         sys.exit(os.EX_IOERR)
-        
+
     if args.list:
         list_catalogs(cp)
         sys.exit(os.EX_OK)
@@ -234,10 +234,10 @@ if __name__ == '__main__':
     # ---
     if not argumentsOK(args):
         sys.exit(EXIT_ERROR)
-        
+
     # Parse the arguments
     ra,dec,radius,url,cols = parseArguments(args,cp)
-    
+
     # Now, the main function does the search and columns filtering...
     table = cs.main(ra,dec,radius,url,cols)
     if table is None:
@@ -248,33 +248,32 @@ if __name__ == '__main__':
             print "\033[91mNot able to access data for source in archive %s\033[0m" % (url)
             print "---"
         sys.exit(EXIT_ERROR)
-    
+
     nrows = len(table)
-    
+
     if args.short:
         print "Number of sources found %d" % nrows
         sys.exit(EXIT_OK)
-    
+
     if nrows == 0:
         print "---"
         print "\033[91mNo sources found. No output generated.\033[0m"
         print "---"
         sys.exit(EXIT_EMPTY)
-        
+
     outfile = args.outfile
     if args.outfile is '':
         logging.warning("An empty name for output filename was given.")
         outfile = str(ra)+'_'+str(dec)+'_'+str(radius)+'.csv'
         logging.warning("Filename for the output: %s" % outfile)
     logging.debug("Output file %s",outfile)
-    
+
     if outfile:
         table.write(outfile,format='ascii',delimiter=',')
-    
+
     print "---"
-    print " Table retrieved:"    
+    print " Table retrieved:"
     table.pprint(max_width=-1)
     print "---"
 
     sys.exit(EXIT_OK)
-    

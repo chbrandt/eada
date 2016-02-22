@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-from zyxw.vo import conesearch as cs
+from eada.vo import specsearch as ss
 
 import logging
 import sys
@@ -10,17 +10,17 @@ import warnings
 warnings.simplefilter('ignore')
 
 desc = """
-    This script searchs for sources in a given position (RA,DEC) and radius (R)
-    in a given catalog. To see the available catalogs use the '--list' option.
+    This script searchs for datasets in a given position (RA,DEC) and radius (R)
+    in a given SSA service. To see the available services use the '--list' option.
 """
 
-CFGFILE='conesearch.cfg'
+CFGFILE='specsearch.cfg'
 
 EXIT_OK     = 0
 EXIT_ERROR  = 1
 EXIT_EMPTY  = 10
 
-def list_catalogs(cp):
+def list_services(cp):
     """List the available catalogs"""
 
     for k,d in cp.iteritems():
@@ -29,7 +29,7 @@ def list_catalogs(cp):
             print "| %-10s : %s" % (c,v)
         print ""
 
-def availableCatalogs(cp):
+def availableServices(cp):
     """
     Get the names of the available catalogs
     """
@@ -49,28 +49,28 @@ def setupParserOptions(parser,cp):
     group.add_argument('--list', action='store_true',
                         help="Print the list os catalogs available for the search.")
 
-    CATS = availableCatalogs(cp) if cp else []
-    group.add_argument('--catalog', dest='cat', metavar='CATALOG',
+    CATS = availableServices(cp) if cp else []
+    group.add_argument('--service', dest='cat', metavar='SERVICE',
                         choices = CATS,
-                        help="Catalog to search for data. To see your choices use the '--list' option.")
+                        help="Service to search for data. To see your choices use the '--list' option.")
 
     group.add_argument('--url', dest='url',
                         help="Service URL to query. To see some options use the '--list' option.")
 
     # (redundant) Group of options for better organize arguments
     #
-    conesearch = parser.add_argument_group('Conesearch','Options for searching catalogues.')
+    specsearch = parser.add_argument_group('Specsearch','Options for searching catalogues.')
 
-    conesearch.add_argument('--ra', dest='ra', type=float, default=0,
+    specsearch.add_argument('--ra', dest='ra', type=float, default=0,
                             help="Right Ascension of the object (in degrees by default)")
 
-    conesearch.add_argument('--dec', dest='dec', type=float, default=0,
+    specsearch.add_argument('--dec', dest='dec', type=float, default=0,
                             help="Declination of the object (in degrees by default)")
 
-    conesearch.add_argument('--radius', type=float, dest='radius', default=0.00001,
+    specsearch.add_argument('--radius', type=float, dest='radius', default=0.00001,
                             help="Radius (around RA,DEC) to search for object(s)",)
 
-    conesearch.add_argument('--runit', dest='runit', metavar='unit', default='degree',
+    specsearch.add_argument('--runit', dest='runit', metavar='unit', default='degree',
                             choices=['degree','arcmin','arcsec'],
                             help="Unit for radius value. Choices are 'degree','arcmin','arcsec'.")
 
@@ -117,15 +117,15 @@ def parseArguments(args,cp):
     assert(cp)
     assert(args.cat or args.url)
     if not args.url and args.cat not in cp.keys():
-        logging.critical("Wrong catalog name: %s", args.cat)
-        print "Given catalog ('%s') is not known. Try a valid one (-h)." % (args.cat)
+        logging.critical("Wrong service name: %s", args.cat)
+        print "Given service ('%s') is not known. Try a valid one (-h)." % (args.cat)
         print "Finishing here."
         sys.exit(1)
 
     if args.cat:
         cat = args.cat
         url = cp.get(cat)['url']
-        logging.debug("Catalog (%s) url: %s", cat, url)
+        logging.debug("Service (%s) url: %s", cat, url)
     else:
         url = args.url
         logging.debug("URL to search for sources: %s", url)
@@ -164,8 +164,8 @@ if __name__ == '__main__':
 
     # Log
     #
-    parser.add_argument('--log', nargs='?', const='conesearch.log', default=None,
-                        help="Do *not* log the events of the script. By default all events are written to 'conesearch.log' file.")
+    parser.add_argument('--log', nargs='?', const='specsearch.log', default=None,
+                        help="Do *not* log the events of the script. By default all events are written to 'specsearch.log' file.")
 
     # --------------------------------------------------------------------------
     # Here we have a hack to read the content of the db file
@@ -185,7 +185,7 @@ if __name__ == '__main__':
 
     # Read the db/config file
     import os
-    from zyxw.io import config
+    from eada.io import config
     if args.dbfile:
         dbfile = os.path.abspath(args.dbfile)
     else:
@@ -208,7 +208,7 @@ if __name__ == '__main__':
         sys.exit(os.EX_IOERR)
 
     if args.list:
-        list_catalogs(cp)
+        list_services(cp)
         sys.exit(os.EX_OK)
 
     # ---
@@ -228,7 +228,7 @@ if __name__ == '__main__':
             print(" Radius unit (runit) not provided.")
             OK = False
         if not (args.cat or args.url):
-            print(" Catalog/url not provided.")
+            print(" Service/url not provided.")
             OK = False
         return OK
     # ---
@@ -239,7 +239,7 @@ if __name__ == '__main__':
     ra,dec,radius,url,cols = parseArguments(args,cp)
 
     # Now, the main function does the search and columns filtering...
-    table = cs.main(ra,dec,radius,url,cols)
+    table = ss.main(ra,dec,radius,url,cols)
     if table is None:
         if args.short:
             print "Failed"
@@ -277,4 +277,3 @@ if __name__ == '__main__':
     print "---"
 
     sys.exit(EXIT_OK)
-    
