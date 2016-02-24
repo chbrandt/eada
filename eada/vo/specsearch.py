@@ -10,7 +10,7 @@ TIMEOUT=10
 class Aux:
 
     @staticmethod
-    def filter_columns(table,columns):
+    def enrich_columns(table,ssa_record,ssa_columns):
         """
         Verify whether given column names do exist in 'table'
 
@@ -159,7 +159,7 @@ def specsearch(ra,dec,radius,url,format=None,timeout=None):
     q.size = radius
     if format:
         q.format = format
-
+    q.verbosity = 3
     try:
         res = q.execute()
     except query.DALServiceError as e:
@@ -224,6 +224,11 @@ def main(ra,dec,radius,url,columns=[]):
         tab = Aux.open_spec(filecache,format)
         if tab is None:
             continue
+        # Garantee we don't have empty column names and names that match tble ones..
+        if columns:
+            cols = Aux.enrich_columns(tab,rec,columns)
+            tab.keep_columns(cols)
+
         tables.append(tab)
 
     if len(tables) == 0:
@@ -231,11 +236,6 @@ def main(ra,dec,radius,url,columns=[]):
         return None
 
     tab = concatenate_tables(tables)
-
-    # Garantee we don't have empty column names and names that match tble ones..
-    if columns:
-        cols = Aux.filter_columns(tab,columns)
-        tab.keep_columns(cols)
 
     logging.info("Retrieved table has %d objects, %d columns." % (len(tab),len(tab.colnames)))
     return tab
