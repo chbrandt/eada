@@ -131,7 +131,7 @@ def parseArguments(args,cp):
         logging.debug("URL to search for sources: %s", url)
 
     if args.cols:
-        if 'asdc' in args.cols:
+        if 'default' in args.cols:
             if args.url:
                 cols = []
             else:

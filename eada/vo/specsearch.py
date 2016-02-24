@@ -3,7 +3,7 @@
 from eada import *
 
 from astropy.table.table import Table
-
+from pyvo.dal.ssa import SSARecord
 TIMEOUT=10
 
 # --
@@ -28,28 +28,39 @@ class Aux:
         Output:
          - [str]
              List of column names matching table' columns.
-
         """
-        assert(isinstance(table,Table))
-        assert(isinstance(columns,list))
+        def create_column_from_value(value,length,name):
+            from astropy.table import Column
+            col = Column([value]*length,name=name)
+            return col
 
-        tcols = table.colnames
-        logging.debug("Table columns: %s" % tcols)
+        assert isinstance(table,Table)
+        assert isinstance(ssa_columns,list)
+        assert isinstance(ssa_record,SSARecord)
+        columns = ssa_columns
+        record = ssa_record
+
+        rcols = record.keys()
+        logging.debug("Table columns: %s" % ','.join(rcols))
+
+        leng = len(table)
 
         cols = []
         for i,col in enumerate(columns):
-            assert(isinstance(col,str))
+            assert isinstance(col,str)
             c = col.strip()
+            del col
             if not c:
                 logging.warning("Empty column name at position %d" % i)
                 continue
-            del c
-            if not col in tcols:
-                logging.warning("Column name '%s' not found in table" % col)
+            if not c in rcols:
+                logging.warning("Column name '%s' not found in table" % c)
                 continue
-            cols.append(col)
+            val = record.get(c,None)
+            cols.append( create_column_from_value(val,leng,name=c))
 
         logging.debug("Selected columns: %s" % cols)
+
         return cols
 
     @staticmethod
@@ -227,7 +238,7 @@ def main(ra,dec,radius,url,columns=[]):
         # Garantee we don't have empty column names and names that match tble ones..
         if columns:
             cols = Aux.enrich_columns(tab,rec,columns)
-            tab.keep_columns(cols)
+            tab.add_columns(cols)
 
         tables.append(tab)
 
