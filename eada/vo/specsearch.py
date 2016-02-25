@@ -70,12 +70,12 @@ class Aux:
         """
         from astropy.table import Table
         tab = None
-        if format is 'fits':
+        if 'fits' in format:
             # I am assuming the table of interest it at the first BinTableHDU
             hdu_index = 1
-            tab = Table.read(file,format=format,hdu=hdu_index)
-        elif format is 'votable':
-            tab = Table.read(file,format=format)
+            tab = Table.read(file,format='fits',hdu=hdu_index)
+        elif 'votable' in format:
+            tab = Table.read(file,format='votable')
         else:
             print("Format {} not supported (using Astropy's Table).".format(format))
         return tab
@@ -152,7 +152,7 @@ def specsearch(ra,dec,radius,url,format=None,timeout=None):
     db_url = url
 
     logging.debug("Position (%s,%s) and radius (%s), in degrees" %(ra, dec, radius))
-    logging.debug("URL (%s) and timeout (%s)" % (url, timeout))
+    logging.debug("URL (%s), timeout (%s) and format (%s)" % (url, timeout, format))
 
     from pyvo.dal import ssa
     from pyvo.dal import query
@@ -168,8 +168,7 @@ def specsearch(ra,dec,radius,url,format=None,timeout=None):
     q = ssa.SSAQuery(url)
     q.pos = (ra,dec)
     q.size = radius
-    if format:
-        q.format = format
+    q.format = format
     q.verbosity = 3
     try:
         res = q.execute()
@@ -191,7 +190,7 @@ def concatenate_tables(tables):
     return tab
 
 # --
-def main(ra,dec,radius,url,columns=[]):
+def main(ra,dec,radius,url,columns=[],format=None):
     """
     Query SSA service and return a 'columns'-filtered table
 
@@ -216,8 +215,14 @@ def main(ra,dec,radius,url,columns=[]):
     logging.info("Position (%s,%s) and radius (%s), in degrees" %(ra, dec, radius))
     logging.info("URL (%s) and columns (%s)"%(url, columns))
 
-    #TODO: support object name resolution
-    ssaTab = specsearch(ra,dec,radius,url)
+    if 'fits' in format:
+        format = 'image/fits'
+    elif 'votable' in format:
+        format = 'votable'
+    else:
+        format = None
+
+    ssaTab = specsearch(ra,dec,radius,url,format=format)
     if ssaTab is None:
         logging.error("Search failed to complete. Service not working properly. Exiting")
         return None
@@ -226,12 +231,7 @@ def main(ra,dec,radius,url,columns=[]):
     tables = []
     for rec in ssaTab:
         filecache = Aux.download_spec(rec)
-        if 'fits' in rec.format:
-            format = 'fits'
-        elif 'votable' in rec.format:
-            format = 'votable'
-        else:
-            format = None
+        print("FORMAT:",rec.format)
         tab = Aux.open_spec(filecache,format)
         if tab is None:
             continue

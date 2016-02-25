@@ -74,6 +74,12 @@ def setupParserOptions(parser,cp):
                             choices=['degree','arcmin','arcsec'],
                             help="Unit for radius value. Choices are 'degree','arcmin','arcsec'.")
 
+    # Options for temp/intermediate spectral dataset
+    #
+    cache = parser.add_argument_group('Spectra','Options for spectra data/file handling.')
+    cache.add_argument('--format', dest='format', metavar='fileformat', default='all',
+                        choices=['fits','votable','all'],
+                        help="Spectral file type to download/cache. Choices are 'fits','votable','all'.")
     # Output generation options
     #
     output = parser.add_argument_group('Output','Options for output generation.')
@@ -147,7 +153,7 @@ def parseArguments(args,cp):
         cols = []
     logging.debug("Columns to output: %s", cols)
 
-    return ra,dec,radius,url,cols
+    return ra,dec,radius,url,cols,args.format
 
 
 # Lets put a cli here, so that the script can work with free parameters
@@ -236,10 +242,10 @@ if __name__ == '__main__':
         sys.exit(EXIT_ERROR)
 
     # Parse the arguments
-    ra,dec,radius,url,cols = parseArguments(args,cp)
+    ra,dec,radius,url,cols,frmt = parseArguments(args,cp)
 
     # Now, the main function does the search and columns filtering...
-    table = ss.main(ra,dec,radius,url,cols)
+    table = ss.main(ra,dec,radius,url,cols,frmt)
     if table is None:
         if args.short:
             print "Failed"
