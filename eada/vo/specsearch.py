@@ -168,7 +168,8 @@ def specsearch(ra,dec,radius,url,format=None,timeout=None):
     q = ssa.SSAQuery(url)
     q.pos = (ra,dec)
     q.size = radius
-    q.format = format
+    if format and format != 'all':
+        q.format = format
     q.verbosity = 3
     try:
         res = q.execute()
@@ -231,8 +232,7 @@ def main(ra,dec,radius,url,columns=[],format=None):
     tables = []
     for rec in ssaTab:
         filecache = Aux.download_spec(rec)
-        print("FORMAT:",rec.format)
-        tab = Aux.open_spec(filecache,format)
+        tab = Aux.open_spec(filecache,rec.format)
         if tab is None:
             continue
         # Garantee we don't have empty column names and names that match tble ones..
