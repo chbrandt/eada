@@ -119,9 +119,11 @@ class Aux:
         f = record.format
         if not path.isdir(dir):
             mkdir(dir)
-        record.cachedataset(dir=dir)
-        return path.join(dir,record.make_dataset_filename())
-
+        try:
+            record.cachedataset(dir=dir)
+            return path.join(dir,record.make_dataset_filename())
+        except:
+            return None
 
 # --
 def specsearch(ra,dec,radius,url,format=None,timeout=None):
@@ -232,11 +234,14 @@ def main(ra,dec,radius,url,columns=[],format=None):
     tables = []
     for rec in ssaTab:
         filecache = Aux.download_spec(rec)
+        if filecache is None:
+            continue
         tab = Aux.open_spec(filecache,rec.format)
         if tab is None:
             continue
         # Garantee we don't have empty column names and names that match tble ones..
         if columns:
+            print "if COLUMNS:",columns
             cols = Aux.enrich_columns(tab,rec,columns)
             tab.add_columns(cols)
 
