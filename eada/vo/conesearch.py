@@ -1,58 +1,12 @@
 #-*- coding:utf-8 -*-
 
 from eada import *
+from eada.io import table
+
+Aux = table.Aux
 
 from astropy.table.table import Table
 
-TIMEOUT=10
-
-# --
-class Aux:
-
-    @staticmethod
-    def filter_columns(table,columns):
-        """
-        Verify whether given column names do exist in 'table'
-
-         Columns (which is supposed to be a list of column names) should match with
-        table's contents. The columns that do not match with table's will simply
-        be discarded from the output list.
-
-        Note: empty column name is not allowed and will be discarded.
-
-        Input:
-         - table   : py:class:`~astropy.table.table.Table`
-         - columns : [str]
-             Column names to verify/match against table ones
-
-        Output:
-         - [str]
-             List of column names matching table' columns.
-
-        """
-        assert(isinstance(table,Table))
-        assert(isinstance(columns,list))
-
-        tcols = table.colnames
-        logging.debug("Table columns: %s" % tcols)
-
-        cols = []
-        for i,col in enumerate(columns):
-            assert(isinstance(col,str))
-            c = col.strip()
-            if not c:
-                logging.warning("Empty column name at position %d" % i)
-                continue
-            del c
-            if not col in tcols:
-                logging.warning("Column name '%s' not found in table" % col)
-                continue
-            cols.append(col)
-
-        logging.debug("Selected columns: %s" % cols)
-        return cols
-
-# --
 def conesearch(ra,dec,radius,url,timeout=None):
     """
     Search for objects inside the circle (ra,dec,radius) at given 'url'
@@ -106,7 +60,7 @@ def conesearch(ra,dec,radius,url,timeout=None):
 
     return res
 
-# --
+
 def main(ra,dec,radius,url,columns=[]):
     """
     Query Conesearch service and return a 'columns'-filtered table

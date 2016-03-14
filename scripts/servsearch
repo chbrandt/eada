@@ -30,7 +30,7 @@ units = ['h:m:s',
 
 desc = """
     Code to search (USVAO) registry for catalogue services.
-    It is hardcoded to look for catalogues providing spectral emission data;
+    It is hardcoded to look for catalogues providing photometric emission data;
     the columns/fields should present (any of) the following UCDs and units, resp:
 
     UCDs: %s
@@ -40,8 +40,8 @@ desc = """
 import sys
 import os
 
-from zyxw.vo import servsearch
-from zyxw.io import config
+from eada.vo import servsearch
+from eada.io import config
 
 import logging
 LOGLEVEL = logging.DEBUG
@@ -56,12 +56,12 @@ def writeCatalogs(catalogues,at=''):
         except:
             print >> sys.stderr, "Not able to create directory '%s'. Check your permissions." % at
             sys.exit(1)
-    
+
     try:
         fp = open(at+'/README.txt','w')
     except:
         print >> sys.stderr, "Not able to write to directory '%s'. Check your permissions." % at
-    
+
     print("\nCatologues selected [%d]:" % len(catalogues))
     out = {}
     for c in catalogues:
@@ -75,7 +75,7 @@ def writeCatalogs(catalogues,at=''):
                     f3 = unicode(f[3]).enconde('utf-8')
                     fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
     config.write_ini(out,at+'/CATALOGS.ini')
-    
+
 # Lets put a cli here, so that the script can work with free parameters
 #
 if __name__ == '__main__':
@@ -86,10 +86,10 @@ if __name__ == '__main__':
     parser.add_argument('band', metavar='waveband',
                         choices=servsearch.BANDS.keys(),
                         help='Waveband of interest to search for.')
-                        
+
     parser.add_argument('--keywords', nargs='?', action='store',
                         help='Special keywords to be found at catalogues.')
-                        
+
     # Log
     #
     parser.add_argument('--log', nargs='?', const='servsearch.log', default=None,
@@ -108,9 +108,8 @@ if __name__ == '__main__':
 
     _ucd = servsearch.BANDS[args.band]
     ucds = {_ucd:ucds}
-    
+
     # Run
     catalogues = servsearch.main(args.band, args.keywords, ucds, units)
-    
+
     writeCatalogs(catalogues,args.band)
-    

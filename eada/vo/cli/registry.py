@@ -25,12 +25,17 @@ class RegArguments(Arguments):
         self.parser.add_argument('--keywords',
                                 const=None, default=None,
                                 action='store',
-                                help='Keywords to be found (anywhere) in catalogues.')
+                                help='Keywords to be found (anywhere) in resources.')
 
         self.parser.add_argument('--ucds',
                                 const=None, default=None,
                                 action='store',
-                                help='UCDs to be found in catalogues.')
+                                help='UCDs to be found in resources.')
+
+        self.parser.add_argument('--units',
+                                const=None, default=None,
+                                action='store',
+                                help='Units to be found in resources.')
 
     def parse_arguments(self,args):
         super(RegArguments,self).parse_arguments(args)

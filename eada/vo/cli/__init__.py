@@ -15,17 +15,24 @@ class Arguments(object):
                                 help="Write a logfile. Default is 'vos.log'.")
 
     def parse_arguments(self,args):
-        args,unkn = self.parser.parse_args(args)
+        #args,unkn = self.parser.parse_args(args)
+        args = self.parser.parse_args(args)
         self.args = args
         self.setup_log()
 
+    def dargs(self):
+        return vars(self.args)
+
     def setup_log(self):
-        if self.args.log:
-            logging.basicConfig(filename=args.log, filemode='w',
+        if self.args.logfile:
+            logging.basicConfig(filename=args.logfile, filemode='w',
                                 format='[%(filename)s:%(funcName)20s] %(message)s',
                                 level=LOGLEVEL)
         else:
             logging.disable(logging.NOTSET)
+
+    def get(self,arg):
+        return self.args.get(arg)
 
 
 class Registry(object):
@@ -38,8 +45,12 @@ class Registry(object):
         from registry import RegArguments
         self.arguments = RegArguments(desc)
 
-    def parse_arguments(self,args):
+    def search(self,args):
+        from eada import vo as vos
         self.arguments.parse_arguments(args)
-
-    def main(self,args):
-        self.parse_arguments(args)
+        args = self.arguments.dargs()
+        wbs = args.get('wavebands')
+        kws = args.get('keywords')
+        ucds = args.get('ucds')
+        unts = args.get('units')
+        catalogues = vos.registry.search(wbs, kws, ucds, unts)

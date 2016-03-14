@@ -54,7 +54,7 @@ class VOSearch(object):
     def resources(self):
         reg = cli.Registry(description=_SUBCOMMANDS['resources'])
         _args = sys.argv[2:]
-        reg.main(_args)
+        reg.search(_args)
 
     def catalogs(self):
         from vos.cli.scs import SCS
