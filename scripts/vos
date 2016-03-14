@@ -1,0 +1,73 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+
+import argparse
+import sys
+
+from collections import OrderedDict
+
+class _Aux:
+    """Auxiliar functions namespace"""
+    @staticmethod
+    def plainDict(d):
+        """Flatten dictionary (to list)"""
+        res = []
+        for k,v in d.iteritems():
+            res.extend([k,v])
+        return res
+
+
+_SUBCOMMANDS = OrderedDict()
+_SUBCOMMANDS['resources'] = "Query registries for SCS/SSA resources"
+_SUBCOMMANDS['catalogs'] = "Search for object/position within SCS services"
+_SUBCOMMANDS['spectra'] = "Search for object/position within SSA services"
+
+_USAGE = """ vos <command> [<args>]
+
+Possible commands are:
+    {0:<20}{1}
+    {2:<20}{3}
+    {4:<20}{5}
+""".format(*_Aux.plainDict(_SUBCOMMANDS))
+
+from eada import vo as vos
+from eada.vo import cli
+
+class VOSearch(object):
+
+    def __init__(self):
+        parser = argparse.ArgumentParser(
+            description = 'Search VO resources',
+            usage = _USAGE)
+        parser.add_argument('command',
+                            help='Subcommand to run')
+        # parse_args defaults to [1:] for args, but you need to
+        # exclude the rest of the args too, or validation will fail
+        args = parser.parse_args(sys.argv[1:2])
+        if not hasattr(self, args.command):
+            print 'Unrecognized command'
+            parser.print_help()
+            exit(1)
+        # use dispatch pattern to invoke method with same name
+        getattr(self, args.command)()
+
+    def resources(self):
+        reg = cli.Registry(description=_SUBCOMMANDS['resources'])
+        _args = sys.argv[2:]
+        reg.main(_args)
+
+    def catalogs(self):
+        from vos.cli.scs import SCS
+        scs = SCS(description=_SUBCOMMANDS['catalogs'])
+        args = scs.parser.parse_args(sys.argv[2:])
+        print 'Arguments: ' % args
+
+    def spectra(self):
+        from vos.cli.ssa import SSA
+        ssa = SSA(description=_SUBCOMMANDS['spectra'])
+        args = ssa.parser.parse_args(sys.argv[2:])
+        print 'Arguments: ' % args
+
+
+if __name__ == '__main__':
+    VOSearch()
