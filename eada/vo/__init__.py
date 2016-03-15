@@ -1,10 +1,11 @@
 import pyvo
 
-from pyvo.dal.query import DALQueryError,DALServiceError
-
 import constants
 
-import servsearch as registry
+import registry
+import scs
+
+from pyvo.dal.query import DALQueryError,DALServiceError
 
 class ServiceError(DALServiceError):
     def __init__(self):

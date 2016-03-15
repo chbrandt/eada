@@ -8,7 +8,7 @@ from pyvo.dal.ssa import SSARecord
 from eada.io import table
 Aux = table.Aux
 
-def main(ra,dec,radius,url,columns=[],format=None,cachedir=None):
+def search(ra,dec,radius,url,columns=[],format=None,cachedir=None):
     """
     Query SSA service and return a 'columns'-filtered table
 

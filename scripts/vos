@@ -1,11 +1,6 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import argparse
-import sys
-
-from collections import OrderedDict
-
 class _Aux:
     """Auxiliar functions namespace"""
     @staticmethod
@@ -17,6 +12,7 @@ class _Aux:
         return res
 
 
+from collections import OrderedDict
 _SUBCOMMANDS = OrderedDict()
 _SUBCOMMANDS['resources'] = "Query registries for SCS/SSA resources"
 _SUBCOMMANDS['catalogs'] = "Search for object/position within SCS services"
@@ -30,44 +26,86 @@ Possible commands are:
     {4:<20}{5}
 """.format(*_Aux.plainDict(_SUBCOMMANDS))
 
-from eada import vo as vos
-from eada.vo import cli
+#from eada import vo as vos
 
 class VOSearch(object):
 
-    def __init__(self):
+    def __init__(self,argv):
+        import argparse
         parser = argparse.ArgumentParser(
-            description = 'Search VO resources',
-            usage = _USAGE)
+                            description = 'Search VO resources',
+                            usage = _USAGE)
         parser.add_argument('command',
                             help='Subcommand to run')
         # parse_args defaults to [1:] for args, but you need to
         # exclude the rest of the args too, or validation will fail
-        args = parser.parse_args(sys.argv[1:2])
+        args = parser.parse_args(argv[1:2])
         if not hasattr(self, args.command):
             print 'Unrecognized command'
             parser.print_help()
             exit(1)
         # use dispatch pattern to invoke method with same name
-        getattr(self, args.command)()
+        #TODO: substitute 'argv' with 'args' -- there is no sense in doing it with '(sys.)argv'!
+        getattr(self, args.command)(argv)
 
-    def resources(self):
+    def resources(self,args):
+        from eada.vo import cli
         reg = cli.Registry(description=_SUBCOMMANDS['resources'])
-        _args = sys.argv[2:]
-        reg.search(_args)
+        _args = args[2:]
+        catalogues = reg.search(_args)
+        #FIXME: bug ahead at 'args.band' if using 'argv' from the calling function
+        writeCatalogs(catalogues,args.band)
 
-    def catalogs(self):
-        from vos.cli.scs import SCS
-        scs = SCS(description=_SUBCOMMANDS['catalogs'])
-        args = scs.parser.parse_args(sys.argv[2:])
-        print 'Arguments: ' % args
+    def catalogs(self,args):
+        from eada.vo import cli
+        _args = args[2:]
+        ret = cli.scs.run(_args,desc=_SUBCOMMANDS['catalogs'])
+        print ret
+        outfile = 'test.csv'
+        from astropy.table.table import Table
+        if outfile and isinstance(ret,Table):
+            table.write(outfile,format='ascii',delimiter=',')
 
-    def spectra(self):
-        from vos.cli.ssa import SSA
-        ssa = SSA(description=_SUBCOMMANDS['spectra'])
-        args = ssa.parser.parse_args(sys.argv[2:])
-        print 'Arguments: ' % args
+    def spectra(self,args):
+        from eada.vo import cli
+        ssa = cli.SSA(description=_SUBCOMMANDS['spectra'])
+        _args = args[2:]
+        table = ssa.search(_args)
+        print table
+        outfile = None
+        if outfile:
+            table.write(outfile,format='ascii',delimiter=',')
 
+def writeCatalogs(catalogues,at=''):
+    localDir = './'
+    if not at:
+        at = localDir
+    if not (os.path.exists(at) or at is localDir):
+        try:
+            os.mkdir(at)
+        except:
+            print >> sys.stderr, "Not able to create directory '%s'. Check your permissions." % at
+            sys.exit(1)
+
+    try:
+        fp = open(at+'/README.txt','w')
+    except:
+        print >> sys.stderr, "Not able to write to directory '%s'. Check your permissions." % at
+
+    print("\nCatologues selected [%d]:" % len(catalogues))
+    out = {}
+    for c in catalogues:
+        out[c.shortname()] = c.summary()
+        if False:
+            with open(at+'/'+c.shortname()+'.txt','w') as fp:
+                for f in c.fielddesc():
+                    f0 = unicode(f[0]).enconde('utf-8')
+                    f1 = unicode(f[1]).enconde('utf-8')
+                    f2 = unicode(f[2]).enconde('utf-8')
+                    f3 = unicode(f[3]).enconde('utf-8')
+                    fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
+    config.write_ini(out,at+'/CATALOGS.ini')
 
 if __name__ == '__main__':
-    VOSearch()
+    import sys
+    VOSearch(sys.argv)

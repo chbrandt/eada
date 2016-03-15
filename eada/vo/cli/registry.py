@@ -1,9 +1,30 @@
-#!/usr/bin/env python
+#-*- coding:utf-8 -*-
 
 _DESCRIPTION = """Search (USVAO) registry for services."""
 
 from ..constants import WAVEBANDS,SERVICES
-from . import Arguments
+from common import Arguments
+
+
+class Registry(object):
+    def __init__(self,description=None):
+        if not description:
+            description = _DESCRIPTION
+        self.init_arguments(description)
+
+    def init_arguments(self,desc):
+        #from registry import RegArguments
+        self.arguments = RegArguments(desc)
+
+    def search(self,args):
+        from eada import vo as vos
+        self.arguments.parse_arguments(args)
+        args = self.arguments.dargs()
+        wbs = args.get('wavebands')
+        kws = args.get('keywords')
+        ucds = args.get('ucds')
+        unts = args.get('units')
+        catalogues = vos.registry.search(wbs, kws, ucds, unts)
 
 
 class RegArguments(Arguments):
