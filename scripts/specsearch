@@ -275,7 +275,7 @@ if __name__ == '__main__':
     logging.debug("Output file %s",outfile)
 
     if outfile:
-        table.write(outfile,format='ascii',delimiter=',')
+        table.write(outfile,format='ascii',delimiter=';')
 
     print "---"
     print " Table retrieved:"
