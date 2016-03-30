@@ -1,5 +1,10 @@
 import pyvo
 
+import constants
+
+import registry
+import scs
+
 from pyvo.dal.query import DALQueryError,DALServiceError
 
 class ServiceError(DALServiceError):
