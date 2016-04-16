@@ -2,6 +2,6 @@
 
 import logging
 
-from .registry import Registry
-import scs
-from .ssa import SSA
+import .registry
+import .scs
+import .ssa

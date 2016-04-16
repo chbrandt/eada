@@ -2,30 +2,25 @@
 
 _DESCRIPTION = """Search (USVAO) registry for services."""
 
+import logging
+
+def run(args,desc=None):
+    """
+    """
+    from .run import search
+    from eada import vo as vos
+
+    if not desc:
+        desc = _DESCRIPTION
+    arguments = RegArguments(desc)
+
+    table = search(arguments,vos.registry.search)
+
+    return table
+
+
+from .arguments import Arguments
 from ..constants import WAVEBANDS,SERVICES
-from common import Arguments
-
-
-class Registry(object):
-    def __init__(self,description=None):
-        if not description:
-            description = _DESCRIPTION
-        self.init_arguments(description)
-
-    def init_arguments(self,desc):
-        #from registry import RegArguments
-        self.arguments = RegArguments(desc)
-
-    def search(self,args):
-        from eada import vo as vos
-        self.arguments.parse_arguments(args)
-        args = self.arguments.dargs()
-        wbs = args.get('wavebands')
-        kws = args.get('keywords')
-        ucds = args.get('ucds')
-        unts = args.get('units')
-        catalogues = vos.registry.search(wbs, kws, ucds, unts)
-
 
 class RegArguments(Arguments):
     def __init__(self,description):
@@ -60,3 +55,23 @@ class RegArguments(Arguments):
 
     def parse_arguments(self,args):
         super(RegArguments,self).parse_arguments(args)
+
+# class Registry(object):
+#     def __init__(self,description=None):
+#         if not description:
+#             description = _DESCRIPTION
+#         self.init_arguments(description)
+#
+#     def init_arguments(self,desc):
+#         #from registry import RegArguments
+#         self.arguments = RegArguments(desc)
+#
+#     def search(self,args):
+#         from eada import vo as vos
+#         self.arguments.parse_arguments(args)
+#         args = self.arguments.dargs()
+#         wbs = args.get('wavebands')
+#         kws = args.get('keywords')
+#         ucds = args.get('ucds')
+#         unts = args.get('units')
+#         catalogues = vos.registry.search(wbs, kws, ucds, unts)
