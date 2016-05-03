@@ -6,17 +6,19 @@ class Aux:
         _d = { key : dictionary[key] for key in keys }
         return _d
 
-def search(arguments,foo_search):
+def search(argv,argparser,foo_search):
     """
     """
     from .arguments import Arguments
-    assert isinstance(arguments,Arguments)
+    assert isinstance(argparser,Arguments)
+    from inspect import isfunction
+    assert isfunction(foo_search)
 
-    arguments.parse_arguments(args)
-    if arguments.stop:
-        ret = arguments.foo()
+    argparser.parse_arguments(argv)
+    if argparser.stop:
+        ret = argparser.foo()
         return ret
-    args = arguments.arguments()
+    args = argparser.arguments()
 
     from inspect import getargspec
     foo_args = getargspec(foo_search)[0]

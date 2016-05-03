@@ -19,6 +19,60 @@ def _ustr(word):
 
 import metadata
 
+def search(waveband, keywords='', ucds=None, units=None,
+         service='conesearch'):
+    '''
+    Search and filter services to be used for SED analysis
+    '''
+    from pyvo import regsearch
+
+    registry='US'
+    if not _validRegistry(registry):
+        _regsOK = [ k for k,v in _registries.items() if v ]
+        logcrt("Registry not supported. Choices are: %s" % (_regsOK))
+        return False
+
+    loginf("Querying registry '%s' for services '%s' providing '%s' data matching '%s' keyword"
+            % (registry,service,waveband,keywords))
+
+    # We use PyVO for querying the registry
+    records = regsearch(waveband=waveband,
+                         keywords=keywords,
+                         servicetype=service)
+    loginf("Number of services found: %d" % (records.nrecs))
+
+    # Let's get --first-- empty tables from the retrieved records/services
+    if ucds is None:
+        ucds = _ucds
+    if units is None:
+        units = _units
+    catalogues = select_catalogs(records,ucds,units)
+    loginf("%d tables were retrieved." % len(catalogues))
+
+    return catalogues
+
+_ucds = ['pos.eq',
+        'POS_EQ_RA_MAIN',
+        'POS_EQ_DEC_MAIN',
+        'phot.mag',
+        'phot.count',
+        'phys.luminosity',
+        'phot.flux']
+
+_units = ['h:m:s',
+         'd:m:s',
+         'ct/s',
+         'erg/s',
+         'erg/s/cm2',
+         'erg/s/cm^2',
+         'mag',
+         'mW/m2',
+         '1e-17W/m2',
+         'ct/ks',
+         'mJy',
+         'ct',
+         '[10-7W]']
+
 # Wavebands available to search for catalogue data
 # (for convenience I relate the UCD words used)
 BANDS = {'radio'        : 'em.radio',
@@ -29,6 +83,61 @@ BANDS = {'radio'        : 'em.radio',
          'xray'         : 'em.X-ray'}
 
 from pyvo.dal.scs import SCSResults
+import os
+from eada.io import config
+
+class Aux:
+    @staticmethod
+    def writeCatalogs(catalogList,at=''):
+        """
+        Write down INI (config) file for catalogues (resources)
+        """
+        catalogues = catalogList
+        assert isinstance(catalogues,list)
+
+        localDir = './'
+        if not at:
+            at = localDir
+        if not (os.path.exists(at) or at is localDir):
+            try:
+                os.mkdir(at)
+            except:
+                print >> sys.stderr, "Not able to create directory '%s'. Check your permissions." % at
+                sys.exit(1)
+
+        try:
+            fp = open(at+'/README.txt','w')
+        except:
+            print >> sys.stderr, "Not able to write to directory '%s'. Check your permissions." % at
+
+        print("\nCatologues selected [%d]:" % len(catalogues))
+        out = {}
+        for c in catalogues:
+            assert isinstance(c,CatalogValidator)
+            out[c.shortname()] = c.summary()
+            if False:
+                with open(at+'/'+c.shortname()+'.txt','w') as fp:
+                    for f in c.fielddesc():
+                        f0 = unicode(f[0]).enconde('utf-8')
+                        f1 = unicode(f[1]).enconde('utf-8')
+                        f2 = unicode(f[2]).enconde('utf-8')
+                        f3 = unicode(f[3]).enconde('utf-8')
+                        fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
+        config.write_ini(out,at+'/CATALOGS.ini')
+
+
+class CatalogValidatorList(object):
+    def __init__(self):
+        self.lst = list()
+
+    def append(self,value):
+        self.lst.append(value)
+
+    def __len__(self):
+        return len(self.lst)
+
+    def write(self,at=''):
+        Aux.writeCatalogs(self.lst,at)
 
 class CatalogValidator(object):
 
@@ -81,8 +190,9 @@ class CatalogValidator(object):
         self._record = record
         self._table = self.Table()
         self._nullPos = (0,0)
-        self._nullRad = 0.00001
-        self._ucds = {}
+        self._nullRad = 1e-15
+        # self._ucds = {}
+        self._ucds = []
         self._units = []
         self._columns = []
 
@@ -95,6 +205,9 @@ class CatalogValidator(object):
         return len(self._table) if self._table != None else 0
 
     def _getTable(self):
+        print "getting table"
+        import socket
+        socket.setdefaulttimeout(5)
         assert(self._record)
         import warnings; warnings.filterwarnings('ignore')
         s = self._record.to_service()
@@ -102,16 +215,21 @@ class CatalogValidator(object):
 
     def sync(self):
         if not(self._table):
+            print "sync: not table"
             try:
                 t = self._getTable()
+                print "sync: getting table"
             except:
+                print "sync: try-excepted"
                 return
             self._table.update(t)
         assert(self._table)
 
     def setUCDs(self,UCDs):
-        assert(isinstance(UCDs,dict))
-        self._ucds = UCDs.copy()
+        # assert(isinstance(UCDs,dict))
+        # self._ucds = UCDs.copy()
+        assert isinstance(UCDs,list)
+        self._ucds = UCDs[:]
 
     def setUnits(self,Units):
         if isinstance(Units,list):
@@ -123,11 +241,12 @@ class CatalogValidator(object):
 
     def _checkUCDs(self):
         assert(self._table)
-        emUCD = self._ucds.keys()
-        assert(len(emUCD)==1)
-        ok1 = metadata.checkUCDs(self._table,emUCD,True)
-        ok2 = metadata.checkUCDs(self._table,self._ucds[emUCD[0]],True)
-        return ok1 and ok2
+        # emUCD = self._ucds.keys()
+        # assert(len(emUCD)==1)
+        # ok1 = metadata.checkUCDs(self._table,emUCD,True)
+        # ok2 = metadata.checkUCDs(self._table,self._ucds[emUCD[0]],True)
+        # return ok1 and ok2
+        return metadata.checkUCDs(self._table,self._ucds,True)
 
     def _checkUnits(self):
         assert(self._table)
@@ -142,9 +261,12 @@ class CatalogValidator(object):
 
     def filterColumns(self):
         self.sync()
-        ucds = self._ucds.keys()
-        assert(len(ucds)==1)
-        ucds.extend(self._ucds[ucds[0]])
+
+        # ucds = self._ucds.keys()
+        # assert(len(ucds)==1)
+        # ucds.extend(self._ucds[ucds[0]])
+        ucds = self._ucds[:]
+
         nameCols = metadata.matchUCDs(self._table,ucds,True)
         units = self._units
         nameCols.extend(metadata.matchUnits(self._table,units,True))
@@ -209,6 +331,7 @@ def _validRegistry(ID):
     '''
     return bool(_registries[ID])
 
+
 def _retrieveTable(record):
     '''
     Retrieve an empty table referenced by the record
@@ -219,9 +342,15 @@ def _retrieveTable(record):
     logdbg("Qyeried URL: '%s'" % (tab.queryurl))
     return tab
 
-def selectCatalogs(records,ucds,units):
-    '''
-    '''
+
+def select_catalogs(records,ucds,units):
+    """
+    From the list of 'records', select those matching 'ucds' and 'units'
+
+    Output:
+    - list of `~CatalogValidator`
+
+    """
     def printProgress(_progress):
         i = _progress[0][0]
         n = _progress[1][0]
@@ -230,7 +359,7 @@ def selectCatalogs(records,ucds,units):
         sys.stdout.write("\r[%d%% - %d/%d] %s" % (prog,i,n,s))
         sys.stdout.flush()
 
-    catalogues = []
+    catalogues = CatalogValidatorList()
     cnt = 0
     _failed = []
     _unwanted = []
@@ -240,20 +369,28 @@ def selectCatalogs(records,ucds,units):
         _progress[1][0] = records.nrecs
         printProgress(_progress)
         cv = CatalogValidator(r)
+        print "CatalogValidator instanciated"
         loginf("Retrieving table '%s'" % (cv.title()))
         cv.sync()
+        print "CV synched"
         if not cv:
             _failed.append(r)
             _progress[2][0] += 'x'
+            print "FAILED"
             continue
         cv.setUCDs(ucds)
+        print "UCDs set -- ",ucds
         cv.setUnits(units)
+        print "Units set -- ",units
         if not cv.isValid():
             _unwanted.append(cv)
             _progress[2][0] += '-'
+            print "INVALID"
             continue
         cv.filterColumns()
+        print "CV cols filtered"
         catalogues.append(cv)
+        print "CV appended"
         _progress[2][0] += 'o'
         cnt += 1
 
@@ -267,33 +404,5 @@ def selectCatalogs(records,ucds,units):
                 ( len(_fn), '\n'.join(_fn) ))
         del _fn
     del _failed
-
-    return catalogues
-
-
-def search(waveband, keyword='', ucds={}, units=[],
-         service='conesearch', registry='US'):
-    '''
-    Search and filter services to be used for SED analysis
-    '''
-    from pyvo import regsearch
-
-    if not _validRegistry(registry):
-        _regsOK = [ k for k,v in _registries.items() if v ]
-        logcrt("Registry not supported. Choices are: %s" % (_regsOK))
-        return False
-
-    loginf("Querying registry '%s' for services '%s' providing '%s' data matching '%s' keyword"
-            % (registry,service,waveband,keyword))
-
-    # We use PyVO for querying the registry
-    records = regsearch(waveband=waveband,
-                         keywords=keyword,
-                         servicetype=service)
-    loginf("Number of services found: %d" % (records.nrecs))
-
-    # Let's get --first-- empty tables from the retrieved records/services
-    catalogues = selectCatalogs(records,ucds,units)
-    loginf("%d tables were retrieved." % len(catalogues))
 
     return catalogues

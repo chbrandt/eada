@@ -5,42 +5,51 @@ class _Aux:
     """Auxiliar functions namespace"""
     @staticmethod
     def plainDict(d):
-        """Flatten dictionary (to list)"""
+        """
+        Flatten dictionary (to list)
+        """
         res = []
         for k,v in d.iteritems():
             res.extend([k,v])
         return res
 
-    @staticmethod
-    def writeCatalogs(catalogues,at=''):
-        localDir = './'
-        if not at:
-            at = localDir
-        if not (os.path.exists(at) or at is localDir):
-            try:
-                os.mkdir(at)
-            except:
-                print >> sys.stderr, "Not able to create directory '%s'. Check your permissions." % at
-                sys.exit(1)
+    # @staticmethod
+    # def writeCatalogs(catalogues,at=''):
+    #     """
+    #     Write down INI (config) file for catalogues (resources)
+    #     """
+    #     from astropy.table import Table
+    #     assert isinstance(catalogues,Table)
+    #
+    #     localDir = './'
+    #     if not at:
+    #         at = localDir
+    #     if not (os.path.exists(at) or at is localDir):
+    #         try:
+    #             os.mkdir(at)
+    #         except:
+    #             print >> sys.stderr, "Not able to create directory '%s'. Check your permissions." % at
+    #             sys.exit(1)
+    #
+    #     try:
+    #         fp = open(at+'/README.txt','w')
+    #     except:
+    #         print >> sys.stderr, "Not able to write to directory '%s'. Check your permissions." % at
+    #
+    #     print("\nCatologues selected [%d]:" % len(catalogues))
+    #     out = {}
+    #     for c in catalogues:
+    #         out[c.shortname()] = c.summary()
+    #         if False:
+    #             with open(at+'/'+c.shortname()+'.txt','w') as fp:
+    #                 for f in c.fielddesc():
+    #                     f0 = unicode(f[0]).enconde('utf-8')
+    #                     f1 = unicode(f[1]).enconde('utf-8')
+    #                     f2 = unicode(f[2]).enconde('utf-8')
+    #                     f3 = unicode(f[3]).enconde('utf-8')
+    #                     fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
+    #     config.write_ini(out,at+'/CATALOGS.ini')
 
-        try:
-            fp = open(at+'/README.txt','w')
-        except:
-            print >> sys.stderr, "Not able to write to directory '%s'. Check your permissions." % at
-
-        print("\nCatologues selected [%d]:" % len(catalogues))
-        out = {}
-        for c in catalogues:
-            out[c.shortname()] = c.summary()
-            if False:
-                with open(at+'/'+c.shortname()+'.txt','w') as fp:
-                    for f in c.fielddesc():
-                        f0 = unicode(f[0]).enconde('utf-8')
-                        f1 = unicode(f[1]).enconde('utf-8')
-                        f2 = unicode(f[2]).enconde('utf-8')
-                        f3 = unicode(f[3]).enconde('utf-8')
-                        fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
-        config.write_ini(out,at+'/CATALOGS.ini')
 
 
 from collections import OrderedDict
@@ -78,20 +87,35 @@ class VOSearch(object):
         getattr(self, args.command)(argv[2:])
 
     def resources(self,argv):
+        """
+        Search resources in Registry
+        """
         from eada.vo import cli
-        ret = cli.registry.run(argv,description=_SUBCOMMANDS['resources'])
-        #FIXME: bug ahead at 'args.band' if using 'argv' from the calling function
-        writeCatalogs(ret,args.band)
+        ret = cli.registry.run(argv,desc=_SUBCOMMANDS['resources'])
+
+        ret.write()
+
+        # #FIXME: bug ahead at 'args.band' if using 'argv' from the calling function
+        # writeCatalogs(ret,args.band)
 
     def catalogs(self,argv):
+        """
+        Search objects in SCS
+        """
         from eada.vo import cli
         scs = cli.scs.run(argv,desc=_SUBCOMMANDS['catalogs'])
+
         outfile = 'test.csv'
+        scs.write(outfile)
+
         from astropy.table.table import Table
         if outfile and isinstance(ret,Table):
             table.write(outfile,format='ascii',delimiter=',')
 
     def spectra(self,argv):
+        """
+        Search objects in SSA
+        """
         from vos.cli.ssa import SSA
         ssa = SSA(description=_SUBCOMMANDS['spectra'])
         args = ssa.parser.parse_args(argv)

@@ -2,6 +2,8 @@
 
 import logging
 
+LOGLEVEL=logging.DEBUG
+
 class Arguments(object):
 
     def __init__(self,description):
