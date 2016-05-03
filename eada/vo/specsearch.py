@@ -90,7 +90,6 @@ def specsearch(ra,dec,radius,url,format=None):
         format = None
 
     logging.debug("Position (%s,%s) and radius (%s), in degrees" %(ra, dec, radius))
-    logging.debug("URL (%s), timeout (%s) and format (%s)" % (url, timeout, format))
 
     q = ssa.SSAQuery(url)
 

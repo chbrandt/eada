@@ -1,3 +1,6 @@
+import logging
+from astropy.table import Table
+
 class Aux:
 
     @staticmethod
@@ -79,7 +82,7 @@ class Aux:
 
         assert isinstance(table,Table)
         assert isinstance(ssa_columns,list)
-        assert isinstance(ssa_record,SSARecord)
+        #assert isinstance(ssa_record,SSARecord)
         columns = ssa_columns
         record = ssa_record
 
@@ -103,7 +106,8 @@ class Aux:
             cols.append( create_column_from_value(val,leng,name=c))
 
         logging.debug("Selected columns: %s" % cols)
-        return table.add_columns(cols)
+        table.add_columns(cols)
+        return table
 
     @staticmethod
     def open_spec(file,format):
@@ -159,6 +163,8 @@ class Aux:
         from os import mkdir
         from os import path
         f = record.format
+        if not dir:
+            dir = 'eada_files'
         if not path.isdir(dir):
             mkdir(dir)
         record.cachedataset(dir=dir)
