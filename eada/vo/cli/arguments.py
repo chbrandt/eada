@@ -1,8 +1,12 @@
 #-*- coding:utf-8 -*-
 
-import logging
+import os
+CFGFILE='/tmp/vos.cfg'
 
+import logging
 LOGLEVEL=logging.DEBUG
+
+from eada.io import config
 
 class Arguments(object):
 
@@ -56,6 +60,10 @@ class ServArguments(Arguments):
 
     def init_arguments(self):
         super(ServArguments,self).init_arguments()
+
+        self.parser.add_argument('--vosfile', default=None,
+                                 help="File (.ini) providing list of servers and/if filtering parameters.")
+
         # Mutually exclusive options
         #  The options are meant to be "list" or "choose" catalogues or give the
         #  "url" directly.
@@ -65,6 +73,10 @@ class ServArguments(Arguments):
         servers.add_argument('--list', action='store_true',
                             help="Print the list os servers available for the search.")
 
+        #TODO: probably this 'choices' for dynamically showing the availables is badly
+        #      placed; for I should partially parse the arguments -- to get the servers
+        #      available -- and that is not nice.
+        #      Think about just removing that, and leave it to '--list'.
 #        SRVS = availableCatalogs(cp) if cp else []
         SRVS = []
         servers.add_argument('--server', #dest='cat', metavar='CATALOG',
@@ -84,6 +96,17 @@ class ServArguments(Arguments):
         # in practice this assert will never be used,
         assert srv or url or lst # (it is done by the argparse)
         # i'll leave it here anyway as a sanity check...
+
+        # let me see if there is a vosfile to get server/params from
+        fle = self.get('vosfile')
+        if not fle is None:
+            dbfile = os.path.abspath(fle)
+        else:
+            logging.warning("No DB file given. Using package's default.")
+            dbfile = os.path.join(os.path.dirname(__file__), CFGFILE)
+        cp = config.read_ini(dbfile)
+        self.set('servers',cp)
+
         if lst:
             self.list()
         else:
@@ -102,9 +125,21 @@ class ServArguments(Arguments):
             self.set('url',url)
 
     def list(self):
-        def foo():
-            print "list of bla"
-            return 0
+        srvs = self.get('servers')
+        if srvs:
+            def foo(options=srvs):
+                """
+                List available options given by 'vosfile' (should be a servers list)
+                """
+                for k,d in options.iteritems():
+                    print k
+                    for c,v in d.items():
+                        print "| %-10s : %s" % (c,v)
+                    print ""
+                return 0
+        else:
+            def foo():
+                print "Nothing to list."
         self._break(foo)
 
 class LocArguments(ServArguments):

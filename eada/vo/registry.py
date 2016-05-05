@@ -19,6 +19,28 @@ def _ustr(word):
 
 import metadata
 
+_ucds = ['pos.eq',
+        'POS_EQ_RA_MAIN',
+        'POS_EQ_DEC_MAIN',
+        'phot.mag',
+        'phot.count',
+        'phys.luminosity',
+        'phot.flux']
+
+_units = ['h:m:s',
+         'd:m:s',
+         'ct/s',
+         'erg/s',
+         'erg/s/cm2',
+         'erg/s/cm^2',
+         'mag',
+         'mW/m2',
+         '1e-17W/m2',
+         'ct/ks',
+         'mJy',
+         'ct',
+         '[10-7W]']
+
 def search(waveband, keywords='', ucds=None, units=None,
          service='conesearch'):
     '''
@@ -51,28 +73,6 @@ def search(waveband, keywords='', ucds=None, units=None,
 
     return catalogues
 
-_ucds = ['pos.eq',
-        'POS_EQ_RA_MAIN',
-        'POS_EQ_DEC_MAIN',
-        'phot.mag',
-        'phot.count',
-        'phys.luminosity',
-        'phot.flux']
-
-_units = ['h:m:s',
-         'd:m:s',
-         'ct/s',
-         'erg/s',
-         'erg/s/cm2',
-         'erg/s/cm^2',
-         'mag',
-         'mW/m2',
-         '1e-17W/m2',
-         'ct/ks',
-         'mJy',
-         'ct',
-         '[10-7W]']
-
 # Wavebands available to search for catalogue data
 # (for convenience I relate the UCD words used)
 BANDS = {'radio'        : 'em.radio',
@@ -82,49 +82,33 @@ BANDS = {'radio'        : 'em.radio',
          'uv'           : 'em.UV',
          'xray'         : 'em.X-ray'}
 
+
+def write(catalogs,output):
+    """
+    Write down INI (config) file for catalogues (resources)
+    """
+    import os
+    from eada.io import config
+
+    filename = output
+
+    print("\nCatologues selected [%d]:" % len(catalogs))
+    out = {}
+    for c in catalogs.lst:
+        assert isinstance(c,CatalogValidator)
+        out[c.shortname()] = c.summary()
+        # if False:
+        #     with open(at+'/'+c.shortname()+'.txt','w') as fp:
+        #         for f in c.fielddesc():
+        #             f0 = unicode(f[0]).enconde('utf-8')
+        #             f1 = unicode(f[1]).enconde('utf-8')
+        #             f2 = unicode(f[2]).enconde('utf-8')
+        #             f3 = unicode(f[3]).enconde('utf-8')
+        #             fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
+    config.write_ini(out,filename)
+
+
 from pyvo.dal.scs import SCSResults
-import os
-from eada.io import config
-
-class Aux:
-    @staticmethod
-    def writeCatalogs(catalogList,at=''):
-        """
-        Write down INI (config) file for catalogues (resources)
-        """
-        catalogues = catalogList
-        assert isinstance(catalogues,list)
-
-        localDir = './'
-        if not at:
-            at = localDir
-        if not (os.path.exists(at) or at is localDir):
-            try:
-                os.mkdir(at)
-            except:
-                print >> sys.stderr, "Not able to create directory '%s'. Check your permissions." % at
-                sys.exit(1)
-
-        try:
-            fp = open(at+'/README.txt','w')
-        except:
-            print >> sys.stderr, "Not able to write to directory '%s'. Check your permissions." % at
-
-        print("\nCatologues selected [%d]:" % len(catalogues))
-        out = {}
-        for c in catalogues:
-            assert isinstance(c,CatalogValidator)
-            out[c.shortname()] = c.summary()
-            if False:
-                with open(at+'/'+c.shortname()+'.txt','w') as fp:
-                    for f in c.fielddesc():
-                        f0 = unicode(f[0]).enconde('utf-8')
-                        f1 = unicode(f[1]).enconde('utf-8')
-                        f2 = unicode(f[2]).enconde('utf-8')
-                        f3 = unicode(f[3]).enconde('utf-8')
-                        fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
-        config.write_ini(out,at+'/CATALOGS.ini')
-
 
 class CatalogValidatorList(object):
     def __init__(self):
@@ -136,8 +120,8 @@ class CatalogValidatorList(object):
     def __len__(self):
         return len(self.lst)
 
-    def write(self,at=''):
-        Aux.writeCatalogs(self.lst,at)
+    def write(self,output):
+        write(self.lst,output)
 
 class CatalogValidator(object):
 

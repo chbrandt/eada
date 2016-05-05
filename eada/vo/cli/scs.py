@@ -4,22 +4,23 @@ _DESCRIPTION = """Search SCS services for objects."""
 
 import logging
 
-def run(args,desc=None):
+def run(argv,desc=None):
     """
+    Run conesearch cli: resolve arguments, return Table
     """
-    from .run import search
+    from _run import search
     from eada import vo as vos
 
     if not desc:
         desc = _DESCRIPTION
-    arguments = SCSArguments(desc)
+    argParser = SCSArguments(desc)
 
-    table = search(arguments,vos.scs.search)
+    table = search(argv,argParser,vos.scs.search)
 
     return table
 
 
-from .arguments import LocArguments
+from arguments import LocArguments
 
 class SCSArguments(LocArguments):
     def __init__(self,description):
@@ -63,29 +64,4 @@ class SCSArguments(LocArguments):
         self.set('columns',cols)
 
     def list(self):
-        def foo():
-            print "list of catalogs"
-            return 0
-        self._break(foo)
-
-# class SCS(object):
-#     def __init__(self,description=None):
-#         if not description:
-#             description = _DESCRIPTION
-#         self.init_arguments(description)
-#
-#     def init_arguments(self,desc):
-#         #from registry import RegArguments
-#         self.arguments = SCSArguments(desc)
-#
-#     def search(self,args):
-#         from eada import vo as vos
-#         self.arguments.parse_arguments(args)
-#         args = self.arguments.arguments()
-#         # ---
-#         from inspect import getargspec
-#         foo_args = getargspec(vos.scs.search)[0]
-#         args = _filter_dict(args,foo_args)
-#         # ---
-#         table = vos.scs.search(**args)
-#         return table
+        super(SCSArguments,self).list()

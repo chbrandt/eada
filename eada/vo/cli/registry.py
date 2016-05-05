@@ -8,7 +8,7 @@ def run(argv,desc=None):
     """
     Run regsearch cli: resolve arguments, return Table
     """
-    from .run import search
+    from _run import search,write
     from eada import vo as vos
 
     if not desc:
@@ -17,7 +17,9 @@ def run(argv,desc=None):
 
     table = search(argv,argParser,vos.registry.search)
 
-    return table
+    res = write(argv,argParser,vos.registry.write,table)
+
+    return res
 
 
 from .arguments import Arguments
@@ -53,6 +55,10 @@ class RegArguments(Arguments):
                                 const=None, default=None,
                                 action='store',
                                 help='Units to be found in resources.')
+
+        self.parser.add_argument('--output', default='resources.ini',
+                                 help="File (.ini) to output selected resources.")
+
 
     def parse_arguments(self,args):
         super(RegArguments,self).parse_arguments(args)

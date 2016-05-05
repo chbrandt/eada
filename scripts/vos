@@ -93,8 +93,6 @@ class VOSearch(object):
         from eada.vo import cli
         ret = cli.registry.run(argv,desc=_SUBCOMMANDS['resources'])
 
-        ret.write()
-
         # #FIXME: bug ahead at 'args.band' if using 'argv' from the calling function
         # writeCatalogs(ret,args.band)
 
@@ -105,12 +103,12 @@ class VOSearch(object):
         from eada.vo import cli
         scs = cli.scs.run(argv,desc=_SUBCOMMANDS['catalogs'])
 
-        outfile = 'test.csv'
-        scs.write(outfile)
-
-        from astropy.table.table import Table
-        if outfile and isinstance(ret,Table):
-            table.write(outfile,format='ascii',delimiter=',')
+        # outfile = 'test.csv'
+        # scs.write(outfile)
+        #
+        # from astropy.table.table import Table
+        # if outfile and isinstance(ret,Table):
+        #     table.write(outfile,format='ascii',delimiter=',')
 
     def spectra(self,argv):
         """
