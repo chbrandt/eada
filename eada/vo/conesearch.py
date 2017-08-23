@@ -138,7 +138,7 @@ def main(ra,dec,radius,url,columns=[]):
         logging.error("Search failed to complete. Service not working properly. Exiting")
         return None
 
-    nobjs = scsTab.nrecs
+    nobjs = len(scsTab)
     assert(nobjs == scsTab.votable.nrows)
 
     tab = scsTab.votable.to_table()
