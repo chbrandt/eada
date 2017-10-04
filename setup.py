@@ -28,16 +28,16 @@ else:
 builtins._ASTROPY_SETUP_ = True
 
 # Set affiliated package-specific settings
-PACKAGENAME = 'zyxw'
+PACKAGENAME = 'eada'
 DESCRIPTION = 'Package for dealing with astronomical data processing'
 LONG_DESCRIPTION = """
-Zyxw is strongly dependent on astropy and related packages. Codes here are
-higher level interfaces -- you can call it workflows -- for other libraries
-(e.g, Astropy) to further handle and process data.
+Eada (External Archive Data Access) queries VO services for data based
+on (RA,Dec) position and a radius around it.
+The package uses PyVO and Astropy.
 """
 
 AUTHOR = 'Carlos H. Brandt'
-AUTHOR_EMAIL = 'carlos.brandt@asdc.asi.it'
+AUTHOR_EMAIL = 'carlos.brandt@ssdc.asi.it'
 LICENSE = 'GPL'
 URL = ''
 

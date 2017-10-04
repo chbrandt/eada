@@ -14,7 +14,21 @@ desc = """
     in a given catalog. To see the available catalogs use the '--list' option.
 """
 
-CFGFILE='conesearch.cfg'
+import os
+CFGFILE = 'conesearch.cfg'
+def read_config(filename=None,merge=True):
+    # Read the db/config file
+    from eada.io import config
+    cp = {}
+    if merge:
+        cfg_ = config.read_default(CFGFILE)
+        if cfg_:
+            cp.update( cfg_ )
+    if filename is not None and os.path.isfile(filename):
+        cfg_ = config.read_ini(filename)
+        if cfg_:
+            cp.update( cfg_ )
+    return cp
 
 EXIT_OK     = 0
 EXIT_ERROR  = 1
@@ -52,10 +66,10 @@ def setupParserOptions(parser,cp):
     CATS = availableCatalogs(cp) if cp else []
     group.add_argument('--catalog', dest='cat', metavar='CATALOG',
                         choices = CATS,
-                        help="Catalog to search for data. To see your choices use the '--list' option.")
+                        help="One of the catalogs in your config file. Use '--list' option.")
 
     group.add_argument('--url', dest='url',
-                        help="Service URL to query. To see some options use the '--list' option.")
+                        help="Service URL to query.")
 
     # (redundant) Group of options for better organize arguments
     #
@@ -78,11 +92,12 @@ def setupParserOptions(parser,cp):
     #
     output = parser.add_argument_group('Output','Options for output generation.')
     output.add_argument('--columns', dest='cols', metavar='fieldname', nargs='*',
+                        default='default',
                         help="Columns to get from the retrieved catalog. The\
-                         argument 'asdc' will output a preset of columns, suitable for ASDC.\
+                         argument 'default' will output the preset of columns, from config file.\
                          If not given, all columns will be output.")
     output.add_argument('--short', action='store_true',
-                        help="Just outputs if at least one source was found.")
+                        help="Just outputs if at least one source is found.")
     output.add_argument('-o','--outfile', dest='outfile', nargs='?', const='',
                         default=None, help="Filename to write the output, CSV format table file.")
 
@@ -131,7 +146,7 @@ def parseArguments(args,cp):
         logging.debug("URL to search for sources: %s", url)
 
     if args.cols:
-        if 'asdc' in args.cols:
+        if 'default' in args.cols:
             if args.url:
                 cols = []
             else:
@@ -183,20 +198,7 @@ if __name__ == '__main__':
                             format='[%(filename)s:%(funcName)20s] %(message)s',
                             level=logging.NOTSET)
 
-    # Read the db/config file
-    import os
-    from eada.io import config
-    if args.dbfile:
-        dbfile = os.path.abspath(args.dbfile)
-    else:
-        logging.warning("No DB file given. Using package's default.")
-        import inspect
-        dbfile = os.path.join(os.path.dirname(__file__), CFGFILE)
-
-    if os.path.exists(dbfile):
-        cp = config.read_ini(dbfile)
-    else:
-        cp = None
+    cp = read_config(args.dbfile)
     # --------------------------------------------------------------------------
 
     # Parse the arguments
@@ -237,6 +239,7 @@ if __name__ == '__main__':
 
     # Parse the arguments
     ra,dec,radius,url,cols = parseArguments(args,cp)
+    print(ra,dec,radius,url,cols)
 
     # Now, the main function does the search and columns filtering...
     table = cs.main(ra,dec,radius,url,cols)

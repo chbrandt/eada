@@ -37,25 +37,44 @@ following functions.
 #  the dictionary to the ini-like config file.
 #
 
-import sys;
+import logging
+import sys
 import re
+import os
+
+def read_default(config_file):
+    # config_file is either 'conesearch.cfg' or 'specsearch.cfg'
+    config_dir = os.path.join(os.path.expanduser("~"),'.config','eada')
+    config_file = os.path.join(config_dir,config_file)
+    if not os.path.exists(config_file):
+        if not os.path.exists(config_dir):
+            try:
+                os.makedirs(config_dir)
+            except:
+                logging.error("Could not create directory {}".format(config_dir))
+                return False
+        try:
+            open(config_file,'a').close()
+        except:
+            return False
+    return read_ini(config_file)
 
 #=====================================
 # Read config file (INI) to structure:
-# 
+#
 def read_ini( filename, *sections ):
     '''
     Function to read ".ini"-lyke config files into a python structure.
     (About INI files: http://en.wikipedia.org/wiki/INI_file)
 
-    The function returns a dictionary of dictionaries. That is, the sections "[]" 
+    The function returns a dictionary of dictionaries. That is, the sections "[]"
     of the ini file are dictionaries containing config's key:value parameters.
     And everything (i.e, all sections) is returned inside a dictionary.
-    
+
     config_struct = read_config( configfile.ini [,'sectionA','sectionB',...])
 
-    If "section..." keys are not given as arguments for the function, it will 
-    read every section from the file. Otherwise, if a section name (e.g, "sectionA") 
+    If "section..." keys are not given as arguments for the function, it will
+    read every section from the file. Otherwise, if a section name (e.g, "sectionA")
     is given, just that section(s) will be returned.
 
     Input:
@@ -67,7 +86,7 @@ def read_ini( filename, *sections ):
                          and value is a dictionary with the items on that 'section'
 
     '''
-    
+
     import os
     assert(os.path.isfile(filename))
 
@@ -79,11 +98,11 @@ def read_ini( filename, *sections ):
     #
     sects = config.sections();
     if sects == []:
-        print >> sys.stderr, "Empty config file";
-        return (None);
+        print >> sys.stderr, "Config file {} is empty".format(filename);
+        return None;
 
     # Start list of tuples: [('section',section_dictionary), (,) ,...]
-    # 
+    #
     out = {};
     if sections:
         sects = sections
@@ -115,7 +134,7 @@ read_config = read_ini;
 
 #====================================================
 # Write config structure to .ini file:
-# 
+#
 def write_ini( sections, filename ):
     '''
     Function to write a ini-like (config) file given a dictionary.
@@ -134,7 +153,7 @@ def write_ini( sections, filename ):
     if len(sections) == 0:
         print >> sys.stderr, "Given 'sections' is empty."
         return None
-        
+
     import ConfigParser;
     config = ConfigParser.RawConfigParser();
 
@@ -156,7 +175,7 @@ write_config = write_ini;
 
 #=====================================
 # Read config file (XML) to structure:
-# 
+#
 def read_xml( config_file, _section='section', _key='scalar', _value='default' ):
     '''
     Reads a config.xml file into a dictionary with "section"->"key":"value".
@@ -207,7 +226,7 @@ if __name__ == "__main__" :
         print >> sys.stderr, "Wrong config type (%s) given." % (configtype);
         parser.print_help();
         sys.exit(1);
-        
+
     #    config = read_config(configfile,'input','path','run_flags');
     if ( configtype == 'ini' ):
         config = read_ini(configfile);
@@ -222,4 +241,3 @@ if __name__ == "__main__" :
 
     sys.exit(0);
 """
-
