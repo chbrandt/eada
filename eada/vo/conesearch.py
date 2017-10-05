@@ -2,7 +2,7 @@
 
 from eada import *
 
-from astropy.table.table import Table
+from astropy.table import Table
 
 TIMEOUT=10
 
@@ -82,27 +82,12 @@ def conesearch(ra,dec,radius,url,timeout=None):
     logging.debug("URL (%s) and timeout (%s)", url, timeout)
 
     from pyvo.dal import scs
-    from pyvo.dal import query
-
-    if timeout and isinstance(timeout,(int,float)):
-        timeout = ((timeout*1.0)+0)/1.0 # sanity check
-        try:
-            query.setparam('timeout',timeout)
-        except:
-            logging.warning("'timeout' parameter not set on query.")
 
     res = None
     try:
         res = scs.search( db_url, (ra,dec), radius, verbosity=3)
-    except query.DALServiceError as e:
-        logging.exception("DALServiceError raised: %s", e)
-    except query.DALQueryError as e:
-        logging.exception("DALQueryError raised: %s", e)
     except Exception as e:
         logging.exception("Exception raised: %s", e)
-
-    if res is None:
-        return None
 
     return res
 
@@ -150,6 +135,10 @@ def main(ra,dec,radius,url,columns=[]):
     if columns:
         cols = Aux.filter_columns(tab,columns)
         tab.keep_columns(cols)
+
+    # Remove format from columns
+    for col in tab.colnames:
+        tab[col].format = None
 
     logging.info("Retrieved table has %d objects, %d columns." % (nobjs,len(tab.colnames)))
     return tab

@@ -86,7 +86,7 @@ def setupParserOptions(parser,cp):
 
     conesearch.add_argument('--runit', dest='runit', metavar='unit', default='degree',
                             choices=['degree','arcmin','arcsec'],
-                            help="Unit for radius value. Choices are 'degree','arcmin','arcsec'.")
+                            help="Unit for radius value. Default is 'degree'.")
 
     # Output generation options
     #
@@ -129,7 +129,7 @@ def parseArguments(args,cp):
     radius = rad.to(units.degree).value # convert the given radius to degrees
     del rad
 
-    assert(cp)
+    assert(cp is not None)
     assert(args.cat or args.url)
     if not args.url and args.cat not in cp.keys():
         logging.critical("Wrong catalog name: %s", args.cat)
@@ -200,6 +200,8 @@ if __name__ == '__main__':
 
     cp = read_config(args.dbfile)
     # --------------------------------------------------------------------------
+    if cp is None:
+        cp = {}
 
     # Parse the arguments
     parser = setupParserOptions(parser,cp)
@@ -239,7 +241,6 @@ if __name__ == '__main__':
 
     # Parse the arguments
     ra,dec,radius,url,cols = parseArguments(args,cp)
-    print(ra,dec,radius,url,cols)
 
     # Now, the main function does the search and columns filtering...
     table = cs.main(ra,dec,radius,url,cols)
