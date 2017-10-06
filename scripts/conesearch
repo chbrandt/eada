@@ -1,59 +1,30 @@
 #!/usr/bin/env python
-#-*- coding:utf-8 -*-
 
-from eada.vo import conesearch as cs
-
-import logging
-import sys
-import string
-import warnings
-warnings.simplefilter('ignore')
+EXIT_OK     = 0
+EXIT_ERROR  = 1
+EXIT_EMPTY  = 10
 
 desc = """
     This script searchs for sources in a given position (RA,DEC) and radius (R)
     in a given catalog. To see the available catalogs use the '--list' option.
 """
 
+from eada.vo import conesearch as cs
+
 import os
-CFGFILE = 'conesearch.cfg'
-def read_config(filename=None,merge=True):
-    # Read the db/config file
-    from eada.io import config
-    cp = {}
-    if merge:
-        cfg_ = config.read_default(CFGFILE)
-        if cfg_:
-            cp.update( cfg_ )
-    if filename is not None and os.path.isfile(filename):
-        cfg_ = config.read_ini(filename)
-        if cfg_:
-            cp.update( cfg_ )
-    return cp
+import logging
+import sys
+import string
+import warnings; warnings.simplefilter('ignore')
 
-EXIT_OK     = 0
-EXIT_ERROR  = 1
-EXIT_EMPTY  = 10
-
-def list_catalogs(cp):
-    """List the available catalogs"""
-
-    for k,d in cp.iteritems():
-        print k
-        for c,v in d.items():
-            print "| %-10s : %s" % (c,v)
-        print ""
-
-def availableCatalogs(cp):
-    """
-    Get the names of the available catalogs
-    """
-    cats = [ k for k in cp.iterkeys() ]
-    return cats
+from eada.io import config
+config.CFGFILE = 'conesearch.cfg'
 
 def setupParserOptions(parser,cp):
     """
     Define command line options
     """
+    CATS = availableCatalogs(cp) if cp else []
     # Mutually exclusive options
     #  The options are meant to be "list" or "choose" catalogues or give the
     #  "url" directly.
@@ -63,7 +34,6 @@ def setupParserOptions(parser,cp):
     group.add_argument('--list', action='store_true',
                         help="Print the list os catalogs available for the search.")
 
-    CATS = availableCatalogs(cp) if cp else []
     group.add_argument('--catalog', dest='cat', metavar='CATALOG',
                         choices = CATS,
                         help="One of the catalogs in your config file. Use '--list' option.")
@@ -164,6 +134,22 @@ def parseArguments(args,cp):
 
     return ra,dec,radius,url,cols
 
+def list_catalogs(cp):
+    """List the available catalogs"""
+
+    for k,d in cp.iteritems():
+        print k
+        for c,v in d.items():
+            print "| %-10s : %s" % (c,v)
+        print ""
+
+def availableCatalogs(cp):
+    """
+    Get the names of the available catalogs
+    """
+    cats = [ k for k in cp.iterkeys() ]
+    return cats
+
 
 # Lets put a cli here, so that the script can work with free parameters
 #
@@ -198,7 +184,7 @@ if __name__ == '__main__':
                             format='[%(filename)s:%(funcName)20s] %(message)s',
                             level=logging.NOTSET)
 
-    cp = read_config(args.dbfile)
+    cp = config._read(args.dbfile)
     # --------------------------------------------------------------------------
     if cp is None:
         cp = {}
