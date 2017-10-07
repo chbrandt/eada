@@ -274,10 +274,10 @@ if __name__ == '__main__':
 
     if outfile:
         table.write(outfile,format='ascii',delimiter=',')
-
-    print "---"
-    print " Table retrieved:"
-    table.pprint(max_width=-1)
-    print "---"
+    else:
+        print "---"
+        print " Table retrieved:"
+        table.pprint(max_width=-1)
+        print "---"
 
     sys.exit(EXIT_OK)

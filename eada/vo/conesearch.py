@@ -124,7 +124,6 @@ def main(ra,dec,radius,url,columns=[]):
         return None
 
     nobjs = len(scsTab)
-    assert(nobjs == scsTab.votable.nrows)
 
     tab = scsTab.votable.to_table()
     if tab is None:
