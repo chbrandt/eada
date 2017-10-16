@@ -35,8 +35,8 @@ def setupParserOptions(parser,cp):
                         help="Print the list os catalogs available for the search.")
 
     group.add_argument('--catalog', dest='cat', metavar='CATALOG',
-                        choices = CATS,
-                        help="One of the catalogs in your config file. Use '--list' option.")
+                        choices = CATS, 
+                        help="A catalog (name) from your config file. Use '--list' option.")
 
     group.add_argument('--url', dest='url',
                         help="Service URL to query.")
@@ -62,7 +62,6 @@ def setupParserOptions(parser,cp):
     #
     output = parser.add_argument_group('Output','Options for output generation.')
     output.add_argument('--columns', dest='cols', metavar='fieldname', nargs='*',
-                        default='default',
                         help="Columns to get from the retrieved catalog. The\
                          argument 'default' will output the preset of columns, from config file.\
                          If not given, all columns will be output.")
@@ -259,11 +258,11 @@ if __name__ == '__main__':
     logging.debug("Output file %s",outfile)
 
     if outfile:
-        table.write(outfile,format='ascii',delimiter=',')
-
-    print "---"
-    print " Table retrieved:"
-    table.pprint(max_width=-1)
-    print "---"
+        table.write(outfile,format='ascii.ecsv')#,delimiter=',')
+    else:
+        print "---"
+        print " Table retrieved:"
+        table.pprint(max_width=-1)
+        print "---"
 
     sys.exit(EXIT_OK)

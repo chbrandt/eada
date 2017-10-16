@@ -6,7 +6,7 @@ Tools to access VO data services
 Install
 =======
 
- Setup procedure is the done through simply:
+ From inside `eada` directory, type:
  ```
  $ python setup.py install
  ```
