@@ -29,6 +29,7 @@ BANDS = {'radio'        : 'em.radio',
          'xray'         : 'em.X-ray'}
 
 from pyvo.dal.scs import SCSResults
+from pyvo.dal.query import DALQueryError
 
 class CatalogValidator(object):
 
@@ -52,15 +53,13 @@ class CatalogValidator(object):
             if newTable != None and isinstance(newTable,SCSResults):
                 self._pseudoTable = newTable
                 self._votableTree = newTable.votable
-            else:
-                raise(TypeError,"Instance of SCSResults expected.")
 
         def fields(self):
             return self._votableTree.fields
 
         def fieldname_with_ucd(self,ucd):
             names = []
-            for fld in self._pseudoTable.fieldnames():
+            for fld in self._pseudoTable.fieldnames:
                 desc = self._pseudoTable.getdesc(fld)
                 if desc.ucd and string.find(desc.ucd,ucd) >= 0:
                     names.append(fld)
@@ -68,7 +67,7 @@ class CatalogValidator(object):
 
         def fieldname_with_unit(self,unit):
             names = []
-            for fld in self._pseudoTable.fieldnames():
+            for fld in self._pseudoTable.fieldnames:
                 desc = self._pseudoTable.getdesc(fld)
                 if desc.unit and string.find(str(desc.unit).replace(' ',''),unit) >= 0:
                     names.append(fld)
@@ -81,7 +80,7 @@ class CatalogValidator(object):
         self._record = record
         self._table = self.Table()
         self._nullPos = (0,0)
-        self._nullRad = 0.00001
+        self._nullRad = 0.000001
         self._ucds = {}
         self._units = []
         self._columns = []
@@ -97,17 +96,17 @@ class CatalogValidator(object):
     def _getTable(self):
         assert(self._record)
         import warnings; warnings.filterwarnings('ignore')
-        s = self._record.to_service()
-        return s.search(pos=self._nullPos, radius=self._nullRad)
+        s = self._record.service
+        try:
+            r = s.search(pos=self._nullPos, radius=self._nullRad)
+        except DALQueryError as e:
+            r = None
+        return r
 
     def sync(self):
-        if not(self._table):
-            try:
-                t = self._getTable()
-            except:
-                return
+        if not self._table:
+            t = self._getTable()
             self._table.update(t)
-        assert(self._table)
 
     def setUCDs(self,UCDs):
         assert(isinstance(UCDs,dict))
@@ -155,38 +154,40 @@ class CatalogValidator(object):
                 if field.name is name:
                     ucd = field.ucd
                     unit = field.unit
-                    self._columns.append( (name,ucd,unit) )
+                    descr = field.description
+                    self._columns.append( (name,ucd,unit,descr) )
 
     def summary(self):
         out = odict()
         out['title']        = self.title()
         out['url']          = self.url()
         out['ivoid']        = self.ivoid()
-        out['publisher']    = self.publisher()
+        out['creators']     = self.publisher()
         out['description']  = self.description()
         out['columns_name'] = [ _ustr(col[0]) for col in self._columns ]
         out['columns_ucd']  = [ _ustr(col[1]) for col in self._columns ]
         out['columns_unit'] = [ _ustr(col[2]) for col in self._columns ]
+        out['columns_desc'] = [ _ustr(col[3]) for col in self._columns ]
         return out
 
     def description(self):
-        return self._record.get('description')
+        return self._record.res_description
 
     def url(self):
-        return self._record.accessurl
+        return self._record.access_url
 
     def title(self):
-        return self._record.title
+        return self._record.res_title
 
     def publisher(self):
-        return self._record.publisher
+        return self._record.creators
 
     def ivoid(self):
         return self._record.ivoid
 
     def shortname(self):
-        _sn = self._record.shortname.split()[0]
-        return filter(str.isalnum,_sn)
+        _sn = self._record.short_name.split()[0]
+        return filter(str.isalnum,str(_sn))
 
     def fielddesc(self):
         fl = []
@@ -227,7 +228,8 @@ def selectCatalogs(records,ucds,units):
         n = _progress[1][0]
         s = _progress[2][0]
         prog = int(100*float(i)/n)
-        sys.stdout.write("\r[%d%% - %d/%d] %s" % (prog,i,n,s))
+        # sys.stdout.write("\r[%d%% - %d/%d] %s" % (prog,i,n,s))
+        sys.stdout.write("\r[%d%% - %d/%d]" % (prog,i,n))
         sys.stdout.flush()
 
     catalogues = []
@@ -237,7 +239,7 @@ def selectCatalogs(records,ucds,units):
     _progress = ([0],[0],[''])
     for i,r in enumerate(records):
         _progress[0][0] = i+1
-        _progress[1][0] = records.nrecs
+        _progress[1][0] = len(records)
         printProgress(_progress)
         cv = CatalogValidator(r)
         loginf("Retrieving table '%s'" % (cv.title()))
@@ -259,10 +261,10 @@ def selectCatalogs(records,ucds,units):
 
     printProgress(_progress)
     print('\n')
-    assert(len(catalogues)+len(_failed)+len(_unwanted)==records.nrecs)
+    assert(len(catalogues)+len(_failed)+len(_unwanted)==len(records))
 
     if len(_failed):
-        _fn = [ f.title for f in _failed ]
+        _fn = [ f.res_title for f in _failed ]
         logwrn("%d tables were in a NULL state. They are:\n%s" %
                 ( len(_fn), '\n'.join(_fn) ))
         del _fn
@@ -272,7 +274,8 @@ def selectCatalogs(records,ucds,units):
 
 
 def search(waveband, keyword='', ucds={}, units=[],
-         service='conesearch', registry='US'):
+         service='conesearch', registry='US',
+         sample=False, parallel=False):
     '''
     Search and filter services to be used for SED analysis
     '''
@@ -290,10 +293,24 @@ def search(waveband, keyword='', ucds={}, units=[],
     records = regsearch(waveband=waveband,
                          keywords=keyword,
                          servicetype=service)
-    loginf("Number of services found: %d" % (records.nrecs))
+    loginf("Number of services found: %d" % (len(records)))
 
-    # Let's get --first-- empty tables from the retrieved records/services
-    catalogues = selectCatalogs(records,ucds,units)
+    if sample:
+        from random import shuffle
+        irec = list(range(len(records)))
+        shuffle(irec)
+        nrec = int(len(records)/10)
+        records = [ records[i] for i in irec[:10] ]
+
+    if parallel:
+        foo = lambda r:selectCatalogs(r,ucds,units)
+        from multiprocessing import Pool
+        with Pool(10) as p:
+            catalogues = p.map(foo, records)
+    else:
+        catalogues = selectCatalogs(records,ucds,units)
     loginf("%d tables were retrieved." % len(catalogues))
 
     return catalogues
+
+main = search

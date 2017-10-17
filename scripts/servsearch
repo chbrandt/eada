@@ -95,6 +95,9 @@ if __name__ == '__main__':
     parser.add_argument('--log', nargs='?', const='servsearch.log', default=None,
                         help="Log script steps. A filename can be given as argument.")
 
+    parser.add_argument('--sample', action='store_true',
+                        help="If asked, a 10%% randomly chosen sample is worked out.")
+
     # Parse the known arguments
     args,unknown = parser.parse_known_args()
 
@@ -109,7 +112,10 @@ if __name__ == '__main__':
     _ucd = servsearch.BANDS[args.band]
     ucds = {_ucd:ucds}
 
+    sample = args.sample
+
     # Run
-    catalogues = servsearch.main(args.band, args.keywords, ucds, units)
+    catalogues = servsearch.main(args.band, args.keywords, ucds, units,
+                                        sample=sample)
 
     writeCatalogs(catalogues,args.band)
