@@ -31,7 +31,7 @@ def matchUCDs(tab,UCDs=[],substring=False):
         names.extend(tab.fieldname_with_ucd(u))
     ns = set(names)
     return list(ns)
-    
+
 def matchUnits(tab,units=[],substring=False):
     """Returns a list with the matching UCDs"""
     if tab is None:
@@ -41,12 +41,14 @@ def matchUnits(tab,units=[],substring=False):
         names.extend(tab.fieldname_with_unit(u))
     ns = set(names)
     return list(ns)
-    
+
 def checkUCDs(tab,UCDs=[],substring=False):
     """Returns a True if tab has one of the given UCDs; False otherwise"""
-    import string
     if tab is None:
         return False
+    if not UCDs:
+        return True
+    import string
     l = getUCD(tab)
     if not substring:
         ok = any( filter(lambda u:u in UCDs, set(l)) )
@@ -56,7 +58,7 @@ def checkUCDs(tab,UCDs=[],substring=False):
             ok.append(any( [ string.find(u,ucd)>=0 for ucd in UCDs ] ))
         ok = any(ok)
     return ok
-    
+
 def getUnit(tab):
     """Returns a list of units from a table"""
     l = []
@@ -72,10 +74,12 @@ def checkUnits(tab,Units=[]):
     """Returns a True if tb has one of the given Units; False otherwise"""
     if tab is None:
         return None
+    if not Units:
+        return True
     l = getUnit(tab)
     ok = any( filter(lambda u:u in Units, set(l)) )
     return ok
-    
+
 # Astropy
 """
 from astropy.io.votable.ucd import UCDWords,parse_ucd
@@ -98,7 +102,7 @@ class Tree(object):
         aux = {}
         for d in dictList:
             self.merge(d,aux)
-        
+
     def split(self,ucd):
         if ucd is None:
             return None
@@ -108,7 +112,7 @@ class Tree(object):
         for w in words:
             d = {w:d}
         return d          # Notice that a single string can be returned
-        
+
     def merge(self,node,ref):
         if isinstance(node,dict):
             k,v = node.popitem()
@@ -120,7 +124,7 @@ class Tree(object):
                     ref[k] = v if isinstance(v,dict) else [v]
             else:
                 assert(isinstance(ref,list))
-                if 
+                if
         else:
             assert(isinstance(node,list))
             if isinstance(ref,dict):
@@ -139,13 +143,13 @@ class Tree(object):
             assert(len(val)==1)
             val = val.pop()
             if isinstance(val,str):
-                
-    
-        
+
+
+
 class UCDTree(object):
     '''
     Builds a hierarchical view of acceptable UCD words
-    
+
     The code here is based on the `~astropy.io.votable.ucd.UCDWords` code.
     Works by reading in a data file exactly as provided by IVOA.
     This file resides in data/ucd1p-words.txt.
@@ -154,7 +158,7 @@ class UCDTree(object):
         self._tree = {}
         self._descriptions = {}
         self._capitalization = {}
-        
+
         with data.get_pkg_data_fileobj(
                 "data/ucd1p-words.txt", encoding='ascii') as fd:
             tree = {}
@@ -162,11 +166,11 @@ class UCDTree(object):
                 type, name, descr = [
                     x.strip() for x in line.split('|') ]
                 name_lower = name.lower()
-    
+
 def fromField(field):
     assert(hasattr(field,'ucd'))
     return field.ucd
-    
+
 def _parsePlain(votable):
     assert(isinstance(votable,Table))
     out = []
@@ -184,12 +188,12 @@ def _parseTree(votable):
     for f in votable.fields:
         ucd = fromField(f)
         if ucd is None:
-        
-    
+
+
 def fromTable(votable,mode='plain'):
     '''
     Return a plain list with all table's UCDs
-    
+
     Input:
      - mode : way to output UCDs. Options are ['plain','tree']
     '''
@@ -199,5 +203,5 @@ def fromTable(votable,mode='plain'):
         return _parsePlain(votable)
     else:
         return _parseTree(votable)
-    
+
 """

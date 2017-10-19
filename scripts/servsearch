@@ -5,37 +5,40 @@ Created on Tue Sep 16 11:09:47 2014
 
 @author: chbrandt
 """
+from __future__ import print_function
 
-ucds = ['pos.eq',
-        'POS_EQ_RA_MAIN',
-        'POS_EQ_DEC_MAIN',
-        'phot.mag',
-        'phot.count',
-        'phys.luminosity',
-        'phot.flux']
-
-units = ['h:m:s',
-         'd:m:s',
-         'ct/s',
-         'erg/s',
-         'erg/s/cm2',
-         'erg/s/cm^2',
-         'mag',
-         'mW/m2',
-         '1e-17W/m2',
-         'ct/ks',
-         'mJy',
-         'ct',
-         '[10-7W]']
+# ucds = ['pos.eq',
+#         'POS_EQ_RA_MAIN',
+#         'POS_EQ_DEC_MAIN',
+#         'phot.mag',
+#         'phot.count',
+#         'phys.luminosity',
+#         'phot.flux']
+#
+# units = ['h:m:s',
+#          'd:m:s',
+#          'ct/s',
+#          'erg/s',
+#          'erg/s/cm2',
+#          'erg/s/cm^2',
+#          'mag',
+#          'mW/m2',
+#          '1e-17W/m2',
+#          'ct/ks',
+#          'mJy',
+#          'ct',
+#          '[10-7W]']
 
 desc = """
     Code to search (USVAO) registry for catalogue services.
-    It is hardcoded to look for catalogues providing photometric emission data;
-    the columns/fields should present (any of) the following UCDs and units, resp:
-
-    UCDs: %s
-    Units: %s
-    """ % (ucds,units)
+    """
+    # """
+    # It is hardcoded to look for catalogues providing photometric emission data;
+    # the columns/fields should present (any of) the following UCDs and units, resp:
+    #
+    # UCDs: %s
+    # Units: %s
+    # """ % (ucds,units)
 
 import sys
 import os
@@ -74,7 +77,10 @@ def writeCatalogs(catalogues,at=''):
                     f2 = unicode(f[2]).enconde('utf-8')
                     f3 = unicode(f[3]).enconde('utf-8')
                     fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
-    config.write_ini(out,at+'/CATALOGS.ini')
+    import json
+    with open(at+'/CATALOGS.ini', 'w') as fp:
+        json.dump(out,fp,indent=2)
+    # config.write_ini(out,at+'/CATALOGS.ini')
 
 # Lets put a cli here, so that the script can work with free parameters
 #
@@ -83,20 +89,31 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description=desc)
 
+    bands_ = ['all']
+    bands_.extend(servsearch.BANDS.keys())
     parser.add_argument('band', metavar='waveband',
-                        choices=servsearch.BANDS.keys(),
-                        help='Waveband of interest to search for.')
+                        choices=bands_,
+                        help='Waveband of interest to search for: {}'.format(bands_))
 
     parser.add_argument('--keywords', nargs='?', action='store',
-                        help='Special keywords to be found at catalogues.')
+                        help='Special keywords to be found in catalogues.')
+
+    parser.add_argument('--ucds', nargs='?', action='store',
+                        help='UCDs that calid catalogues should provide.')
+
+    parser.add_argument('--units', nargs='?', action='store',
+                        help='Units to filter catalogues.')
 
     # Log
     #
     parser.add_argument('--log', nargs='?', const='servsearch.log', default=None,
                         help="Log script steps. A filename can be given as argument.")
 
-    parser.add_argument('--sample', action='store_true',
-                        help="If asked, a 10%% randomly chosen sample is worked out.")
+    parser.add_argument('--sample', nargs='?', type=float, const=True, default=None,
+                        help="If no argument, a 10%% randomly chosen sample is worked out.")
+
+    parser.add_argument('--filter', action='store_true',
+                        help="Should output contain only columns with matching UCDs or Units?")
 
     # Parse the known arguments
     args,unknown = parser.parse_known_args()
@@ -109,13 +126,22 @@ if __name__ == '__main__':
     else:
         logging.disable(logging.NOTSET)
 
-    _ucd = servsearch.BANDS[args.band]
-    ucds = {_ucd:ucds}
+    ucds = args.ucds
+    ucds = [ucds.split()] if ucds else []
+    if args.band != 'all':
+        ucds.append([ servsearch.BANDS[band] for band in args.band.split() ])
+
+    units = args.units
+    units = [units.split()] if units else []
 
     sample = args.sample
+    filter_columns = args.filter
 
+    band = args.band if args.band != 'all' else None
+    keywords = args.keywords
     # Run
-    catalogues = servsearch.main(args.band, args.keywords, ucds, units,
-                                        sample=sample)
-
-    writeCatalogs(catalogues,args.band)
+    catalogues = servsearch.main(band, keywords, ucds, units,
+                                    sample=sample,
+                                    filter_columns=filter_columns)
+    if catalogues:
+        writeCatalogs(catalogues,args.band)
