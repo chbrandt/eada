@@ -35,7 +35,7 @@ def setupParserOptions(parser,cp):
                         help="Print the list os catalogs available for the search.")
 
     group.add_argument('--catalog', dest='cat', metavar='CATALOG',
-                        choices = CATS, 
+                        choices = CATS,
                         help="A catalog (name) from your config file. Use '--list' option.")
 
     group.add_argument('--url', dest='url',
@@ -69,6 +69,9 @@ def setupParserOptions(parser,cp):
                         help="Just outputs if at least one source is found.")
     output.add_argument('-o','--outfile', dest='outfile', nargs='?', const='',
                         default=None, help="Filename to write the output, CSV format table file.")
+    output.add_argument('--format', dest='format', type=str, default='csv',
+                        choices=['csv','ecsv'],
+                        help="Output file format, CSV is the default.")
 
     return parser
 
@@ -258,7 +261,8 @@ if __name__ == '__main__':
     logging.debug("Output file %s",outfile)
 
     if outfile:
-        table.write(outfile,format='ascii.ecsv')#,delimiter=',')
+        format_ = '.'.join(['ascii',args.format])
+        table.write(outfile,format=format_,delimiter=',')
     else:
         print "---"
         print " Table retrieved:"

@@ -3,6 +3,7 @@
 Base module for the library, where common modules/functions are loaded/defined.
 """
 from astropy import log as logging
+# import logging
 
 ## Namespace to dealt with docstrings
 #
