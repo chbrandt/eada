@@ -42,6 +42,23 @@ import sys
 import re
 import os
 
+CFGFILE = None
+
+def _read(filename=None,merge=True):
+    # Read the db/config file
+    from eada.io import config
+    cp = {}
+    if merge:
+        cfg_ = config.read_default(CFGFILE)
+        if cfg_:
+            cp.update( cfg_ )
+    if filename is not None and os.path.isfile(filename):
+        cfg_ = config.read_ini(filename)
+        if cfg_:
+            cp.update( cfg_ )
+    return cp
+
+
 def read_default(config_file):
     # config_file is either 'conesearch.cfg' or 'specsearch.cfg'
     config_dir = os.path.join(os.path.expanduser("~"),'.config','eada')

@@ -87,7 +87,8 @@ def conesearch(ra,dec,radius,url,timeout=None):
     try:
         res = scs.search( db_url, (ra,dec), radius, verbosity=3)
     except Exception as e:
-        logging.exception("Exception raised: %s", e)
+        exception_msg = str(e).split('\n')[-1]
+        logging.error("Exception raised: {}".format(e))
 
     return res
 
