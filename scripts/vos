@@ -7,7 +7,7 @@ class _Aux:
     def plainDict(d):
         """Flatten dictionary (to list)"""
         res = []
-        for k,v in d.iteritems():
+        for k,v in d.items():
             res.extend([k,v])
         return res
 
@@ -20,25 +20,25 @@ class _Aux:
             try:
                 os.mkdir(at)
             except:
-                print >> sys.stderr, "Not able to create directory '%s'. Check your permissions." % at
+                print("Not able to create directory '%s'. Check your permissions." % at, file=sys.stderr)
                 sys.exit(1)
 
         try:
             fp = open(at+'/README.txt','w')
         except:
-            print >> sys.stderr, "Not able to write to directory '%s'. Check your permissions." % at
+            print("Not able to write to directory '%s'. Check your permissions." % at, file=sys.stderr)
 
-        print("\nCatologues selected [%d]:" % len(catalogues))
+        print(("\nCatologues selected [%d]:" % len(catalogues)))
         out = {}
         for c in catalogues:
             out[c.shortname()] = c.summary()
             if False:
                 with open(at+'/'+c.shortname()+'.txt','w') as fp:
                     for f in c.fielddesc():
-                        f0 = unicode(f[0]).enconde('utf-8')
-                        f1 = unicode(f[1]).enconde('utf-8')
-                        f2 = unicode(f[2]).enconde('utf-8')
-                        f3 = unicode(f[3]).enconde('utf-8')
+                        f0 = str(f[0]).enconde('utf-8')
+                        f1 = str(f[1]).enconde('utf-8')
+                        f2 = str(f[2]).enconde('utf-8')
+                        f3 = str(f[3]).enconde('utf-8')
                         fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
         config.write_ini(out,at+'/CATALOGS.ini')
 
@@ -71,7 +71,7 @@ class VOSearch(object):
         # exclude the rest of the args too, or validation will fail
         args = parser.parse_args(argv[1:2])
         if not hasattr(self, args.command):
-            print 'Unrecognized command'
+            print('Unrecognized command')
             parser.print_help()
             exit(1)
         # use dispatch pattern to invoke method with same name
@@ -95,7 +95,7 @@ class VOSearch(object):
         from vos.cli.ssa import SSA
         ssa = SSA(description=_SUBCOMMANDS['spectra'])
         args = ssa.parser.parse_args(argv)
-        print 'Arguments: ' % args
+        print('Arguments: ' % args)
 
 
 if __name__ == '__main__':

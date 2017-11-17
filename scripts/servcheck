@@ -7,8 +7,8 @@ Verify the availability of given host/service
 import sys
 import os
 
-import urlparse
-import httplib
+import urllib.parse
+import http.client
 
 from astropy.vo.validator.validate import check_conesearch_sites
 
@@ -24,7 +24,7 @@ def checkServer(hostname):
     '''
     Check if a host (www.abc.com) is up
     '''
-    conn = httplib.HTTPConnection(hostname)
+    conn = http.client.HTTPConnection(hostname)
     conn.request('HEAD','')
     s = conn.getresponse().status
     return int(s) < 400
@@ -33,7 +33,7 @@ def isServiceUp(service_url):
     '''
     Checks whether the given (service) url is reachable
     '''
-    pr = urlparse.urlparse(service_url)
+    pr = urllib.parse.urlparse(service_url)
     serverUp = checkServer(pr.netloc)
     return serverUp
     
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     config_grp = main_group.add_argument_group()
     
     parser.add_argument('verification',
-                        choices=verificationType.keys(),
+                        choices=list(verificationType.keys()),
                         help='Kind of service verification.')
 
     main_group.add_argument('--url', default=None,
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     
     if args.url:
         res = main(args.url,args.verification)
-        print("%s[URL]%s\n%s" % (OUTPUT[res][0],COLOR_END,OUTPUT[res][1]))
+        print(("%s[URL]%s\n%s" % (OUTPUT[res][0],COLOR_END,OUTPUT[res][1])))
         if res:
             sys.exit(os.EX_OK)
         else:
@@ -100,13 +100,13 @@ if __name__ == '__main__':
     cfgfile = args.config
 
     if not os.path.exists(cfgfile):
-        print >> sys.stderr, "File %s does not exist." % cfgfile
+        print("File %s does not exist." % cfgfile, file=sys.stderr)
         sys.exit(os.EX_IOERR)
 
     try:
         cp = config.read_ini(cfgfile)
     except:
-        print >> sys.stderr, "Opening the file raised the following error."
+        print("Opening the file raised the following error.", file=sys.stderr)
         sys.exit(os.EX_IOERR)
 
     caturls = {}
@@ -115,15 +115,15 @@ if __name__ == '__main__':
         try:
             url = cp.get(cat)['url']
         except:
-            print >> sys.stderr, "Catalog '%s' could not be found inside config file."
+            print("Catalog '%s' could not be found inside config file.", file=sys.stderr)
             sys.exit(os.EX_IOERR)
         caturls[cat] = url
     else:
-        for cat in cp.keys():
+        for cat in list(cp.keys()):
             url = cp.get(cat)['url']
             caturls[cat] = url
 
-    status = main(caturls.values(),args.verification)
+    status = main(list(caturls.values()),args.verification)
     if not status:
         sys.exit(os.EX_NOHOST)
     else:
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     status = []
     for cat,url in caturls:
         res = main(url,args.verification)
-        print("%s[%s]%s\n%s" % (OUTPUT[res][0],cat,COLOR_END,OUTPUT[res][1]))
+        print(("%s[%s]%s\n%s" % (OUTPUT[res][0],cat,COLOR_END,OUTPUT[res][1])))
         status.append(res)
     if not all(status):
         sys.exit(os.EX_NOHOST)

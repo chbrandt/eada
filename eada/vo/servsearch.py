@@ -15,9 +15,13 @@ import string
 from collections import OrderedDict as odict
 
 def _ustr(word):
-    return unicode(word).encode('utf-8')
+    # return unicode(word).encode('utf-8')
+    return str(word)
 
 import metadata
+
+NULLPOS = (0,0)
+NULLRAD = 0.0000001
 
 # Wavebands available to search for catalogue data
 # (for convenience I relate the UCD words used)
@@ -37,6 +41,9 @@ class CatalogValidator(object):
     class Table(object):
         def __init__(self):
             self.clear()
+
+        def __str__(self):
+            return str(self.fields())
 
         def clear(self):
             self._pseudoTable = None
@@ -79,8 +86,8 @@ class CatalogValidator(object):
         assert(record != None)
         self._record = record
         self._table = self.Table()
-        self._nullPos = (0,0)
-        self._nullRad = 0.000001
+        self._nullPos = NULLPOS
+        self._nullRad = NULLRAD
         self._ucds = {}
         self._units = []
         self._columns = []
@@ -105,6 +112,7 @@ class CatalogValidator(object):
             r = None
         except Exception as e:
             logging.error("Exception while querying service: {}".format(e))
+            r = None
         return r
 
     def sync(self):
@@ -137,14 +145,9 @@ class CatalogValidator(object):
                 and_ucds.append(ucd)
                 continue
             assert isinstance(ucd,list), '{}'.format(ucd)
-            ok *= metadata.checkUCDs(self._table,ucd,True)
+            ok = ok and metadata.checkUCDs(self._table,ucd,True)
         if and_ucds:
-            ok *= metadata.checkUCDs(self._table,and_ucds,True)
-        # emUCD = self._ucds.keys()
-        # assert(len(emUCD)==1)
-        # ok1 = metadata.checkUCDs(self._table,emUCD,True)
-        # ok2 = metadata.checkUCDs(self._table,self._ucds[emUCD[0]],True)
-        # return ok1 and ok2
+            ok = ok and metadata.checkUCDs(self._table,and_ucds,True)
         return ok
 
     def _checkUnits(self):
@@ -160,9 +163,6 @@ class CatalogValidator(object):
 
     def filterColumns(self):
         self.sync()
-        # ucds = self._ucds.keys()
-        # assert(len(ucds)==1)
-        # ucds.extend(self._ucds[ucds[0]])
         ucds = []
         for ucd in self._ucds:
             if isinstance(ucd,str):
@@ -187,8 +187,8 @@ class CatalogValidator(object):
         self.sync()
         for field in self._table.fields():
             name = field.name
-            ucd = field.ucd
-            unit = field.unit
+            ucd = str(field.ucd)
+            unit = str(field.unit)#.to_string())
             descr = field.description
             self._columns.append( (name,ucd,unit,descr) )
 
@@ -199,10 +199,10 @@ class CatalogValidator(object):
         out['ivoid']        = self.ivoid()
         out['creators']     = self.publisher()
         out['description']  = self.description()
-        out['columns_name'] = [ _ustr(col[0]) for col in self._columns ]
-        out['columns_ucd']  = [ _ustr(col[1]) for col in self._columns ]
-        out['columns_unit'] = [ _ustr(col[2]) for col in self._columns ]
-        out['columns_desc'] = [ _ustr(col[3]) for col in self._columns ]
+        out['columns_name'] = [ col[0] for col in self._columns ]
+        out['columns_ucd']  = [ col[1] for col in self._columns ]
+        out['columns_unit'] = [ col[2] for col in self._columns ]
+        out['columns_desc'] = [ col[3] for col in self._columns ]
         return out
 
     def description(self):
@@ -222,7 +222,7 @@ class CatalogValidator(object):
 
     def shortname(self):
         _sn = self._record.short_name.split()[0]
-        return filter(str.isalnum,str(_sn))
+        return ''.join(filter(str.isalnum,str(_sn)))
 
     def fielddesc(self):
         fl = []
@@ -255,13 +255,35 @@ def _retrieveTable(record):
     logdbg("Qyeried URL: '%s'" % (tab.queryurl))
     return tab
 
-def selectCatalogs(records,ucds=None,units=None,filter_columns=False):
+def _selectCatalog(record,ucds=None,units=None,filter_columns=False):
+    cv = CatalogValidator(record)
+
+    loginf("Retrieving table '%s'" % (cv.title()))
+    cv.sync()
+
+    if not cv:
+        return None
+
+    cv.setUCDs(ucds)
+    cv.setUnits(units)
+
+    if not cv.isValid():
+        return False
+
+    if filter_columns:
+        cv.filterColumns()
+    else:
+        cv.useAllColumns()
+
+    return cv
+
+def _selectCatalogs(records,ucds=None,units=None,filter_columns=False,nprocs=1):
     '''
     '''
     def printProgress(_progress):
         i = _progress[0][0]
         n = _progress[1][0]
-        s = _progress[2][0]
+        # s = _progress[2][0]
         prog = int(100*float(i)/n)
         # sys.stdout.write("\r[%d%% - %d/%d] %s" % (prog,i,n,s))
         sys.stdout.write("\r[%d%% - %d/%d]" % (prog,i,n))
@@ -277,34 +299,22 @@ def selectCatalogs(records,ucds=None,units=None,filter_columns=False):
         _progress[1][0] = len(records)
         printProgress(_progress)
 
-        cv = CatalogValidator(r)
-        loginf("Retrieving table '%s'" % (cv.title()))
-        cv.sync()
-
-        if not cv:
+        cv = _selectCatalog(r,ucds=ucds,units=units,filter_columns=filter_columns)
+        if cv is None:
             _failed.append(r)
-            _progress[2][0] += 'x'
+            # _progress[2][0] += 'x'
             continue
-
-        cv.setUCDs(ucds)
-        cv.setUnits(units)
-
-        if not cv.isValid():
+        if cv is False:
             _unwanted.append(cv)
-            _progress[2][0] += '-'
+            # _progress[2][0] += '-'
             continue
-
-        if filter_columns:
-            cv.filterColumns()
-        else:
-            cv.useAllColumns()
         catalogues.append(cv)
 
-        _progress[2][0] += 'o'
+        # _progress[2][0] += 'o'
         cnt += 1
 
     printProgress(_progress)
-    print('\n')
+    print()
     assert(len(catalogues)+len(_failed)+len(_unwanted)==len(records))
 
     if len(_failed):
@@ -320,7 +330,7 @@ def selectCatalogs(records,ucds=None,units=None,filter_columns=False):
 def search(waveband, keyword='', ucds=[], units=[],
             service='conesearch', registry='US',
             sample=0, filter_columns=False,
-            parallel=False):
+            nprocs=1):
     '''
     Search and filter services to be used for SED analysis
     '''
@@ -355,25 +365,10 @@ def search(waveband, keyword='', ucds=[], units=[],
         shuffle(irec)
         records = [ records[i] for i in irec[:sample] ]
 
-    if parallel:
-        def spawn(f):
-            def fun(pipe,x):
-                pipe.send(f(x))
-                pipe.close()
-            return fun
-        def parmap(f,x):
-            from itertools import izip
-            from multiprocessing import Process,Pipe
-            pipe=[ Pipe() for _ in x ]
-            proc=[Process(target=spawn(f),args=(c,x)) for x,(p,c) in izip(x,pipe)]
-            [ p.start() for p in proc ]
-            [ p.join() for p in proc ]
-            return [ p.recv() for (p,c) in pipe ]
-        foo = lambda r: selectCatalogs(r,ucds,units)
-        catalogues = parmap(foo, records)
-    else:
-        catalogues = selectCatalogs(records,ucds,units,
-                                    filter_columns=filter_columns)
+    catalogues = _selectCatalogs(records, ucds, units,
+                                 filter_columns=filter_columns,
+                                 nprocs=max(1,nprocs))
+
     loginf("%d tables were retrieved." % len(catalogues))
 
     return catalogues

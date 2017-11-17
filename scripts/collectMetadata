@@ -40,9 +40,9 @@ class Config:
         # UCDs defined by ivoa [ http://cdsweb.u-strasbg.fr/UCD/ ]
         #
         def words(self,prefix=None):
-            vals = self._capitalization.values()
+            vals = list(self._capitalization.values())
             if prefix:
-                assert(prefix in self._capitalization.keys())
+                assert(prefix in list(self._capitalization.keys()))
                 vals = [ str(w) for w in vals if string.find(w,prefix)==0 ]
             #vals.sort()
             return vals
@@ -92,7 +92,7 @@ class JSON:
         except:
             return None
 
-        if not jfile.has_key(_key):
+        if _key not in jfile:
             return False
 
         catalogs = jfile[_key]
@@ -129,7 +129,7 @@ def filterCatalogs(jsonFilename):
     mdata.initFilters([],Config.UCDs())
 
     # Now, let's run over each catalog entry and get the data    
-    for name,cat in catalogs.iteritems():
+    for name,cat in catalogs.items():
         # Create a temporary box for the current catalog's metadata
         md = Strct.CatalogServices(str(name))
         md.initFilters(False,Config.WaveBands())
@@ -147,14 +147,14 @@ def filterCatalogs(jsonFilename):
         unknown_wb = ''
         # each known band will be flaged True
         for wb in _wband:
-            if not md.has_key(wb):
+            if wb not in md:
                 unknown_wb += wb+','
                 continue
             md[wb] = True
         # - then the same for ucds, but now they have to be read from the 
         # catalog table's metadata, which has to be retrieved from the service 
         url = str(cat['url'])
-        print("Searching %s" % (cat['title']))
+        print(("Searching %s" % (cat['title'])))
         try:
             res = conesearch(0,0,0.0001,url)  # Null search for metadata only
         except:
@@ -166,15 +166,15 @@ def filterCatalogs(jsonFilename):
         resUCDs = getUCD(res)
         unknown_ucd = ''
         for uw in resUCDs:
-            if not md.has_key(uw):
+            if uw not in md:
                 unknown_ucd += uw+','
                 continue
             md[uw] = True
             
         # Add the verification-value for this catalog to the respective
         # entries in the master data structure 'mdata'
-        assert(md.keys()==mdata.keys())
-        for k in md.keys():
+        assert(list(md.keys())==list(mdata.keys()))
+        for k in list(md.keys()):
             assert(isinstance(list,mdata[k]))
             mdata[k].append(md[k])
 
