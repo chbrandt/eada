@@ -49,6 +49,7 @@ from eada.io import config
 import logging
 LOGLEVEL = logging.DEBUG
 
+
 def writeCatalogs(catalogues,at=None):
     localDir = os.getcwd()
     if not at:
@@ -57,13 +58,17 @@ def writeCatalogs(catalogues,at=None):
         try:
             os.mkdir(at)
         except:
-            print("Not able to create directory '{}'. Check your permissions.".format(at), file=sys.stderr)
+            msg = ("Not able to create directory '{}'."
+                   "Check your permissions.")
+            print(msg.format(at), file=sys.stderr)
             sys.exit(1)
 
     try:
-        fp = open(at+'/README.txt','w')
+        fp = open(at+'/README.txt', 'w')
     except:
-        print("Not able to write to directory '{}'. Check your permissions.".format(at),file=sys.stderr)
+        msg = ("Not able to write to directory '{}'."
+               "Check your permissions.")
+        print(msg.format(at), file=sys.stderr)
 
     print("Catologues selected [{:d}]:".format(len(catalogues)))
     out = {}

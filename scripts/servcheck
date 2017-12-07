@@ -12,14 +12,14 @@ import http.client
 
 from astropy.vo.validator.validate import check_conesearch_sites
 
-from zyxw.io import config
+from eada.io import config
 
 COLOR_OK = '\033[92m'
 COLOR_END = '\033[0m'
 COLOR_FAIL = '\033[91m'
 OUTPUT = {True : (COLOR_OK,'OK'),
           False: (COLOR_FAIL,'FAIL')}
-          
+
 def checkServer(hostname):
     '''
     Check if a host (www.abc.com) is up
@@ -28,7 +28,7 @@ def checkServer(hostname):
     conn.request('HEAD','')
     s = conn.getresponse().status
     return int(s) < 400
-    
+
 def isServiceUp(service_url):
     '''
     Checks whether the given (service) url is reachable
@@ -36,11 +36,11 @@ def isServiceUp(service_url):
     pr = urllib.parse.urlparse(service_url)
     serverUp = checkServer(pr.netloc)
     return serverUp
-    
+
 def pingServices(url_list):
     status = [ isServiceUp(url) for url in url_list ]
     return all(status)
-    
+
 def validateServices(url_list):
     '''
     Validate the (quality of the) VO service
@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
     main_group = parser.add_mutually_exclusive_group()
     config_grp = main_group.add_argument_group()
-    
+
     parser.add_argument('verification',
                         choices=list(verificationType.keys()),
                         help='Kind of service verification.')
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     if not (args.url or args.config):
         parser.print_help()
         sys.exit(1)
-    
+
     if args.url:
         res = main(args.url,args.verification)
         print(("%s[URL]%s\n%s" % (OUTPUT[res][0],COLOR_END,OUTPUT[res][1])))
@@ -128,7 +128,7 @@ if __name__ == '__main__':
         sys.exit(os.EX_NOHOST)
     else:
         sys.exit(os.EX_OK)
-            
+
     status = []
     for cat,url in caturls:
         res = main(url,args.verification)
@@ -138,4 +138,3 @@ if __name__ == '__main__':
         sys.exit(os.EX_NOHOST)
     else:
         sys.exit(os.EX_OK)
-    
