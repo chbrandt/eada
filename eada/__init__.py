@@ -9,7 +9,7 @@ from astropy import log as logging
 #
 class Doc:
     """
-    Auxiliary functions to dealt with python docstrings
+    Auxiliary functions to deal with python docstrings
     """
     @staticmethod
     def synopsis(foo):

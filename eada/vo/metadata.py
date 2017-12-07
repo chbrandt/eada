@@ -42,20 +42,21 @@ def matchUnits(tab,units=[],substring=False):
     ns = set(names)
     return list(ns)
 
-def checkUCDs(tab,UCDs=[],substring=False):
+def checkUCDs(tab,UCDs=[],substring=True):
     """Returns a True if tab has one of the given UCDs; False otherwise"""
     if tab is None:
         return False
     if not UCDs:
         return True
-    import string
+    # import string
     l = getUCD(tab)
     if not substring:
         ok = any( filter(lambda u:u in UCDs, set(l)) )
     else:
         ok = []
         for u in l:
-            ok.append(any( [ string.find(u,ucd)>=0 for ucd in UCDs ] ))
+            # ok.append(any( [ string.find(u,ucd)>=0 for ucd in UCDs ] ))
+            ok.append(any( [ u in ucd for ucd in UCDs ] ))
         ok = any(ok)
     return ok
 
