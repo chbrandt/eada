@@ -1,0 +1,14 @@
+# %ECSV 0.9
+# ---
+# datatype:
+# - {name: OBJID, datatype: int64}
+# - {name: RA, datatype: float64}
+# - {name: DEC, datatype: float64}
+# - {name: U, datatype: float32}
+# - {name: G, datatype: float32}
+# - {name: R, datatype: float32}
+# - {name: I, datatype: float32}
+# - {name: Z, datatype: float32}
+# schema: astropy-2.0
+OBJID RA DEC U G R I Z
+1237662224597909569 166.113813505 38.2088248975 14.6203 13.6011 13.0799 13.6209 12.5521
