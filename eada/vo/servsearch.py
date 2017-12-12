@@ -1,7 +1,16 @@
 #!/usr/bin/env python
-#-*- coding:utf-8 -*-
-
+from __future__ import absolute_import
 import sys
+import timeout_decorator
+TIMEOUT = 3
+
+import string
+from collections import OrderedDict as odict
+
+from pyvo.dal.scs import SCSResults
+from pyvo.dal.query import DALQueryError, DALServiceError
+
+from . import metadata
 
 import logging
 logcrt = logging.critical
@@ -10,15 +19,11 @@ logwrn = logging.warning
 logdbg = logging.debug
 loginf = logging.info
 
-import string
-
-from collections import OrderedDict as odict
 
 def _ustr(word):
     # return unicode(word).encode('utf-8')
     return str(word)
 
-import metadata
 
 NULLPOS = (0,0)
 NULLRAD = 0.0000001
@@ -27,13 +32,64 @@ NULLRAD = 0.0000001
 # (for convenience I relate the UCD words used)
 BANDS = {'radio'        : 'em.radio',
          'millimeter'   : 'em.mm',
+         'mm'           : 'em.mm',
          'infrared'     : 'em.IR',
+         'ir'           : 'em.IR',
          'optical'      : 'em.opt',
+         'opt'          : 'em.opt',
+         'ultraviolet'  : 'em.UV',
          'uv'           : 'em.UV',
          'xray'         : 'em.X-ray'}
 
-from pyvo.dal.scs import SCSResults
-from pyvo.dal.query import DALQueryError,DALServiceError
+
+def search(waveband, keyword='', ucds=[], units=[],
+           service='conesearch', registry='US',
+           sample=0, filter_columns=False,
+           nprocs=1):
+    '''
+    Search and filter services to be used for SED analysis
+    '''
+    from pyvo import regsearch
+
+    if not _validRegistry(registry):
+        _regsOK = [k for k, v in _registries.items() if v]
+        logcrt("Registry not supported. Choices are: %s" % (_regsOK))
+        return False
+
+    loginf("Querying registry '%s' for services '%s' providing '%s' data matching '%s' keyword"
+            % (registry, service, waveband, keyword))
+
+    # We use PyVO for querying the registry
+    records = regsearch(waveband=waveband,
+                        keywords=keyword,
+                        servicetype=service)
+    num_records = len(records)
+    loginf("Number of services found: %d" % (num_records))
+
+    if not num_records:
+        print("No catalogues found.")
+        return None
+
+    if sample is True:
+        sample = int(num_records/10)
+    if sample:
+        assert sample > 0, "Sample should be a positive number"
+        sample = int(sample) if sample >= 1 else int(num_records*sample)
+        from random import shuffle
+        irec = list(range(num_records))
+        shuffle(irec)
+        records = [ records[i] for i in irec[:sample] ]
+
+    catalogues = _selectCatalogs(records, ucds, units,
+                                 filter_columns=filter_columns,
+                                 nprocs=max(1,nprocs))
+
+    loginf("%d tables were retrieved." % len(catalogues))
+
+    return catalogues
+
+main = search
+
 
 class CatalogValidator(object):
 
@@ -50,40 +106,40 @@ class CatalogValidator(object):
             self._votableTree = None
             self._originalTab = None
 
-        def __nonzero__(self):
-            return self._votableTree != None
+        def __bool__(self):
+            return self._votableTree is not None
 
         def __len__(self):
             return len(self._table)
 
-        def update(self,newTable):
-            if newTable != None and isinstance(newTable,SCSResults):
+        def update(self, newTable):
+            if newTable is not None and isinstance(newTable, SCSResults):
                 self._pseudoTable = newTable
                 self._votableTree = newTable.votable
 
         def fields(self):
             return self._votableTree.fields
 
-        def fieldname_with_ucd(self,ucd):
+        def fieldname_with_ucd(self, ucd):
             names = []
             for fld in self._pseudoTable.fieldnames:
                 desc = self._pseudoTable.getdesc(fld)
-                if desc.ucd and string.find(desc.ucd,ucd) >= 0:
+                if desc.ucd and string.find(desc.ucd, ucd) >= 0:
                     names.append(fld)
             return names
 
-        def fieldname_with_unit(self,unit):
+        def fieldname_with_unit(self, unit):
             names = []
             for fld in self._pseudoTable.fieldnames:
                 desc = self._pseudoTable.getdesc(fld)
-                if desc.unit and string.find(str(desc.unit).replace(' ',''),unit) >= 0:
+                if desc.unit and string.find(str(desc.unit).replace(' ', ''), unit) >= 0:
                     names.append(fld)
             return names
 
     # --- /Auxiliary class ---
 
-    def __init__(self,record):
-        assert(record != None)
+    def __init__(self, record):
+        assert(record is not None)
         self._record = record
         self._table = self.Table()
         self._nullPos = NULLPOS
@@ -92,17 +148,19 @@ class CatalogValidator(object):
         self._units = []
         self._columns = []
 
-    def __nonzero__(self):
+    def __bool__(self):
         assert(self._record)
         return bool(self._table)
 
     def __len__(self):
         assert(self._record)
-        return len(self._table) if self._table != None else 0
+        return len(self._table) if self._table is not None else 0
 
+    @timeout_decorator.timeout(TIMEOUT)
     def _getTable(self):
         assert(self._record)
-        import warnings; warnings.filterwarnings('ignore')
+        import warnings
+        warnings.filterwarnings('ignore')
         s = self._record.service
         try:
             r = s.search(pos=self._nullPos, radius=self._nullRad)
@@ -117,21 +175,24 @@ class CatalogValidator(object):
 
     def sync(self):
         if not self._table:
-            t = self._getTable()
+            try:
+                t = self._getTable()
+            except:
+                t = None
             self._table.update(t)
 
-    def setUCDs(self,UCDs):
+    def setUCDs(self, UCDs):
         if UCDs is None:
             UCDs = []
-        assert isinstance(UCDs,list)
+        assert isinstance(UCDs, list)
         self._ucds = UCDs[:]
 
-    def setUnits(self,Units):
+    def setUnits(self, Units):
         if Units is None:
             Units = []
-        if isinstance(Units,list):
+        if isinstance(Units, list):
             self._units = Units[:]
-        elif isinstance(Units,str):
+        elif isinstance(Units, str):
             self._units = Units.split()
         else:
             raise TypeError("UCDs should be str or list")
@@ -141,18 +202,18 @@ class CatalogValidator(object):
         ok = True
         and_ucds = []
         for ucd in self._ucds:
-            if isinstance(ucd,str):
+            if isinstance(ucd, str):
                 and_ucds.append(ucd)
                 continue
-            assert isinstance(ucd,list), '{}'.format(ucd)
-            ok = ok and metadata.checkUCDs(self._table,ucd,True)
+            assert isinstance(ucd, list), '{}'.format(ucd)
+            ok = ok and metadata.checkUCDs(self._table, ucd, True)
         if and_ucds:
-            ok = ok and metadata.checkUCDs(self._table,and_ucds,True)
+            ok = ok and metadata.checkUCDs(self._table, and_ucds, True)
         return ok
 
     def _checkUnits(self):
         assert self._table
-        ok = metadata.checkUnits(self._table,self._units)
+        ok = metadata.checkUnits(self._table, self._units)
         return ok
 
     def isValid(self):
@@ -165,14 +226,14 @@ class CatalogValidator(object):
         self.sync()
         ucds = []
         for ucd in self._ucds:
-            if isinstance(ucd,str):
+            if isinstance(ucd, str):
                 ucds.append(ucd)
                 continue
-            assert isinstance(ucd,list)
+            assert isinstance(ucd, list)
             ucds.extend(ucd)
-        nameCols = metadata.matchUCDs(self._table,ucds,True)
+        nameCols = metadata.matchUCDs(self._table, ucds, True)
         units = self._units
-        nameCols.extend(metadata.matchUnits(self._table,units,True))
+        nameCols.extend(metadata.matchUnits(self._table, units, True))
         _set = set(nameCols)
         nameCols = list(_set)
         for field in self._table.fields():
@@ -181,7 +242,7 @@ class CatalogValidator(object):
                     ucd = field.ucd
                     unit = field.unit
                     descr = field.description
-                    self._columns.append( (name,ucd,unit,descr) )
+                    self._columns.append((name, ucd, unit, descr))
 
     def useAllColumns(self):
         self.sync()
@@ -199,10 +260,10 @@ class CatalogValidator(object):
         out['ivoid']        = self.ivoid()
         out['creators']     = self.publisher()
         out['description']  = self.description()
-        out['columns_name'] = [ col[0] for col in self._columns ]
-        out['columns_ucd']  = [ col[1] for col in self._columns ]
-        out['columns_unit'] = [ col[2] for col in self._columns ]
-        out['columns_desc'] = [ col[3] for col in self._columns ]
+        out['columns'] = [ col[0] for col in self._columns ]
+        out['ucds']  = [ col[1] for col in self._columns ]
+        out['units'] = [ col[2] for col in self._columns ]
+        out['descriptions'] = [ col[3] for col in self._columns ]
         return out
 
     def description(self):
@@ -221,8 +282,10 @@ class CatalogValidator(object):
         return self._record.ivoid
 
     def shortname(self):
-        _sn = self._record.short_name.split()[0]
-        return ''.join(filter(str.isalnum,str(_sn)))
+        _sn = self._record.short_name
+        _sn = '_'.join(_sn.split())  # or 'EMPTY'
+        # return ''.join(filter(str.isalnum,str(_sn)))
+        return _sn
 
     def fielddesc(self):
         fl = []
@@ -277,6 +340,9 @@ def _selectCatalog(record,ucds=None,units=None,filter_columns=False):
 
     return cv
 
+select_catalog = _selectCatalog
+
+
 def _selectCatalogs(records,ucds=None,units=None,filter_columns=False,nprocs=1):
     '''
     '''
@@ -325,52 +391,3 @@ def _selectCatalogs(records,ucds=None,units=None,filter_columns=False,nprocs=1):
     del _failed
 
     return catalogues
-
-
-def search(waveband, keyword='', ucds=[], units=[],
-            service='conesearch', registry='US',
-            sample=0, filter_columns=False,
-            nprocs=1):
-    '''
-    Search and filter services to be used for SED analysis
-    '''
-    from pyvo import regsearch
-
-    if not _validRegistry(registry):
-        _regsOK = [ k for k,v in _registries.items() if v ]
-        logcrt("Registry not supported. Choices are: %s" % (_regsOK))
-        return False
-
-    loginf("Querying registry '%s' for services '%s' providing '%s' data matching '%s' keyword"
-            % (registry,service,waveband,keyword))
-
-    # We use PyVO for querying the registry
-    records = regsearch(waveband=waveband,
-                         keywords=keyword,
-                         servicetype=service)
-    num_records = len(records)
-    loginf("Number of services found: %d" % (num_records))
-
-    if not num_records:
-        print("No catalogues found.")
-        return None
-
-    if sample is True:
-        sample = int(num_records/10)
-    if sample:
-        assert sample > 0, "Sample should be a positive number"
-        sample = int(sample) if sample >= 1 else int(num_records*sample)
-        from random import shuffle
-        irec = list(range(num_records))
-        shuffle(irec)
-        records = [ records[i] for i in irec[:sample] ]
-
-    catalogues = _selectCatalogs(records, ucds, units,
-                                 filter_columns=filter_columns,
-                                 nprocs=max(1,nprocs))
-
-    loginf("%d tables were retrieved." % len(catalogues))
-
-    return catalogues
-
-main = search
