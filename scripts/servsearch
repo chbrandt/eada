@@ -44,11 +44,12 @@ import sys
 import os
 
 from eada.vo import servsearch
-from eada.io import config
+#from eada.io import config
 
 import logging
 LOGLEVEL = logging.DEBUG
 
+from collections import OrderedDict
 
 def writeCatalogs(catalogues,at=None):
     localDir = os.getcwd()
@@ -71,7 +72,7 @@ def writeCatalogs(catalogues,at=None):
         print(msg.format(at), file=sys.stderr)
 
     print("Catologues selected [{:d}]:".format(len(catalogues)))
-    out = {}
+    out = OrderedDict()
     for c in catalogues:
         sn = c.shortname()
         out[sn] = c.summary()
@@ -124,6 +125,12 @@ if __name__ == '__main__':
     parser.add_argument('--filter', action='store_true',
                         help="Should output contain only columns with matching UCDs or Units?")
 
+    parser.add_argument('--nprocs', type=int, default=1,
+                        help="Query services in parallel if n>1.")
+
+    parser.add_argument('--timeout', type=float, default=3,
+                        help="Define the (hard) timeout to wait for service answer.")
+
     # Parse the known arguments
     args,unknown = parser.parse_known_args()
 
@@ -151,7 +158,8 @@ if __name__ == '__main__':
     # Run
     catalogues = servsearch.main(band, keywords, ucds, units,
                                     sample=sample,
-                                    filter_columns=filter_columns)#, parallel=True)
+                                    filter_columns=filter_columns,
+                                    nprocs=args.nprocs)
     print("Number of catalogues selected: {:d}".format(len(catalogues)))
 
     if len(catalogues):
