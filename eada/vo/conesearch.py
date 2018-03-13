@@ -4,7 +4,8 @@ from eada import *
 
 from astropy.table import Table
 
-TIMEOUT=10
+import timeout_decorator
+TIMEOUT = 30
 
 # --
 class Aux:
@@ -53,6 +54,7 @@ class Aux:
         return cols
 
 # --
+@timeout_decorator.timeout(TIMEOUT)
 def conesearch(ra,dec,radius,url,timeout=None):
     """
     Search for objects inside the circle (ra,dec,radius) at given 'url'
