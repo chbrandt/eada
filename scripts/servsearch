@@ -156,12 +156,14 @@ if __name__ == '__main__':
     band = args.band if args.band != 'all' else None
     keywords = args.keywords
     # Run
-    catalogues = servsearch.main(band, keywords, ucds, units,
+    catalogues = servsearch.search(band, keywords, ucds, units,
                                     sample=sample,
                                     filter_columns=filter_columns,
                                     nprocs=args.nprocs)
-    print("Number of catalogues selected: {:d}".format(len(catalogues)))
 
-    if len(catalogues):
-        writeCatalogs(catalogues,args.band)
-    print('Done.')
+    if catalogues is not None:
+        print("Number of catalogues selected: {:d}".format(len(catalogues)))
+
+        if len(catalogues):
+            writeCatalogs(catalogues,args.band)
+    # print('Done.')

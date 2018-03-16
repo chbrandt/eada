@@ -88,8 +88,6 @@ def search(waveband, keyword='', ucds=[], units=[],
 
     return catalogues
 
-main = search
-
 
 class CatalogValidator(object):
 
@@ -109,8 +107,11 @@ class CatalogValidator(object):
         def __bool__(self):
             return self._votableTree is not None
 
+        def __nonzero__(self):
+            return self.__bool__()
+
         def __len__(self):
-            return len(self._table)
+            return self._pseudoTable and len(self._pseudoTable)
 
         def update(self, newTable):
             if newTable is not None and isinstance(newTable, SCSResults):
@@ -152,9 +153,13 @@ class CatalogValidator(object):
         assert(self._record)
         return bool(self._table)
 
+    def __nonzero__(self):
+        return self.__bool__()
+        
     def __len__(self):
         assert(self._record)
-        return len(self._table) if self._table is not None else 0
+        # print(self._table)
+        return len(self._table) if self._table else 0
 
     @timeout_decorator.timeout(TIMEOUT)
     def _getTable(self):
@@ -360,28 +365,33 @@ def _selectCatalogs(records,ucds=None,units=None,filter_columns=False,nprocs=1):
     _failed = []
     _unwanted = []
     _progress = ([0],[0],[''])
-    for i,r in enumerate(records):
-        _progress[0][0] = i+1
-        _progress[1][0] = len(records)
-        printProgress(_progress)
 
-        cv = _selectCatalog(r,ucds=ucds,units=units,filter_columns=filter_columns)
-        if cv is None:
-            _failed.append(r)
-            # _progress[2][0] += 'x'
-            continue
-        if cv is False:
-            _unwanted.append(cv)
-            # _progress[2][0] += '-'
-            continue
-        catalogues.append(cv)
+    try:
+        for i,r in enumerate(records):
+            _progress[0][0] = i+1
+            _progress[1][0] = len(records)
+            printProgress(_progress)
 
-        # _progress[2][0] += 'o'
-        cnt += 1
+            cv = _selectCatalog(r,ucds=ucds,units=units,filter_columns=filter_columns)
+            if cv is None:
+                _failed.append(r)
+                # _progress[2][0] += 'x'
+                continue
+            if cv is False:
+                _unwanted.append(cv)
+                # _progress[2][0] += '-'
+                continue
+            catalogues.append(cv)
+
+            # _progress[2][0] += 'o'
+            cnt += 1
+    except KeyboardInterrupt:
+        catalogues = catalogues[:-1] if len(catalogues) else []
+        print("Loop interrupted.")
 
     printProgress(_progress)
     print()
-    assert(len(catalogues)+len(_failed)+len(_unwanted)==len(records))
+    # assert(len(catalogues)+len(_failed)+len(_unwanted)==len(records))
 
     if len(_failed):
         _fn = [ f.res_title for f in _failed ]
