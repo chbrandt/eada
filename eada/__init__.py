@@ -2,6 +2,8 @@
 """
 Base module for the library, where common modules/functions are loaded/defined.
 """
+from __future__ import print_function, absolute_import
+
 from astropy import log as logging
 # import logging
 

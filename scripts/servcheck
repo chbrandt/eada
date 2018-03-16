@@ -7,8 +7,15 @@ Verify the availability of given host/service
 import sys
 import os
 
-import urllib.parse
-import http.client
+try:
+    from urllib.parse import urlparse
+except:
+    from urlparse import urlparse
+
+try:
+    from http.client import HTTPConnection
+except:
+    from httplib import HTTPConnection
 
 from astropy.vo.validator.validate import check_conesearch_sites
 
@@ -24,7 +31,7 @@ def checkServer(hostname):
     '''
     Check if a host (www.abc.com) is up
     '''
-    conn = http.client.HTTPConnection(hostname)
+    conn = HTTPConnection(hostname)
     conn.request('HEAD','')
     s = conn.getresponse().status
     return int(s) < 400
@@ -33,7 +40,7 @@ def isServiceUp(service_url):
     '''
     Checks whether the given (service) url is reachable
     '''
-    pr = urllib.parse.urlparse(service_url)
+    pr = urlparse(service_url)
     serverUp = checkServer(pr.netloc)
     return serverUp
 
@@ -100,13 +107,13 @@ if __name__ == '__main__':
     cfgfile = args.config
 
     if not os.path.exists(cfgfile):
-        print("File %s does not exist." % cfgfile, file=sys.stderr)
+        print("File %s does not exist." % cfgfile)#, file=sys.stderr)
         sys.exit(os.EX_IOERR)
 
     try:
         cp = config.read_ini(cfgfile)
     except:
-        print("Opening the file raised the following error.", file=sys.stderr)
+        print("Opening the file raised the following error.")#, file=sys.stderr)
         sys.exit(os.EX_IOERR)
 
     caturls = {}
@@ -115,7 +122,7 @@ if __name__ == '__main__':
         try:
             url = cp.get(cat)['url']
         except:
-            print("Catalog '%s' could not be found inside config file.", file=sys.stderr)
+            print("Catalog '%s' could not be found inside config file.")#, file=sys.stderr)
             sys.exit(os.EX_IOERR)
         caturls[cat] = url
     else:

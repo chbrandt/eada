@@ -20,13 +20,13 @@ class _Aux:
             try:
                 os.mkdir(at)
             except:
-                print("Not able to create directory '%s'. Check your permissions." % at, file=sys.stderr)
+                print("Not able to create directory '%s'. Check your permissions." % at)#, file=sys.stderr)
                 sys.exit(1)
 
         try:
             fp = open(at+'/README.txt','w')
         except:
-            print("Not able to write to directory '%s'. Check your permissions." % at, file=sys.stderr)
+            print("Not able to write to directory '%s'. Check your permissions." % at)#, file=sys.stderr)
 
         print(("\nCatologues selected [%d]:" % len(catalogues)))
         out = {}

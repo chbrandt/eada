@@ -107,16 +107,19 @@ def read_ini( filename, *sections ):
     import os
     assert(os.path.isfile(filename))
 
-    import ConfigParser;
-    config = ConfigParser.ConfigParser();
-    config.read(filename);
+    try:
+        from configparser import ConfigParser
+    except:
+        from ConfigParser import ConfigParser
+    config = ConfigParser()
+    config.read(filename)
 
     # Just verify the existence of section (on a real cfg file..):
     #
-    sects = config.sections();
+    sects = config.sections()
     if sects == []:
-        # print >> sys.stderr, "Config file {} is empty".format(filename);
-        return None;
+        print("Config file {} is empty".format(filename))#, file=sys.stderr)
+        return None
 
     # Start list of tuples: [('section',section_dictionary), (,) ,...]
     #
@@ -129,10 +132,10 @@ def read_ini( filename, *sections ):
     for _section in sects:
         if not config.has_section(_section):
             assert(sections)
-            print >> sys.stderr, "Config file does not have section %s" % (_section);
-            continue;
+            print("Config file does not have section {}".format(_section))#, file=sys.stderr)
+            continue
 
-        dsect = {};
+        dsect = {}
         for k,v in config.items(_section):
             # support list syntax "[...]" being read
             pat = re.compile("^\[(.*)\]$")
@@ -145,7 +148,6 @@ def read_ini( filename, *sections ):
 
     return out;
 
-# ---
 read_config = read_ini;
 # ---
 
@@ -165,28 +167,30 @@ def write_ini( sections, filename ):
     '''
 
     if not isinstance(sections,dict):
-        print >> sys.stderr, "A dictionary is expected at 'sections' argument."
+        print("A dictionary is expected at 'sections' argument.")#, file=sys.stderr)
         return False
     if len(sections) == 0:
-        print >> sys.stderr, "Given 'sections' is empty."
+        print("Given 'sections' is empty.")#, file=sys.stderr)
         return None
 
-    import ConfigParser;
-    config = ConfigParser.RawConfigParser();
+    try:
+        from configparser import RawConfigParser
+    except:
+        from ConfigParser import RawConfigParser
+    config = RawConfigParser
 
     while sections:
-        _item = sections.popitem();
-        _section = _item[0];
-        config.add_section(_section);
-        for k,v in _item[1].items():
-            config.set(_section, k, v);
+        _item = sections.popitem()
+        _section = _item[0]
+        config.add_section(_section)
+        for k,v in list(_item[1].items()):
+            config.set(_section, k, v)
 
     with open(filename,'w') as fp:
-        config.write(fp);
+        config.write(fp)
 
-    return True;
+    return True
 
-# ---
 write_config = write_ini;
 # ---
 
@@ -208,53 +212,9 @@ def read_xml( config_file, _section='section', _key='scalar', _value='default' )
         for node2 in node.getElementsByTagName( _key ):
             id = str(node2.getAttribute("id"));
             dflt = str(node2.getAttribute( _value ));
-            d_sec['%s'%(id)] = dflt;
+            d_sec['{!s}'.format(id)] = dflt;
 #            print " : ", secao, id, dflt;
 
-        map['%s'%(secao)] = d_sec;
+        map['{!s}'.format(secao)] = d_sec;
 
-    return map;
-
-# ---
-"""
-###########################
-if __name__ == "__main__" :
-    import optparse;
-
-    parser = optparse.OptionParser();
-    parser.add_option('-t',
-                      dest='configtype', default='ini',
-                      help='Type of config file. Options are "ini" or "xml"',
-                      metavar='FILE');
-    parser.add_option('-f',
-                      dest='configfile', default=None,
-                      help='Config file to be read',
-                      metavar='FILE');
-    (options,args) = parser.parse_args();
-
-    configtype = options.configtype
-    configfile = options.configfile;
-
-    if configfile == None:
-        parser.print_help();
-        sys.exit(1);
-
-    if not (configtype == 'ini'  or  configtype == 'xml'):
-        print >> sys.stderr, "Wrong config type (%s) given." % (configtype);
-        parser.print_help();
-        sys.exit(1);
-
-    #    config = read_config(configfile,'input','path','run_flags');
-    if ( configtype == 'ini' ):
-        config = read_ini(configfile);
-    else:
-        config = read_xml(configfile);
-
-    print "-";
-    while config:
-        dic_sect = config.popitem();
-        print "%s : \n"%(dic_sect[0]),dic_sect[1];
-    print "-";
-
-    sys.exit(0);
-"""
+    return map

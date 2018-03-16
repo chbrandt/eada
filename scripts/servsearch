@@ -61,7 +61,7 @@ def writeCatalogs(catalogues,at=None):
         except:
             msg = ("Not able to create directory '{}'."
                    "Check your permissions.")
-            print(msg.format(at), file=sys.stderr)
+            print(msg.format(at))#, file=sys.stderr)
             sys.exit(1)
 
     try:
@@ -69,7 +69,7 @@ def writeCatalogs(catalogues,at=None):
     except:
         msg = ("Not able to write to directory '{}'."
                "Check your permissions.")
-        print(msg.format(at), file=sys.stderr)
+        print(msg.format(at))#, file=sys.stderr)
 
     print("Catologues selected [{:d}]:".format(len(catalogues)))
     out = OrderedDict()
