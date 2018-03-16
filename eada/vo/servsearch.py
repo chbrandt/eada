@@ -108,7 +108,7 @@ class CatalogValidator(object):
             return self._votableTree is not None
 
         def __nonzero__(self):
-            return self.__bool__()
+            return self._votableTree is not None
 
         def __len__(self):
             return self._pseudoTable and len(self._pseudoTable)
@@ -154,8 +154,8 @@ class CatalogValidator(object):
         return bool(self._table)
 
     def __nonzero__(self):
-        return self.__bool__()
-        
+        return bool(self._table)
+
     def __len__(self):
         assert(self._record)
         # print(self._table)
