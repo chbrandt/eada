@@ -120,8 +120,8 @@ def parseArguments(args,cp):
     radius = rad.to(units.degree).value # convert the given radius to degrees
     del rad
 
-    assert(cp)
-    assert(args.cat or args.url)
+    # assert cp, "ConfigParser is null? : {!r}".format(cp)
+    # assert(args.cat or args.url)
     if not args.url and args.cat not in list(cp.keys()):
         logging.critical("Wrong service name: %s", args.cat)
         print("Given service ('%s') is not known. Try a valid one (-h)." % (args.cat))
