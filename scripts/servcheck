@@ -96,8 +96,8 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if args.url:
-        res = main(args.url,args.verification)
-        print(("%s[URL]%s\n%s" % (OUTPUT[res][0],COLOR_END,OUTPUT[res][1])))
+        res = main([args.url],args.verification)
+        print(("%s[URL:%s]%s\t...\t%s" % (OUTPUT[res][0],args.url,COLOR_END,OUTPUT[res][1])))
         if res:
             sys.exit(os.EX_OK)
         else:
