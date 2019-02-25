@@ -61,7 +61,7 @@ package_dirs = {}
 
 packages = find_packages()
 
-DEPENDENCIES = ['astropy','pyvo','timeout_decorator','pyyaml']
+DEPENDENCIES = ['astropy','pyvo==0.6.1','timeout_decorator','pyyaml']
 
 setup(name=PACKAGENAME,
       version=VERSION,
@@ -71,7 +71,6 @@ setup(name=PACKAGENAME,
       package_dir=package_dirs,
       ext_modules=extensions,
       scripts=scripts,
-      requires=DEPENDENCIES,
       install_requires=DEPENDENCIES,
       provides=[PACKAGENAME],
       author=AUTHOR,
