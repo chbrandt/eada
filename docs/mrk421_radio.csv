@@ -1,0 +1,43 @@
+# %ECSV 0.9
+# ---
+# datatype:
+# - name: _RAJ2000
+#   unit: deg
+#   datatype: float64
+#   description: Right ascension (FK5, Equinox=J2000.0) (computed by VizieR, not part
+#     of the original data)
+#   meta: !!omap
+#   - {ucd: POS_EQ_RA_MAIN}
+#   - {width: 10}
+#   - {precision: '6'}
+# - name: _DEJ2000
+#   unit: deg
+#   datatype: float64
+#   description: Declination (FK5, Equinox=J2000.0) (computed by VizieR, not part of
+#     the original data)
+#   meta: !!omap
+#   - {ucd: POS_EQ_DEC_MAIN}
+#   - {width: 10}
+#   - {precision: '6'}
+# - name: FIRST
+#   datatype: string
+#   description: FIRST Source designation (1) {\em(\fg{blue}clicking on the name asks
+#     the FIRST Cutout Server to deliver an image of 4'x4' centered on the source})
+#   meta: !!omap
+#   - {ucd: ID_MAIN}
+# - name: Fint
+#   unit: mJy
+#   datatype: float64
+#   description: Integrated flux density at 1.4GHz (4)
+#   meta: !!omap
+#   - {ucd: phot.flux.density;em.radio.750-1500MHz}
+#   - {width: 9}
+#   - {precision: '2'}
+# meta: !!omap
+# - {ID: VIII_92_first14}
+# - {description: 'The FIRST survey catalog, 14Dec17 Version'}
+# - {name: VIII/92/first14}
+# schema: astropy-2.0
+_RAJ2000 _DEJ2000 FIRST Fint
+166.1165 38.208525 J110427.9+381230 35.89
+166.11385 38.208778 J110427.3+381231 574.34

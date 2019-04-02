@@ -37,8 +37,44 @@ following functions.
 #  the dictionary to the ini-like config file.
 #
 
-import sys;
+import logging
+import sys
 import re
+import os
+
+CFGFILE = None
+
+def _read(filename=None,merge=True):
+    # Read the db/config file
+    from eada.io import config
+    cp = {}
+    if merge:
+        cfg_ = config.read_default(CFGFILE)
+        if cfg_:
+            cp.update( cfg_ )
+    if filename is not None and os.path.isfile(filename):
+        cfg_ = config.read_ini(filename)
+        if cfg_:
+            cp.update( cfg_ )
+    return cp
+
+
+def read_default(config_file):
+    # config_file is either 'conesearch.cfg' or 'specsearch.cfg'
+    config_dir = os.path.join(os.path.expanduser("~"),'.config','eada')
+    config_file = os.path.join(config_dir,config_file)
+    if not os.path.exists(config_file):
+        if not os.path.exists(config_dir):
+            try:
+                os.makedirs(config_dir)
+            except:
+                logging.error("Could not create directory {}".format(config_dir))
+                return False
+        try:
+            open(config_file,'a').close()
+        except:
+            return False
+    return read_ini(config_file)
 
 #=====================================
 # Read config file (INI) to structure:
@@ -72,16 +108,19 @@ def read_ini( filename, *sections ):
     if not os.path.isfile(filename):
         return None
 
-    import ConfigParser;
-    config = ConfigParser.ConfigParser();
-    config.read(filename);
+    try:
+        from configparser import ConfigParser
+    except:
+        from ConfigParser import ConfigParser
+    config = ConfigParser()
+    config.read(filename)
 
     # Just verify the existence of section (on a real cfg file..):
     #
-    sects = config.sections();
+    sects = config.sections()
     if sects == []:
-        print >> sys.stderr, "Empty config file";
-        return (None);
+        print("Config file {} is empty".format(filename))#, file=sys.stderr)
+        return None
 
     # Start list of tuples: [('section',section_dictionary), (,) ,...]
     #
@@ -94,10 +133,10 @@ def read_ini( filename, *sections ):
     for _section in sects:
         if not config.has_section(_section):
             assert(sections)
-            print >> sys.stderr, "Config file does not have section %s" % (_section);
-            continue;
+            print("Config file does not have section {}".format(_section))#, file=sys.stderr)
+            continue
 
-        dsect = {};
+        dsect = {}
         for k,v in config.items(_section):
             # support list syntax "[...]" being read
             pat = re.compile("^\[(.*)\]$")
@@ -110,7 +149,6 @@ def read_ini( filename, *sections ):
 
     return out;
 
-# ---
 read_config = read_ini;
 # ---
 
@@ -130,28 +168,30 @@ def write_ini( sections, filename ):
     '''
 
     if not isinstance(sections,dict):
-        print >> sys.stderr, "A dictionary is expected at 'sections' argument."
+        print("A dictionary is expected at 'sections' argument.")#, file=sys.stderr)
         return False
     if len(sections) == 0:
-        print >> sys.stderr, "Given 'sections' is empty."
+        print("Given 'sections' is empty.")#, file=sys.stderr)
         return None
 
-    import ConfigParser;
-    config = ConfigParser.RawConfigParser();
+    try:
+        from configparser import RawConfigParser
+    except:
+        from ConfigParser import RawConfigParser
+    config = RawConfigParser
 
     while sections:
-        _item = sections.popitem();
-        _section = _item[0];
-        config.add_section(_section);
-        for k,v in _item[1].items():
-            config.set(_section, k, v);
+        _item = sections.popitem()
+        _section = _item[0]
+        config.add_section(_section)
+        for k,v in list(_item[1].items()):
+            config.set(_section, k, v)
 
     with open(filename,'w') as fp:
-        config.write(fp);
+        config.write(fp)
 
-    return True;
+    return True
 
-# ---
 write_config = write_ini;
 # ---
 
@@ -173,9 +213,10 @@ def read_xml( config_file, _section='section', _key='scalar', _value='default' )
         for node2 in node.getElementsByTagName( _key ):
             id = str(node2.getAttribute("id"));
             dflt = str(node2.getAttribute( _value ));
-            d_sec['%s'%(id)] = dflt;
+            d_sec['{!s}'.format(id)] = dflt;
 #            print " : ", secao, id, dflt;
 
+<<<<<<< HEAD
         map['%s'%(secao)] = d_sec;
 
     return map;
@@ -223,3 +264,8 @@ if __name__ == "__main__" :
 
     sys.exit(0);
 """
+=======
+        map['{!s}'.format(secao)] = d_sec;
+
+    return map
+>>>>>>> master

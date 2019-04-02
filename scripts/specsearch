@@ -23,17 +23,17 @@ EXIT_EMPTY  = 10
 def list_services(cp):
     """List the available catalogs"""
 
-    for k,d in cp.iteritems():
-        print k
-        for c,v in d.items():
-            print "| %-10s : %s" % (c,v)
-        print ""
+    for k,d in cp.items():
+        print(k)
+        for c,v in list(d.items()):
+            print("| %-10s : %s" % (c,v))
+        print("")
 
 def availableServices(cp):
     """
     Get the names of the available catalogs
     """
-    cats = [ k for k in cp.iterkeys() ]
+    cats = [ k for k in cp.keys() ]
     return cats
 
 def setupParserOptions(parser,cp):
@@ -120,12 +120,12 @@ def parseArguments(args,cp):
     radius = rad.to(units.degree).value # convert the given radius to degrees
     del rad
 
-    assert(cp)
-    assert(args.cat or args.url)
-    if not args.url and args.cat not in cp.keys():
+    # assert cp, "ConfigParser is null? : {!r}".format(cp)
+    # assert(args.cat or args.url)
+    if not args.url and args.cat not in list(cp.keys()):
         logging.critical("Wrong service name: %s", args.cat)
-        print "Given service ('%s') is not known. Try a valid one (-h)." % (args.cat)
-        print "Finishing here."
+        print("Given service ('%s') is not known. Try a valid one (-h)." % (args.cat))
+        print("Finishing here.")
         sys.exit(1)
 
     if args.cat:
@@ -142,7 +142,7 @@ def parseArguments(args,cp):
                 cols = []
             else:
                 dcat = cp.get(cat)
-                if dcat.has_key('columns'):
+                if 'columns' in dcat:
                     cols = dcat.get('columns')
                     cols = string.split(cols,',')
                 else:
@@ -248,23 +248,23 @@ if __name__ == '__main__':
     table = ss.main(ra,dec,radius,url,cols,frmt)
     if table is None:
         if args.short:
-            print "Failed"
+            print("Failed")
         else:
-            print "---"
-            print "\033[91mNot able to access data for source in archive %s\033[0m" % (url)
-            print "---"
+            print("---")
+            print("\033[91mNot able to access data for source in archive %s\033[0m" % (url))
+            print("---")
         sys.exit(EXIT_ERROR)
 
     nrows = len(table)
 
     if args.short:
-        print "Number of sources found %d" % nrows
+        print("Number of sources found %d" % nrows)
         sys.exit(EXIT_OK)
 
     if nrows == 0:
-        print "---"
-        print "\033[91mNo sources found. No output generated.\033[0m"
-        print "---"
+        print("---")
+        print("\033[91mNo sources found. No output generated.\033[0m")
+        print("---")
         sys.exit(EXIT_EMPTY)
 
     outfile = args.outfile
@@ -277,9 +277,9 @@ if __name__ == '__main__':
     if outfile:
         table.write(outfile,format='ascii',delimiter=',')
 
-    print "---"
-    print " Table retrieved:"
+    print("---")
+    print(" Table retrieved:")
     table.pprint(max_width=-1)
-    print "---"
+    print("---")
 
     sys.exit(EXIT_OK)

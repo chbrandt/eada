@@ -6,75 +6,91 @@ Created on Tue Sep 16 11:09:47 2014
 @author: chbrandt
 """
 
-ucds = ['pos.eq',
-        'POS_EQ_RA_MAIN',
-        'POS_EQ_DEC_MAIN',
-        'phot.mag',
-        'phot.count',
-        'phys.luminosity',
-        'phot.flux']
 
-units = ['h:m:s',
-         'd:m:s',
-         'ct/s',
-         'erg/s',
-         'erg/s/cm2',
-         'erg/s/cm^2',
-         'mag',
-         'mW/m2',
-         '1e-17W/m2',
-         'ct/ks',
-         'mJy',
-         'ct',
-         '[10-7W]']
+# ucds = ['pos.eq',
+#         'POS_EQ_RA_MAIN',
+#         'POS_EQ_DEC_MAIN',
+#         'phot.mag',
+#         'phot.count',
+#         'phys.luminosity',
+#         'phot.flux']
+#
+# units = ['h:m:s',
+#          'd:m:s',
+#          'ct/s',
+#          'erg/s',
+#          'erg/s/cm2',
+#          'erg/s/cm^2',
+#          'mag',
+#          'mW/m2',
+#          '1e-17W/m2',
+#          'ct/ks',
+#          'mJy',
+#          'ct',
+#          '[10-7W]']
 
 desc = """
     Code to search (USVAO) registry for catalogue services.
-    It is hardcoded to look for catalogues providing photometric emission data;
-    the columns/fields should present (any of) the following UCDs and units, resp:
-
-    UCDs: %s
-    Units: %s
-    """ % (ucds,units)
+    """
+    # """
+    # It is hardcoded to look for catalogues providing photometric emission data;
+    # the columns/fields should present (any of) the following UCDs and units, resp:
+    #
+    # UCDs: %s
+    # Units: %s
+    # """ % (ucds,units)
 
 import sys
 import os
 
 from eada.vo import servsearch
-from eada.io import config
+#from eada.io import config
 
 import logging
 LOGLEVEL = logging.DEBUG
 
-def writeCatalogs(catalogues,at=''):
-    localDir = './'
+from collections import OrderedDict
+
+def writeCatalogs(catalogues,at=None):
+    localDir = os.getcwd()
     if not at:
         at = localDir
-    if not (os.path.exists(at) or at is localDir):
+    if not os.path.exists(at):
         try:
             os.mkdir(at)
         except:
-            print >> sys.stderr, "Not able to create directory '%s'. Check your permissions." % at
+            msg = ("Not able to create directory '{}'."
+                   "Check your permissions.")
+            print(msg.format(at))#, file=sys.stderr)
             sys.exit(1)
 
     try:
-        fp = open(at+'/README.txt','w')
+        fp = open(at+'/README.txt', 'w')
     except:
-        print >> sys.stderr, "Not able to write to directory '%s'. Check your permissions." % at
+        msg = ("Not able to write to directory '{}'."
+               "Check your permissions.")
+        print(msg.format(at))#, file=sys.stderr)
 
-    print("\nCatologues selected [%d]:" % len(catalogues))
-    out = {}
+    print("Catologues selected [{:d}]:".format(len(catalogues)))
+    out = OrderedDict()
     for c in catalogues:
-        out[c.shortname()] = c.summary()
-        if False:
-            with open(at+'/'+c.shortname()+'.txt','w') as fp:
-                for f in c.fielddesc():
-                    f0 = unicode(f[0]).enconde('utf-8')
-                    f1 = unicode(f[1]).enconde('utf-8')
-                    f2 = unicode(f[2]).enconde('utf-8')
-                    f3 = unicode(f[3]).enconde('utf-8')
-                    fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
-    config.write_ini(out,at+'/CATALOGS.ini')
+        sn = c.shortname()
+        out[sn] = c.summary()
+        print('\t{}'.format(sn))
+        # if False:
+        #     with open(at+'/'+c.shortname()+'.txt','w') as fp:
+        #         for f in c.fielddesc():
+        #             f0 = str(f[0]).enconde('utf-8')
+        #             f1 = str(f[1]).enconde('utf-8')
+        #             f2 = str(f[2]).enconde('utf-8')
+        #             f3 = str(f[3]).enconde('utf-8')
+        #             fp.write("%-20s : %-40s : %-35s : %-10s\n" % (f0,f1,f2,f3))
+    filename = os.path.join(at,'CATALOGS.json')
+    import json
+    with open(filename, 'w') as fp:
+        json.dump(out,fp,indent=2)
+    # config.write_ini(out,at+'/CATALOGS.ini')
+    print("Catalogues written to {}".format(filename))
 
 # Lets put a cli here, so that the script can work with free parameters
 #
@@ -83,17 +99,37 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description=desc)
 
+    bands_ = list(servsearch.BANDS.keys())
+    # bands_ = ['all']
     parser.add_argument('band', metavar='waveband',
-                        choices=servsearch.BANDS.keys(),
-                        help='Waveband of interest to search for.')
+                        choices=bands_,
+                        help='Waveband of interest to search for: {}'.format(bands_))
 
     parser.add_argument('--keywords', nargs='?', action='store',
-                        help='Special keywords to be found at catalogues.')
+                        help='Special keywords to be found in catalogues.')
+
+    parser.add_argument('--ucds', nargs='?', action='store',
+                        help='UCDs that calid catalogues should provide.')
+
+    parser.add_argument('--units', nargs='?', action='store',
+                        help='Units to filter catalogues.')
 
     # Log
     #
     parser.add_argument('--log', nargs='?', const='servsearch.log', default=None,
                         help="Log script steps. A filename can be given as argument.")
+
+    parser.add_argument('--sample', nargs='?', type=float, const=True, default=None,
+                        help="If no argument, a 10%% randomly chosen sample is worked out.")
+
+    parser.add_argument('--filter', action='store_true',
+                        help="Should output contain only columns with matching UCDs or Units?")
+
+    parser.add_argument('--nprocs', type=int, default=1,
+                        help="Query services in parallel if n>1.")
+
+    parser.add_argument('--timeout', type=float, default=3,
+                        help="Define the (hard) timeout to wait for service answer.")
 
     # Parse the known arguments
     args,unknown = parser.parse_known_args()
@@ -106,10 +142,28 @@ if __name__ == '__main__':
     else:
         logging.disable(logging.NOTSET)
 
-    _ucd = servsearch.BANDS[args.band]
-    ucds = {_ucd:ucds}
+    ucds = args.ucds
+    ucds = [ucds.split()] if ucds else []
+    # if args.band != 'all':
+    #     ucds.append([ servsearch.BANDS[band] for band in args.band.split() ])
 
+    units = args.units
+    units = [units.split()] if units else []
+
+    sample = args.sample
+    filter_columns = args.filter
+
+    band = args.band if args.band != 'all' else None
+    keywords = args.keywords
     # Run
-    catalogues = servsearch.main(args.band, args.keywords, ucds, units)
+    catalogues = servsearch.search(band, keywords, ucds, units,
+                                    sample=sample,
+                                    filter_columns=filter_columns,
+                                    nprocs=args.nprocs)
 
-    writeCatalogs(catalogues,args.band)
+    if catalogues is not None:
+        print("Number of catalogues selected: {:d}".format(len(catalogues)))
+
+        if len(catalogues):
+            writeCatalogs(catalogues,args.band)
+    # print('Done.')

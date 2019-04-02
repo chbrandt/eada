@@ -1,45 +1,30 @@
 #!/usr/bin/env python
-#-*- coding:utf-8 -*-
 
-from eada.vo import conesearch as cs
-
-import logging
-import sys
-import string
-import warnings
-warnings.simplefilter('ignore')
+EXIT_OK     = 0
+EXIT_ERROR  = 1
+EXIT_EMPTY  = 10
 
 desc = """
     This script searchs for sources in a given position (RA,DEC) and radius (R)
     in a given catalog. To see the available catalogs use the '--list' option.
 """
 
-CFGFILE='conesearch.cfg'
+from eada.vo import conesearch as cs
 
-EXIT_OK     = 0
-EXIT_ERROR  = 1
-EXIT_EMPTY  = 10
+import os
+import logging
+import sys
+import string
+import warnings; warnings.simplefilter('ignore')
 
-def list_catalogs(cp):
-    """List the available catalogs"""
-
-    for k,d in cp.iteritems():
-        print k
-        for c,v in d.items():
-            print "| %-10s : %s" % (c,v)
-        print ""
-
-def availableCatalogs(cp):
-    """
-    Get the names of the available catalogs
-    """
-    cats = [ k for k in cp.iterkeys() ]
-    return cats
+from eada.io import config
+config.CFGFILE = 'conesearch.cfg'
 
 def setupParserOptions(parser,cp):
     """
     Define command line options
     """
+    CATS = availableCatalogs(cp) if cp else []
     # Mutually exclusive options
     #  The options are meant to be "list" or "choose" catalogues or give the
     #  "url" directly.
@@ -49,13 +34,12 @@ def setupParserOptions(parser,cp):
     group.add_argument('--list', action='store_true',
                         help="Print the list os catalogs available for the search.")
 
-    CATS = availableCatalogs(cp) if cp else []
     group.add_argument('--catalog', dest='cat', metavar='CATALOG',
                         choices = CATS,
-                        help="Catalog to search for data. To see your choices use the '--list' option.")
+                        help="A catalog (name) from your config file. Use '--list' option.")
 
     group.add_argument('--url', dest='url',
-                        help="Service URL to query. To see some options use the '--list' option.")
+                        help="Service URL to query.")
 
     # (redundant) Group of options for better organize arguments
     #
@@ -72,19 +56,22 @@ def setupParserOptions(parser,cp):
 
     conesearch.add_argument('--runit', dest='runit', metavar='unit', default='degree',
                             choices=['degree','arcmin','arcsec'],
-                            help="Unit for radius value. Choices are 'degree','arcmin','arcsec'.")
+                            help="Unit for radius value. Default is 'degree'.")
 
     # Output generation options
     #
     output = parser.add_argument_group('Output','Options for output generation.')
     output.add_argument('--columns', dest='cols', metavar='fieldname', nargs='*',
                         help="Columns to get from the retrieved catalog. The\
-                         argument 'asdc' will output a preset of columns, suitable for ASDC.\
+                         argument 'default' will output the preset of columns, from config file.\
                          If not given, all columns will be output.")
     output.add_argument('--short', action='store_true',
-                        help="Just outputs if at least one source was found.")
+                        help="Just outputs if at least one source is found.")
     output.add_argument('-o','--outfile', dest='outfile', nargs='?', const='',
                         default=None, help="Filename to write the output, CSV format table file.")
+    output.add_argument('--format', dest='format', type=str, default='csv',
+                        choices=['csv','ecsv'],
+                        help="Output file format, CSV is the default.")
 
     return parser
 
@@ -114,12 +101,12 @@ def parseArguments(args,cp):
     radius = rad.to(units.degree).value # convert the given radius to degrees
     del rad
 
-    assert(cp)
+    assert(cp is not None)
     assert(args.cat or args.url)
-    if not args.url and args.cat not in cp.keys():
+    if not args.url and args.cat not in list(cp.keys()):
         logging.critical("Wrong catalog name: %s", args.cat)
-        print "Given catalog ('%s') is not known. Try a valid one (-h)." % (args.cat)
-        print "Finishing here."
+        print("Given catalog ('%s') is not known. Try a valid one (-h)." % (args.cat))
+        print("Finishing here.")
         sys.exit(1)
 
     if args.cat:
@@ -131,12 +118,12 @@ def parseArguments(args,cp):
         logging.debug("URL to search for sources: %s", url)
 
     if args.cols:
-        if 'asdc' in args.cols:
+        if 'default' in args.cols:
             if args.url:
                 cols = []
             else:
                 dcat = cp.get(cat)
-                if dcat.has_key('columns'):
+                if 'columns' in dcat:
                     cols = dcat.get('columns')
                     cols = string.split(cols,',')
                 else:
@@ -148,6 +135,22 @@ def parseArguments(args,cp):
     logging.debug("Columns to output: %s", cols)
 
     return ra,dec,radius,url,cols
+
+def list_catalogs(cp):
+    """List the available catalogs"""
+
+    for k,d in cp.items():
+        print(k)
+        for c,v in list(d.items()):
+            print("| %-10s : %s" % (c,v))
+        print("")
+
+def availableCatalogs(cp):
+    """
+    Get the names of the available catalogs
+    """
+    cats = [ k for k in cp.keys() ]
+    return cats
 
 
 # Lets put a cli here, so that the script can work with free parameters
@@ -183,21 +186,10 @@ if __name__ == '__main__':
                             format='[%(filename)s:%(funcName)20s] %(message)s',
                             level=logging.NOTSET)
 
-    # Read the db/config file
-    import os
-    from eada.io import config
-    if args.dbfile:
-        dbfile = os.path.abspath(args.dbfile)
-    else:
-        logging.warning("No DB file given. Using package's default.")
-        import inspect
-        dbfile = os.path.join(os.path.dirname(__file__), CFGFILE)
-
-    if os.path.exists(dbfile):
-        cp = config.read_ini(dbfile)
-    else:
-        cp = None
+    cp = config._read(args.dbfile)
     # --------------------------------------------------------------------------
+    if cp is None:
+        cp = {}
 
     # Parse the arguments
     parser = setupParserOptions(parser,cp)
@@ -242,23 +234,23 @@ if __name__ == '__main__':
     table = cs.main(ra,dec,radius,url,cols)
     if table is None:
         if args.short:
-            print "Failed"
+            print("Failed")
         else:
-            print "---"
-            print "\033[91mNot able to access data for source in archive %s\033[0m" % (url)
-            print "---"
+            print("---")
+            print("\033[91mNot able to access data for source in archive %s\033[0m" % (url))
+            print("---")
         sys.exit(EXIT_ERROR)
 
     nrows = len(table)
 
     if args.short:
-        print "Number of sources found %d" % nrows
+        print("Number of sources found %d" % nrows)
         sys.exit(EXIT_OK)
 
     if nrows == 0:
-        print "---"
-        print "\033[91mNo sources found. No output generated.\033[0m"
-        print "---"
+        print("---")
+        print("\033[91mNo sources found. No output generated.\033[0m")
+        print("---")
         sys.exit(EXIT_EMPTY)
 
     outfile = args.outfile
@@ -269,11 +261,12 @@ if __name__ == '__main__':
     logging.debug("Output file %s",outfile)
 
     if outfile:
-        table.write(outfile,format='ascii',delimiter=',')
-
-    print "---"
-    print " Table retrieved:"
-    table.pprint(max_width=-1)
-    print "---"
+        format_ = '.'.join(['ascii',args.format])
+        table.write(outfile,format=format_,delimiter=',')
+    else:
+        print("---")
+        print(" Table retrieved:")
+        table.pprint(max_width=-1)
+        print("---")
 
     sys.exit(EXIT_OK)

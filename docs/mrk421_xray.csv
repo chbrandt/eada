@@ -1,0 +1,168 @@
+# %ECSV 0.9
+# ---
+# datatype:
+# - name: name
+#   datatype: object
+#   description: Source Designation (IAU)
+#   meta: !!omap
+#   - {ucd: ID_MAIN}
+# - name: ra
+#   unit: deg
+#   datatype: float64
+#   description: Corrected Right Ascension of the Source
+#   meta: !!omap
+#   - {ucd: POS_EQ_RA_MAIN}
+#   - {precision: F6}
+# - name: dec
+#   unit: deg
+#   datatype: float64
+#   description: Corrected Declination of the Source
+#   meta: !!omap
+#   - {ucd: POS_EQ_DEC_MAIN}
+#   - {precision: F6}
+# - name: ep_8_flux
+#   unit: erg/cm^2/s
+#   datatype: float64
+#   description: EPIC Total Band Flux (erg/cm^2/s)
+#   meta: !!omap
+#   - {ucd: phot.flux;em.X-ray}
+#   - {precision: '5'}
+# - name: ep_1_flux
+#   unit: erg/cm^2/s
+#   datatype: float64
+#   description: EPIC Band 1 Flux (erg/cm^2/s)
+#   meta: !!omap
+#   - {ucd: phot.flux;em.X-ray.soft}
+#   - {precision: '5'}
+# - name: ep_2_flux
+#   unit: erg/cm^2/s
+#   datatype: float64
+#   description: EPIC Band 2 Flux (erg/cm^2/s)
+#   meta: !!omap
+#   - {ucd: phot.flux;em.X-ray.soft}
+#   - {precision: '5'}
+# - name: ep_3_flux
+#   unit: erg/cm^2/s
+#   datatype: float64
+#   description: EPIC Band 3 Flux (erg/cm^2/s)
+#   meta: !!omap
+#   - {ucd: phot.flux;em.X-ray.soft}
+#   - {precision: '5'}
+# - name: ep_4_flux
+#   unit: erg/cm^2/s
+#   datatype: float64
+#   description: EPIC Band 4 Flux (erg/cm^2/s)
+#   meta: !!omap
+#   - {ucd: phot.flux;em.X-ray.medium}
+#   - {precision: '5'}
+# - name: ep_5_flux
+#   unit: erg/cm^2/s
+#   datatype: float64
+#   description: EPIC Band 5 Flux (erg/cm^2/s)
+#   meta: !!omap
+#   - {ucd: phot.flux;em.X-ray.medium}
+#   - {precision: '5'}
+# meta: !!omap
+# - {description: 'Query result for:
+# 
+#     select detid, srcid, name, ra, dec, time, ep_8_flux, ep_8_flux_error, pn_8_flux,
+#     pn_8_flux_error, m1_8_flux, m1_8_flux_error, m2_8_flux, m2_8_flux_error, bii,
+#     ccdm1, ccdm2, ccdpn, confused_flag, dec_unc, dist_nn, dr3_detdist, dr3_detid,
+#     dr3_mult, dr3_srcdist, dr3_srcid, dr4_detdist, dr4_detid, dr4_mult, dr4_srcdist,
+#     dr4_srcid, end_time, ep_1_flux, ep_1_flux_error, ep_2_flux, ep_2_flux_error, ep_3_flux,
+#     ep_3_flux_error, ep_4_flux, ep_4_flux_error, ep_5_flux, ep_5_flux_error, ep_8_cts,
+#     ep_8_cts_error, ep_8_det_ml, ep_8_rate, ep_8_rate_error, ep_9_det_ml, ep_9_flux,
+#     ep_9_flux_error, ep_9_rate, ep_9_rate_error, ep_chi2prob, ep_extent, ep_extent_error,
+#     ep_extent_ml, ep_flag, ep_hr1, ep_hr1_error, ep_hr2, ep_hr2_error, ep_hr3, ep_hr3_error,
+#     ep_hr4, ep_hr4_error, ep_offax, ep_ontime, error_radius, high_background_flag,
+#     lii, m1_1_bg, m1_1_det_ml, m1_1_exposure, m1_1_flux, m1_1_flux_error, m1_1_rate,
+#     m1_1_rate_error, m1_1_vig, m1_2_bg, m1_2_det_ml, m1_2_exposure, m1_2_flux, m1_2_flux_error,
+#     m1_2_rate, m1_2_rate_error, m1_2_vig, m1_3_bg, m1_3_det_ml, m1_3_exposure, m1_3_flux,
+#     m1_3_flux_error, m1_3_rate, m1_3_rate_error, m1_3_vig, m1_4_bg, m1_4_det_ml, m1_4_exposure,
+#     m1_4_flux, m1_4_flux_error, m1_4_rate, m1_4_rate_error, m1_4_vig, m1_5_bg, m1_5_det_ml,
+#     m1_5_exposure, m1_5_flux, m1_5_flux_error, m1_5_rate, m1_5_rate_error, m1_5_vig,
+#     m1_8_cts, m1_8_cts_error, m1_8_det_ml, m1_8_rate, m1_8_rate_error, m1_9_det_ml,
+#     m1_9_flux, m1_9_flux_error, m1_9_rate, m1_9_rate_error, m1_chi2prob, m1_filter,
+#     m1_flag, m1_fvar, m1_fvar_error, m1_hr1, m1_hr1_error, m1_hr2, m1_hr2_error, m1_hr3,
+#     m1_hr3_error, m1_hr4, m1_hr4_error, m1_maskfrac, m1_offax, m1_ontime, m1_rawx,
+#     m1_rawy, m1_submode, m2_1_bg, m2_1_det_ml, m2_1_exposure, m2_1_flux, m2_1_flux_error,
+#     m2_1_rate, m2_1_rate_error, m2_1_vig, m2_2_bg, m2_2_det_ml, m2_2_exposure, m2_2_flux,
+#     m2_2_flux_error, m2_2_rate, m2_2_rate_error, m2_2_vig, m2_3_bg, m2_3_det_ml, m2_3_exposure,
+#     m2_3_flux, m2_3_flux_error, m2_3_rate, m2_3_rate_error, m2_3_vig, m2_4_bg, m2_4_det_ml,
+#     m2_4_exposure, m2_4_flux, m2_4_flux_error, m2_4_rate, m2_4_rate_error, m2_4_vig,
+#     m2_5_bg, m2_5_det_ml, m2_5_exposure, m2_5_flux, m2_5_flux_error, m2_5_rate, m2_5_rate_error,
+#     m2_5_vig, m2_8_cts, m2_8_cts_error, m2_8_det_ml, m2_8_rate, m2_8_rate_error, m2_9_det_ml,
+#     m2_9_flux, m2_9_flux_error, m2_9_rate, m2_9_rate_error, m2_chi2prob, m2_filter,
+#     m2_flag, m2_fvar, m2_fvar_error, m2_hr1, m2_hr1_error, m2_hr2, m2_hr2_error, m2_hr3,
+#     m2_hr3_error, m2_hr4, m2_hr4_error, m2_maskfrac, m2_offax, m2_ontime, m2_rawx,
+#     m2_rawy, m2_submode, n_detections, obs_class, obs_first, obs_last, obsid, pn_1_bg,
+#     pn_1_det_ml, pn_1_exposure, pn_1_flux, pn_1_flux_error, pn_1_rate, pn_1_rate_error,
+#     pn_1_vig, pn_2_bg, pn_2_det_ml, pn_2_exposure, pn_2_flux, pn_2_flux_error, pn_2_rate,
+#     pn_2_rate_error, pn_2_vig, pn_3_bg, pn_3_det_ml, pn_3_exposure, pn_3_flux, pn_3_flux_error,
+#     pn_3_rate, pn_3_rate_error, pn_3_vig, pn_4_bg, pn_4_det_ml, pn_4_exposure, pn_4_flux,
+#     pn_4_flux_error, pn_4_rate, pn_4_rate_error, pn_4_vig, pn_5_bg, pn_5_det_ml, pn_5_exposure,
+#     pn_5_flux, pn_5_flux_error, pn_5_rate, pn_5_rate_error, pn_5_vig, pn_8_cts, pn_8_cts_error,
+#     pn_8_det_ml, pn_8_rate, pn_8_rate_error, pn_9_det_ml, pn_9_flux, pn_9_flux_error,
+#     pn_9_rate, pn_9_rate_error, pn_chi2prob, pn_filter, pn_flag, pn_fvar, pn_fvar_error,
+#     pn_hr1, pn_hr1_error, pn_hr2, pn_hr2_error, pn_hr3, pn_hr3_error, pn_hr4, pn_hr4_error,
+#     pn_maskfrac, pn_offax, pn_ontime, pn_rawx, pn_rawy, pn_submode, poscorok_flag,
+#     ra_unc, radec_error, refcat, sc_chi2prob, sc_dec, sc_det_ml, sc_ep_1_flux, sc_ep_1_flux_error,
+#     sc_ep_2_flux, sc_ep_2_flux_error, sc_ep_3_flux, sc_ep_3_flux_error, sc_ep_4_flux,
+#     sc_ep_4_flux_error, sc_ep_5_flux, sc_ep_5_flux_error, sc_ep_8_flux, sc_ep_8_flux_error,
+#     sc_ep_8_fmax, sc_ep_8_fmax_error, sc_ep_8_fmin, sc_ep_8_fmin_error, sc_ep_9_flux,
+#     sc_ep_9_flux_error, sc_ext_ml, sc_extent, sc_fvar, sc_fvar_error, sc_hr1, sc_hr1_error,
+#     sc_hr2, sc_hr2_error, sc_hr3, sc_hr3_error, sc_hr4, sc_hr4_error, sc_poserr, sc_ra,
+#     sc_sum_flag, sc_var_flag, spectra_flag, src_num, sum_flag, syserrcc, tseries_flag,
+#     var_exp_id, var_flag, var_inst_id, xmm_revolution,  degrees(2*asin(sqrt(power(sin((radians(  dec  )
+#     - 0.6668728538945135)/2),2) +cos(radians(  dec  ))*cos(0.6668728538945135)*power(sin((radians(  ra  )
+#     - 2.8992348373944585)/2),2))))*60  as "_offset" from xmmssc where  (  ( (( power(sin((radians(  dec  )
+#     - 0.6668728538945135)/2),2) +cos(radians(  dec  ))*cos(0.6668728538945135)*power(sin((radians(  ra  )
+#     - 2.8992348373944585)/2),2)<5.876107633632919E-10) and (  dec     between   38.20622222222222   and   38.21177777777778))
+#     )  ) limit 10001'}
+# schema: astropy-2.0
+name ra dec ep_8_flux ep_1_flux ep_2_flux ep_3_flux ep_4_flux ep_5_flux
+"3XMM J110428.0+381226" 166.116488 38.20721 9.97838e-11 9.73291e-12 1.65352e-11 1.61532e-11 2.94535e-11 2.76705e-11
+"3XMM J110428.0+381226" 166.116523 38.207834 6.07344e-11 2.49752e-14 1.46941e-15 3.72569e-12 2.29741e-11 2.10962e-11
+"3XMM J110427.2+381231" 166.113795 38.208063 2.57401e-10 4.51662e-11 5.63473e-11 5.22515e-11 5.4413e-11 4.93293e-11
+"3XMM J110427.2+381231" 166.1124 38.208414 5.54527e-10 8.30859e-11 1.09268e-10 1.0689e-10 1.26756e-10 1.41051e-10
+"3XMM J110427.5+381231" 166.114959 38.2086 1.22024e-15 6.45996e-17 6.46423e-17 2.86046e-16 8.0698e-17 6.52032e-16
+"3XMM J110427.2+381231" 166.113499 38.208645 3.02476e-10 5.41557e-11 6.41598e-11 6.16749e-11 6.36955e-11 5.96049e-11
+"3XMM J110427.2+381231" 166.113508 38.208686 3.89519e-10 1.03393e-10 1.06818e-10 8.60848e-11 6.35072e-11 4.03435e-11
+"3XMM J110427.2+381231" 166.113948 38.208699 3.50745e-10 7.44119e-11 9.23104e-11 7.61041e-11 6.4234e-11 4.40441e-11
+"3XMM J110427.2+381231" 166.11392 38.208705 7.17877e-10 9.50516e-11 1.2366e-10 1.38096e-10 1.73776e-10 1.88381e-10
+"3XMM J110427.2+381231" 166.113685 38.208717 4.01427e-10 7.39057e-11 8.94345e-11 9.06808e-11 8.84706e-11 6.06184e-11
+"3XMM J110427.2+381231" 166.113813 38.208745 2.86334e-10 6.36401e-11 6.84458e-11 5.6984e-11 5.33014e-11 4.40274e-11
+"3XMM J110427.2+381231" 166.112704 38.208746 5.33853e-10 8.00737e-11 1.03549e-10 1.06079e-10 1.21524e-10 1.20043e-10
+"3XMM J110427.2+381231" 166.113707 38.208749 3.36978e-10 7.28467e-11 8.97831e-11 7.29658e-11 6.06905e-11 4.11222e-11
+"3XMM J110427.2+381231" 166.113561 38.208755 2.54375e-10 5.66007e-11 6.30689e-11 5.50003e-11 4.84491e-11 2.83914e-11
+"3XMM J110427.2+381231" 166.113961 38.208779 1.22692e-10 3.24945e-11 3.34159e-11 2.44092e-11 1.9797e-11 1.1949e-11
+"3XMM J110427.2+381231" 166.113746 38.208794 5.73616e-10 9.10942e-11 1.20079e-10 1.15901e-10 1.2535e-10 1.22449e-10
+"3XMM J110427.2+381231" 166.113896 38.208796 8.77176e-10 1.41476e-10 1.72584e-10 1.66841e-10 1.91638e-10 2.04638e-10
+"3XMM J110427.2+381231" 166.113938 38.2088 4.38373e-10 8.7757e-11 1.15196e-10 9.6301e-11 8.11073e-11 5.80121e-11
+"3XMM J110427.2+381231" 166.113462 38.2088 6.53014e-10 9.02657e-11 1.09298e-10 1.26253e-10 1.5011e-10 1.5956e-10
+"3XMM J110427.2+381231" 166.113879 38.208802 8.60095e-10 1.34927e-10 1.93763e-10 1.83061e-10 1.81783e-10 1.66766e-10
+"3XMM J110427.2+381231" 166.114372 38.208803 8.7414e-10 1.2964e-10 1.82559e-10 1.79913e-10 1.95801e-10 1.86226e-10
+"3XMM J110427.2+381231" 166.113885 38.208807 7.09678e-10 1.14919e-10 1.44437e-10 1.45296e-10 1.57104e-10 1.50328e-10
+"3XMM J110427.2+381231" 166.113173 38.208814 1.20922e-09 1.24225e-10 1.92568e-10 2.21715e-10 2.85267e-10 3.72759e-10
+"3XMM J110427.2+381231" 166.113876 38.208816 5.254e-10 7.91733e-11 1.1217e-10 1.09633e-10 1.14941e-10 1.10483e-10
+"3XMM J110427.2+381231" 166.113812 38.208819 2.61001e-10 6.06978e-11 7.2493e-11 5.62356e-11 4.27603e-11 2.88146e-11
+"3XMM J110427.2+381231" 166.113625 38.208821 2.19332e-10 4.68878e-11 5.29911e-11 4.63454e-11 4.26747e-11 2.98149e-11
+"3XMM J110427.2+381231" 166.113886 38.20884 3.93632e-10 8.01175e-11 1.00157e-10 8.45886e-11 7.44077e-11 5.43608e-11
+"3XMM J110427.2+381231" 166.113704 38.208861 4.29596e-10 6.58501e-11 8.16837e-11 8.56145e-11 1.03149e-10 8.98106e-11
+"3XMM J110427.2+381231" 166.113751 38.208866 3.5216e-10 7.10539e-11 8.4991e-11 7.83957e-11 7.08647e-11 4.33916e-11
+"3XMM J110426.6+381232" 166.111008 38.208868 3.25529e-10 5.54645e-11 7.36745e-11 6.84506e-11 6.95804e-11 5.79593e-11
+"3XMM J110427.2+381231" 166.113653 38.208873 1.95007e-10 4.50642e-11 5.26611e-11 3.84275e-11 3.43198e-11 2.36407e-11
+"3XMM J110427.2+381231" 166.113816 38.208885 2.17808e-10 4.79512e-11 5.34781e-11 4.56856e-11 4.16552e-11 2.77281e-11
+"3XMM J110427.2+381231" 166.113693 38.208888 2.26389e-10 4.76243e-11 5.46262e-11 4.69629e-11 4.41122e-11 3.15057e-11
+"3XMM J110427.5+381231" 166.114212 38.208895 3.58832e-15 3.21423e-17 8.79794e-18 3.14348e-17 2.82342e-16 2.63056e-15
+"3XMM J110427.2+381231" 166.11336 38.208931 2.00336e-10 4.43384e-11 4.99393e-11 4.34192e-11 3.74603e-11 2.50187e-11
+"3XMM J110427.2+381231" 166.11365 38.208961 3.29463e-10 6.62262e-11 7.46637e-11 6.57143e-11 6.95059e-11 4.84449e-11
+"3XMM J110427.2+381231" 166.113236 38.208964 1.0893e-09 1.08683e-10 1.75429e-10 2.0067e-10 2.53201e-10 3.55413e-10
+"3XMM J110427.2+381231" 166.113738 38.208966 1.60315e-10 3.90953e-11 4.74602e-11 3.48926e-11 2.39477e-11 1.48093e-11
+"3XMM J110427.2+381231" 166.113233 38.208981 1.03698e-09 1.52775e-10 2.04374e-10 2.27829e-10 2.44281e-10 2.16323e-10
+"3XMM J110427.2+381231" 166.113978 38.209051 3.52555e-10 5.65533e-11 7.00137e-11 6.72621e-11 7.83392e-11 8.05183e-11
+"3XMM J110426.6+381232" 166.11044 38.209092 7.05982e-11 1.1371e-11 1.58639e-11 1.49174e-11 1.7312e-11 1.11338e-11
+"3XMM J110427.2+381231" 166.113965 38.209098 5.53231e-10 7.4806e-11 1.00566e-10 1.00903e-10 1.29431e-10 1.50407e-10
+"3XMM J110427.2+381231" 166.114118 38.209136 1.61677e-10 3.95876e-11 4.54818e-11 3.50067e-11 2.54893e-11 1.65472e-11
+"3XMM J110426.9+381234" 166.112356 38.209575 6.75169e-11 3.09728e-16 1.52392e-16 2.70827e-15 2.23784e-11 2.87077e-11
+"3XMM J110426.9+381234" 166.112196 38.209653 1.51301e-11 4.40837e-12 4.90869e-12 3.29793e-12 5.07213e-13 2.00792e-12
