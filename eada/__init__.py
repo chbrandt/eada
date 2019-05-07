@@ -1,4 +1,3 @@
-# -*- coding:utf-8 -*-
 """
 Base module for the library, where common modules/functions are loaded/defined.
 """
@@ -45,7 +44,7 @@ class TypedList(list):
         Raise TypeError in case of non-matching item/list types
         """
         if not isinstance(item,self._type):
-            raise TypeError, "item is not of type %s" % self._type
+            raise TypeError("item is not of type {}".format(self._type))
         super(TypedList,self).append(item)
 
 class StringList(TypedList):
@@ -77,3 +76,7 @@ class StringList(TypedList):
         if strip:
             item = s
         super(StringList,self).append(item)
+
+# from ._version import get_versions
+# __version__ = get_versions()['version']
+# del get_versions

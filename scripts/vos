@@ -112,7 +112,83 @@ class VOSearch(object):
         args = ssa.parser.parse_args(argv)
         print('Arguments: ' % args)
 
+def _list():
+    print('_list()')
+
+def _parse_list_subcommand(subargs):
+    print('LIST')
+    print('Given subargs:',subargs)
+    parser = argparse.ArgumentParser(description="List available services")
+    subparser = listing.add_subparsers(title='list-subcommands')
+    # --- List-EPNTAP ---
+    list_epntap = subparser.add_parser('epntap', help="List EPN-TAP services")
+    list_epntap.add_argument('--length', dest='count', action='store_true',
+                         help="List services' number of records")
+    list_epntap.add_argument('--minimal', dest='schema_only', action='store_true',
+                         help="List the names of the schema only")
+    list_epntap.set_defaults(func=_list)
+    args = parser.parse_args(subargs)
+    print(args)
+    # --- List-SCS ---
+    # list_scs = list_subparser.add_parser('scs', help="List SCS services")
+
 
 if __name__ == '__main__':
     import sys
-    VOSearch(sys.argv)
+    import os
+    import argparse
+
+    description = """
+    Discover and download data from VO services.
+    """
+    parser = argparse.ArgumentParser(description=description, add_help=False)
+    parser.add_argument('-h', '--help', action='help',
+                        help="Use '--help' on subcommands to know more about them")
+
+    subparsers = parser.add_subparsers(title='Subcommands')
+
+    # === List ===
+    # def _list():
+    #     print('_list()')
+    listing = subparsers.add_parser('list', help="List available services")
+    listing.set_defaults(func=_parse_list_subcommand)
+    # list_epntap = listing
+    # list_subparser = listing.add_subparsers(title='list-subcommands')
+    # --- List-EPNTAP ---
+    # list_epntap = list_subparser.add_parser('epntap', help="List EPN-TAP services")
+    # list_epntap.add_argument('--length', dest='count', action='store_true',
+    #                      help="List services' number of records")
+    # list_epntap.add_argument('--minimal', dest='schema_only', action='store_true',
+    #                      help="List the names of the schema only")
+    # list_epntap.set_defaults(func=_list)
+    # --- List-SCS ---
+    # list_scs = list_subparser.add_parser('scs', help="List SCS services")
+
+    # === Update ===
+    updating = subparsers.add_parser('update', help="Update the list of resources")
+    updating.add_argument('service_type',
+                            choices=['epntap','scs'],
+                            help="Type of service to look for in VO registry")
+
+
+
+    # === Fetch ===
+    def _fetch():
+        print('_fetch()')
+    fetching = subparsers.add_parser('fetch', help='Fetch data from a service')
+    fetching.add_argument('schema', help="Name of EPN-Core schema ('schema.epn_core')")
+    fetching.add_argument('--limit', dest='limit', type=int,
+                          help='Limit the number of returned records',
+                          default=None)
+    fetching.add_argument('--percent', dest='percent', type=float,
+                          help='Fraction (in percentile) of table size records to return',
+                          default=None)
+    fetching.set_defaults(func=_fetch)
+
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(0)
+
+    args,eargs = parser.parse_known_args()
+    print('Given command_line arguments:',args,eargs)
+    args.func(eargs)

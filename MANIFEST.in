@@ -1,2 +1,4 @@
 include distribute_setup.py
 
+include versioneer.py
+include eada/_version.py
