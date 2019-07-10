@@ -1,0 +1,742 @@
+{
+"services":[
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "Solar active regions extracted from Heliophysics Feature Catalog.",
+    "contributors": [
+        "Xavier Bonnin", "Christian Renié", "PADC"
+    ],
+    "creator": [
+        "Jean Aboudarham"
+    ],
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "http://voparis-helio.obspm.fr/hfc-gui/",
+    "accessurl": "http://voparis-tap-helio.obspm.fr/__system__/tap/run/tap",
+    "title": "Heliophysics Feature Catalog active regions",
+    "shortname": "HFC1AR",
+    "schema": "hfc1ar",
+    "identifier": "ivo://vopdc.obspm/lesia/hfc1ar/epn"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LUTH",
+    "description": "VO-compliant and interactive encyclopaedia of extrasolar planets.",
+    "contributors": [
+        "PADC"
+    ],
+    "creator": [
+        "Jean Schneider"
+    ],
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "http://exoplanet.eu/",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "Extrasolar Planets Encyclopaedia",
+    "shortname": "ExoPlanet",
+    "schema": "exoplanet",
+    "identifier": "ivo://vopdc.obspm/luth/exoplanet/epn"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "This service provides the most accurate values of dimensions, mass, and rotation period of solar system planets. These data are retreived from Archinal et al 2009 (IAU report, 2011CeMDA.109..101A) (radii) and Cox et al 2000 (Allen's astrophysical quantities, 2000asqu.book.....C) (masses, heliocentric distances, and rotation periods).",
+    "contributors": [
+        "PADC"
+    ],
+    "creator": [
+        "Stéphane Erard"
+    ],
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "http://lesia.obspm.fr",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "Main characteristics of solar system planets",
+    "shortname": "planets",
+    "schema": "planets",
+    "identifier": "ivo://vopdc.obspm/lesia/planets/epn"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "This service is a redesigned version of the PDS spectral library, with data files provided as VOtable. The native version is distributed by the PDS Geosciences node: http://pds-geosciences.wustl.edu/mro/mro-m-crism-4-speclib-v1/mrocr_90xx/ Reference: Murchie et al (2007) Compact Reconnaissance Imaging Spectrometer for Mars (CRISM) on Mars Reconnaissance Orbiter (MRO). JGR Planets, 112:E05S03",
+    "contributors": [
+        "PADC"
+    ],
+    "creator": [
+        "Stéphane Erard"
+    ],
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "https://perso.lesia.obspm.fr/data-services/pds-spectral-library/",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "PDS spectral library",
+    "shortname": "pds_speclib",
+    "schema": "pds_speclib",
+    "identifier": "ivo://vopdc.obspm/lesia/pds_speclib/epn"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "This service provides a compilation of global spectra of planets and satellites in the visible and NIR range, for quick reference purpose. Spectra are selected from various libraries, including the Tohoku-Hiroshima-Nagoya Planet Spectra Library (Lundock et al 2009) and a USGS web site (R. Clark). Reformatted VOtable versions are provided together with links to the original data.",
+    "contributors": [
+        "PADC"
+    ],
+    "creator": [
+        "Stéphane Erard"
+    ],
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "https://perso.lesia.obspm.fr/data-services/planetary-spectra/",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "Spectra of planets and satellites",
+    "shortname": "spectro_planets",
+    "schema": "spectro_planets",
+    "identifier": "ivo://vopdc.obspm/lesia/spectro_planets/epn"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - IMCCE",
+    "description": "Compiled database for asteroid spectra in the visible and nir regions.",
+    "contributors": [
+        "M. Popescu", "Jonathan Normand", "PADC"
+    ],
+    "creator": [
+        "Mirel Birlan"
+    ],
+    "title": "M4AST - Modeling for Asteroids",
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "http://cardamine.imcce.fr/m4ast",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "shortname": "M4AST",
+    "schema": "m4ast",
+    "identifier": "ivo://vopdc.obspm/imcce/m4ast"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "Solar type 3 bursts extracted from Heliophysics Feature Catalog.",
+    "contributors": [
+        "Xavier Bonnin", "Christian Renié", "PADC"
+    ],
+    "creator": [
+        "Jean Aboudarham"
+    ],
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "http://voparis-helio.obspm.fr/hfc-gui/",
+     "accessurl": "http://voparis-tap-helio.obspm.fr/__system__/tap/run/tap",
+    "title": "Heliophysics Feature Catalog type 3 radio bursts",
+    "shortname": "HFC1T3",
+    "schema": "hfc1t3",
+    "identifier": "ivo://vopdc.obspm/lesia/hfc1t3/epn"
+},
+{
+ "publisher": "Paris Astronomical Data Centre - LESIA",
+  "description": "Measurements of comet Halley in the spectral channel of IKS on board the Vega-1 spacecraft. Data are retrieved from the PDS Small Bodies Node archive (2011 reformatted version) and completed with extra information from the original team. The dataset consists in 101 tables providing the calibrated radiance spectra of comet Halley as distance decreases, plus two composite spectra in different spectral ranges. For details and further references, see: Combes M. et al., 1988, The 2.3-12 micron Spectrum of Comet Halley from the IKS-VEGA Experiment, Icarus, 76, 404-436.",
+    "contributors": [
+        "Stéphane Erard",
+        "IKI", "PDS", "PADC"
+    ],
+    "creator": [
+        "LESIA"
+    ],
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "http://lesia.obspm.fr/IKS/",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "IR spectroscopy of comet Halley",
+    "shortname": "IKS",
+    "schema":"iks",
+    "identifier": "ivo://vopdc.obspm/lesia/iks/epn"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "This database displays vertical profiles of temperature and composition in Titan's atmosphere at nine different latitudes between 100 and 500 km. These profiles were retrieved from the infrared spectra acquired by the Composite Infrared Spectrometer (CIRS) aboard the Cassini spacecraft. The retrieval method and the description of the used dataset is detailed by Vinatier et al., 2009, Analysis of Cassini/CIRS limb spectra of Titan acquired during the nominal mission. I: Hydrocarbons, nitriles and CO2 vertical mixing ratio profiles, Icarus, in press. doi:10.1016/j.icarus.2009.08.013.",
+    "contributors": [
+        "PADC"
+    ],
+    "creator": [
+        "Sandrine Vinatier"
+    ],
+    "referenceurl": "http://www.lesia.obspm.fr",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "Vertical Profiles in Titan Middle Atmosphere",
+    "shortname": "Titan",
+    "schema": "titan",
+    "identifier": "ivo://vopdc.obspm/lesia/titan/epn"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "The database of planetary images (BDIP) comes from the digitization of photographs collected and preserved by the Center for Photographic Documentation of the planets held by the IAU at the Meudon Observatory in 1961 under the curation of J.H. Focas (IAUC, 12th General Assembly Report, 1964). A similar center was established at the Lowell Observatory in Arizona, under the responsibility of W.A. Baum. The photographs were duplicated between the two centers. Digitization was performed in 1998-2000, funded by the Science Council of the Observatory of Paris.",
+    "contributors": [
+        "PADC"
+    ],
+    "creator": [
+        "Florence Henry"
+    ],
+    "referenceurl": "http://lesia.obspm.fr/BDIP/",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "Base de Données d'Images Planétaires",
+    "shortname": "BDIP",
+    "schema": "bdip",
+    "identifier": "ivo://vopdc.obspm/lesia/bdip/epn"
+},
+{
+    "publisher": "Station de Radioastronomie de Nançay (SRN)",
+    "description": "Dynamic Spectra of the Routine observation of Jupiter with the Nancay Decameter Array. This dataset contains two series of dynamic spectra recorded on each of the Nançay decameter sub-arrays (i.e. on Left Hand and Right Hand Polarization). The receiver is sampling from 10 MHz to 40 MHz with 75 kHz steps on the spectral axis. It records one spectrum every second on each polarization. The list of observation frequencies is provided.",
+    "contributors": [
+        "Andrée Coffre",
+        "Emmanuel Thétas",
+        "PADC"
+    ],
+    "creator": [
+        "Baptiste Cecconi"
+    ],
+    "referenceurl": "https://www.obs-nancay.fr/-Le-reseau-decametrique-.html?lang=en",
+    "accessurl": "http://vogate.obs-nancay.fr/__system__/tap/run/tap",
+    "title": "Nancay Decameter Array observation database",
+    "shortname": "NDA Obs. Database",
+    "schema": "nda",
+    "identifier": "ivo://vopdc.obspm/usn/nda/epn"
+},
+{
+    "publisher": "IA2",
+    "description": "The Cosmic Dust Catalog Volume 15 main page: http://curator.jsc.nasa.gov/dust/cdcat15/ParticleList.cfm and The Cosmic Dust Catalog Volume 15 explanation guide: http://curator.jsc.nasa.gov/dust/cdcat15/index.cfm, The Cosmic Dust Catalog Volume 18 main page: http://curator.jsc.nasa.gov/dust/cdcat18/index.cfm The service also provides a digitalized spectrum data derived by the Cosmic Dust Catalog Volume 15. The method of digitization is described by J. Lasue et al. 2010 paper : Automated classification of interplanetary dust particles: Johnson Space Center Cosmic Dust Catalog Volume 15   DOI:http://onlinelibrary.wiley.com/doi/10.1111/j.1945-5100.2010.01059.x/full. The digitalized spectra files in the service are courtesy provided by J. Lasue",
+    "contributors": [
+        "INAF-IAPS"
+    ],
+    "creator": [
+        "IA2"
+    ],
+    "referenceurl": "http://sbdn.iaps.inaf.it/web/sbdn/cosmic-dust-catalog",
+    "accessurl": "http://vo-node1.iaps.inaf.it/tap",
+    "title": "INAF-IAPS RDB NASA dust catalogue TAP service",
+    "shortname": "ndcs",
+    "schema": "ndcs",
+    "identifier": "ivo://ia2.inaf.it/hosted/iaps/epn/tap/nasadustcat"
+},
+{
+    "publisher": "Centre de Données de la Physique des Plasmas",
+    "description": "Planetary and heliophysics plasma data at CDPP/AMDA",
+    "creator": [
+        "Centre de Données de la Physique des Plasmas"
+    ],
+    "referenceurl": "http://amda.cdpp.eu",
+    "accessurl": "http://cdpp-epntap.irap.omp.eu/__system__/tap/run/tap",
+    "title": "Planetary and heliophysics plasma data at CDPP/AMDA",
+    "shortname": "AMDA",
+    "schema": "amdadb",
+    "identifier": "ivo://cdpp/amda"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "Since 1973, the 18-cm lines of the OH radical have been systematically observed in a number of comets with the Nançay radio telescope. This allowed an evaluation of the cometary water… production rates and their evolution with time, as well as a study of several physical processes: the excitation mechanisms of the OH radio lines, the expansion of the cometary atmospheres, their anisotropy in relation with non-gravitational forces, the Zeeman effect in relation with the cometary magnetic field. The Nançay observations of 53 cometary apparitions between 1982 and 2009 are now organized in this database.",
+    "contributors": [
+        "Mathieu Hirtzig",
+        "PADC"
+    ],
+    "creator": [
+        "Jacques Crovisier"
+    ],
+    "referenceurl": "http://www.lesia.obspm.fr/planeto/cometes/basecom/",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "The Nançay Cometary Database",
+    "shortname": "BASECOM",
+    "schema": "basecom",
+    "identifier": "ivo://vopdc.obspm/lesia/basecom/epn"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "The Auroral Planetary Imaging and Spectroscopy (APIS) service provides an open and interactive access to processed auroral observations of the outer planets and their satellites. Such observations are of interest for a wide community at the interface between planetology and magnetospheric and heliospheric physics. APIS consists of (i) a high level database, built from planetary auroral observations acquired by the Hubble Space Telescope (HST) since 1997 with its mostly used Far-UltraViolet spectro-imagers, (ii) a dedicated search interface aimed at browsing efficiently this database through relevant conditional search criteria and (iii) the ability to interactively work with the data online through plotting tools developed by the Virtual Observatory (VO) community, such as Aladin and Specview. This service is VO compliant and can therefore also been queried by external search portals of the VO community. The diversity of available data and the capability to sort them out by relevant physical criteria shall in particular facilitate statistical studies, on long-term scales and/or multi-instrumental multi-spectral combined analysis.",
+    "contributors": [
+        "Florence Henry",
+        "PADC"
+    ],
+    "creator": [
+        "Laurent Lamy"
+    ],
+    "referenceurl": "http://lesia.obspm.fr/apis/",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "Auroral Planetary Imaging and Spectroscopy",
+    "shortname": "APIS",
+    "schema": "apis",
+    "identifier": "ivo://vopdc.obspm/lesia/apis/epn"
+},
+{
+    "publisher": "Tohoku University",
+    "description": "Iitate log periodic Radio antenna High Resolution data",
+    "contributors": [
+        "Baptiste Cecconi",
+        "Pierre Le Sidaner"
+    ],
+    "creator": [
+        "Dr. Atsushi Kumamoto"
+    ],
+    "referenceurl": "http://ariel.gp.tohoku.ac.jp/~jupiter/it_hf",
+    "accessurl": "http://thebe.gp.tohoku.ac.jp/__system__/tap/run/tap",
+    "title": "Iitate HF data",
+    "shortname": "IitateHF",
+    "schema": "iitatehf",
+    "identifier": "ivo://tohoku.univ.jp/iitate/q/epn_core"
+},
+{
+    "publisher": "Tohoku University",
+    "description": "Iitate Planetary Radio Telescope Data",
+    "contributors": [
+        "Baptiste Cecconi"
+    ],
+    "creator": [
+        "Dr. Fuminori Tsuchiya"
+    ],
+    "referenceurl": "http://pparc.gp.tohoku.ac.jp/data/iprt/",
+    "accessurl": "http://thebe.gp.tohoku.ac.jp/__system__/tap/run/tap",
+    "title": "IPRT/AMATERAS data",
+    "shortname": "IPRT",
+    "schema": "iprt",
+    "identifier": "ivo://tohoku.univ.jp/pparc_r/q/epn_core"
+},
+{
+    "publisher": "Tohoku University",
+    "description": "Hisaki/Exceed EUV Planetary observation database",
+    "contributors": [
+        "Atsushi Kumamoto",
+        "Pierre Le Sidaner",
+        "Baptiste Cecconi"
+    ],
+    "creator": [
+        "Tomoki Kimura"
+    ],
+    "referenceurl": "http://darts.jaxa.jp/stp/hisaki/",
+    "accessurl": "http://thebe.gp.tohoku.ac.jp/__system__/tap/run/tap",
+    "title": "Hisaki Planetary Database",
+    "shortname": "hisaki",
+    "schema": "hisaki",
+    "identifier": "ivo://tohoku.univ.jp/hisaki/q/epn_core"
+},
+{
+    "publisher": "IWF",
+    "description": "IMPEx simulation runs provided by FMI, LATMOS and SINP",
+    "contributors": [
+        "IMPEx-FP7 Project Team"
+    ],
+    "creator": [
+        "Tarek Al-Ubaidi"
+    ],
+    "referenceurl": "http://impex-fp7.oeaw.ac.at/",
+    "accessurl": "http://epn-tap.oeaw.ac.at/__system__/tap/run/tap",
+    "title": "IMPEx Simulation Data",
+    "shortname": "IMPEx_EPN20",
+    "schema": "impex_epn20",
+    "identifier": "ivo://vo-plasma.oeaw.ac.at/impex_epn20/impex_epn20/epn_core"
+},
+{
+    "publisher": "IWF",
+    "description": "Venus-Express Observations of the Magnetic Field in VSO Coordinates including Spacecraft Positions",
+    "contributors": [
+        ""
+    ],
+    "creator": [
+        "Al-Ubaidi, Tarek",
+        "Scherf, Manuel",
+        "Zhang, T."
+    ],
+    "referenceurl": "http://onlinelibrary.wiley.com/doi/10.1029/2008JE003215/abstract",
+    "accessurl": "http://epn-tap.oeaw.ac.at/__system__/tap/run/tap",
+    "title": "Venus-Express Magnetometer Data",
+    "shortname": "VExMag_EPN20",
+    "schema": "vexmag_epn20",
+    "identifier": "ivo://vo-plasma.oeaw.ac.at/vexmag_epn20/vexmag_epn20/epn_core"
+},
+{
+    "publisher": "Jacobs Uni",
+    "description": "CRISM/MRO spectral cubes in calibrated and georeferenced version, from PlanetServer2 programme. This service provides links as WCS queries and returns geotiff files which can be displayed in QGIS or similar software. The original dataset is described in Murchie et al, 2007 (2007JGRE..112.5S03M) and is distributed in native format on the PDS geosciences node.",
+    "contributors": [
+        ""
+    ],
+    "creator": [
+        "Mikhail Minin"
+    ],
+    "accessurl": "http://epn1.epn-vespa.jacobs-university.de/__system__/tap/run/tap",
+    "title": "CRISM georeferenced cubes",
+    "shortname": "CRISM",
+    "schema": "crism",
+    "identifier": "ivo://jacobsuni/crism/q/epn_core"
+},
+{
+    "publisher": "Jacobs Uni",
+    "description": "Catalogue of Martian impact craters with properties, from Robbins & Hynek 2011 (10.1029/2011JE003967)",
+    "contributors": [
+        ""
+    ],
+    "creator": [
+        "Mikhail Minin"
+    ],
+    "accessurl": "http://epn1.epn-vespa.jacobs-university.de/__system__/tap/run/tap",
+    "title": "Martian Impact Craters",
+    "shortname": "Mars_Craters",
+    "schema": "mars_craters",
+    "identifier": "ivo://jacobsuni/mars_craters/q/epn_core"
+},
+{
+    "publisher": "Jacobs Uni",
+    "description": "USGS planetary maps are accessible through WMS queries and can be displayed in QGIS or similar software. The original archive is located at https://astrogeology.usgs.gov/maps",
+    "contributors": [
+        ""
+    ],
+    "creator": [
+        "Mikhail Minin"
+    ],
+    "accessurl": "http://epn1.epn-vespa.jacobs-university.de/__system__/tap/run/tap",
+    "title": "USGS planetary maps",
+    "shortname": "USGS_WMS",
+    "schema": "usgs_wms",
+    "identifier": "ivo://jacobsuni/usgs_wms/q/epn_core"
+},
+{
+    "publisher": "Jacobs Uni",
+    "description": "M3/Chandrayaan-1 spectral cubes in calibrated and georeferenced version, from PlanetServer2 programme. This service provides links as WCS queries and returns geotiff files which can be displayed in QGIS or similar software. The original dataset is described in Pieters et al (2009) and is distributed in native format on the PDS geosciences node and ISRO Science Data Archive.",
+    "contributors": [
+        ""
+    ],
+    "creator": [
+        "Mikhail Minin"
+    ],
+    "accessurl": "http://epn1.epn-vespa.jacobs-university.de/__system__/tap/run/tap",
+    "title": "Moon Mineralogy Mapper",
+    "shortname": "M3 georeferenced cubes",
+    "schema": "m3",
+    "identifier": "ivo://jacobsuni/m3/q/epn_core"
+},
+{
+    "publisher": "LMD",
+    "description": "MCD is a database of atmospheric statistics compiled from Global Climate Model (GCM) numerical simulation of Martian atmosphere (http://www-mars.lmd.jussieu.fr). The GCM computes in 3D the atmospheric circulation and climate taking into account radiative transfer through the gaseous atmospheres and the dust and ice aerosols, includes a representation of the CO2 ice condensation and sublimation on the ground and in the atmosphere, simulates the water cycle (with modelling of cloud microphysics), the dust multisize particle transport, the atmospheric composition controlled by the photochemistry and the local non-condensible gas enrichment and depletion induced by CO2 condensation and sublimation, and has been extended into the thermosphere and to model ionospheric processes (due to chemistry). The database extends up to exobase (the top of the thermosphere, roughly at 300km in altitude); in addition to statistics on temperature, wind, pressure, radiative fluxes, it provides data such as atmospheric composition (including dust water vapor and ice content) and make use of 'dust and Extreme Ultra Violet (EUV) scenarios' to represent the variation of dust in the atmosphere and solar EUV conditions.",
+    "contributors": [
+        "Ehouarn Millour",
+        "Stéphane Erard",
+        "PADC"
+    ],
+    "creator": [
+        "Zi Yin",
+        "Alexandre Rostaing"
+    ],
+    "referenceurl": "http://www-mars.lmd.jussieu.fr/",
+    "accessurl": "http://sery.lmd.jussieu.fr/__system__/tap/run/tap",
+    "title": "EPN-TAP access to the MCD database",
+    "shortname": "MCD",
+    "schema": "mcd",
+    "identifier": "ivo://lmd.jussieu/mcd/q/epn_core"
+},
+{
+    "publisher": "LESIA",
+    "description": "RadioJOVE Data Archive",
+    "contributors": [
+        "Renaud Savalle",
+        "PADC"
+    ],
+    "creator": [
+        "Baptiste Cecconi"
+    ],
+    "referenceurl": "http://radiojove.org",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "RadioJOVE Data Archive",
+    "shortname": "RadioJOVE",
+    "schema": "radiojove",
+    "identifier": "ivo://vopdc.obspm/lesia/radiojove/epn"
+},
+{
+    "publisher": "LESIA",
+    "description": "VIRTIS/Venus Express demonstrator service: imaging spectroscopy of Venus in the visible and the near infrared. This lists all the calibrated files from the nominal mission for the three channels M-vis, M-IR and H. Files are described according to the extended index in the PSA archive, with links to the PSA: ftp://psa.esac.esa.int/pub/mirror/VENUS-EXPRESS/VIRTIS/VEX-V-VIRTIS-2-3-V3.0/. See Piccioni et al, 2007, VIRTIS: The Visible and Infrared Thermal Imaging Spectrometer, ESA SP 1295.",
+    "contributors": [
+        "Florence Henry",
+        "PADC"
+    ],
+    "creator": [
+        "Stéphane Erard"
+    ],
+    "referenceurl": "http://lesia.obspm.fr",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "VIRTIS Venus Express nominal mission (demo)",
+    "shortname": "VVEx",
+    "schema": "vvex",
+    "identifier": "ivo://vopdc.obspm/lesia/vvex/epn"
+},
+{
+    "publisher": "LATMOS",
+    "description": "SPICAM/Mars-Express: Vertical profiles of temperature, CO2, O3, and aerosols density derived from UV occultations. Maattanen et al 2013 (2013Icar..223..892M)",
+    "contributors": [
+        "Anni Määtänen",
+        "François Forget",
+        "Sébastien Lebonnois"
+    ],
+    "creator": [
+        "Zi Yin",
+        "Alexandre Rostaing"
+    ],
+    "referenceurl": "http://www.latmos.ipsl.fr",
+    "accessurl": "http://vo.projet.latmos.ipsl.fr/__system__/tap/run/tap",
+    "title": "SPICAM Mars Atmospheric Vertical Distribution",
+    "shortname": "SPICAM",
+    "schema": "spicam",
+    "identifier": "ivo://latmos.ipsl/spicam/q/epn_core"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "This service lists TNO thermal properties as derived mostly from Spitzer and Herschel observations",
+    "contributors": [
+        "PADC"
+    ],
+    "creator": [
+        "Emmanuel Lellouch",
+        "Florence HENRY"
+    ],
+    "referenceurl": "http://public-tnosarecool.lesia.obspm.fr",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "TNOs are Cool",
+    "shortname": "tnosarecool",
+    "schema": "tnosarecool",
+    "identifier": "ivo://vopdc.obspm/lesia/tnosarecool/epn"
+},
+{
+    "publisher": "bira-iasb",
+    "description": "Profiles of species in Venus atmophere terminator. Data retrieved from calibrated spectra obtained with the SPICAV-SOIR instrument on board the Venus Express spacecraft. These spectra can be checked on the ESA PSA repository. See: A.C. Vandaele et al., Contribution from SOIR/VEX to the updated Venus International Reference Atmosphere (VIRA), Adv. Space Res. (2015), http://dx.doi.org/10.1016/j.asr:2015.08.012.",
+    "contributors": [
+        " "
+    ],
+    "creator": [
+        "Loic Trompet"
+    ],
+    "referenceurl": "http://www.aeronomie.be",
+    "accessurl": "http://vespa-ae.oma.be/__system__/tap/run/tap",
+    "title": "Profiles from SPICAV-SOIR/VEx",
+    "shortname": "BIRA-IASB TAP",
+    "schema": "soir",
+    "identifier": "ivo://bira-iasb/tap"
+},
+{
+    "publisher": "Instituto de Astrofisica de Andalucia-CSIC; INTA-CAB",
+    "description": "EPN-TAP access to IAA-CAB-INTA-CSIC absorption cross sections database.",
+    "contributors": [
+        " "
+    ],
+    "creator": [
+        "Jaime Jimenez"
+    ],
+    "referenceurl": "http://spectrum.iaa.es:8080/iaa",
+    "accessurl": "http://spectrum.iaa.es/__system__/tap/run/tap",
+    "title": "Data for numerical modeling of planetary atmospheres",
+    "shortname": "abs_cs",
+    "schema": "abs_cs",
+    "identifier": "ivo://spectrum.iaa/abs_cs/q/epn_core"
+},
+{
+    "publisher": "ov-gso",
+    "description": "Pic du Midi de Bigorre in the French Pyrenees is the place where coronagraphic images were first realized, by Bernard Lyot in the 1930s. Since then, the solar instruments at Pic du Midi regularly provide images of the solar disc, solar prominences and solar corona.",
+    "contributors": [
+        "J.M. Glorian"
+    ],
+    "creator": [
+        "Patrick Maeght"
+    ],
+    "referenceurl": "http://ov-gso.irap.omp.eu",
+    "accessurl": "http://climso.irap.omp.eu/__system__/tap/run/tap",
+    "title": "CLIMSO coronagraphs at pic du midi de Bigorre",
+    "shortname": "CLIMSO",
+    "schema": "climso",
+    "identifier": "ivo://ov-gso/climso"
+},
+{
+    "publisher": "Centre de Données de la Physique des Plasmas (CDPP)",
+    "description": "Illumination by the Sun of each face of the comet 67P/Churyumov-Gerasimenko based on the shape model CSHP_DV_130_01_LORES_OBJ.OBJ. The service provides the cosine between the normal of each face (in the same order as the faces defined in the shape model) and the Sun direction; both numerical values and images of the illumination are available. Each map is defined for a given position of the Sun in the frame of 67P (67P/C-G_CK). Longitude 0 is at the center of each map. The code is developed by A. Beth, Imperial College London, UK and the service is provided by CDPP (http://cdpp.eu). Acknowlegment: The illumination models have been developed at the Department of Physics at Imperial College London (UK) under the financial support of STFC grant of UK ST/N000692/1 and ESA contract 4000119035/16/ES/JD (Rosetta RPC-PIU). We would also like to warmly thank Bernhard Geiger (ESA) for his support in validating the 2D-illumination maps.",
+    "contributors": [
+        "CDPP", "Nathanaël Jourdane", "ESA", "Stéphane Erard", "Imperial College London", "STFC/UK"
+    ],
+    "creator": [
+        "Arnaud Beth, Imperial College London, Dpt of Physics (abeth@ic.ac.uk)"
+    ],
+        "referenceurl": "http://cdpp.eu/",
+    "accessurl": "http://cdpp-epntap.irap.omp.eu/__system__/tap/run/tap",
+    "title": "Illumination maps of 67P",
+    "shortname": "ILLU67P",
+    "schema": "illu67p",
+    "identifier": "ivo://cdpp/illu67p"
+},
+{
+    "publisher": "Centre de Données de la Physique des Plasmas (CDPP)",
+    "description": "A Transplanet model of magnetosphere-ionosphere coupling at Earth, Mars, and Jupiter ",
+    "contributors": [
+        "CDPP"
+    ],
+    "creator": [
+        "M. Indurain"
+    ],
+    "referenceurl": "http://cdpp.eu/",
+    "accessurl": "http://cdpp-epntap.irap.omp.eu/__system__/tap/run/tap",
+    "title": "Magnetosphere Ionosphere coupling simulation runs",
+    "shortname": "PSWS Transplanet",
+    "schema": "transplanet",
+    "identifier": "ivo://cdpp/transplanet"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - IMCCE",
+    "description": "This service provides orbital elements, of Near-Earth objects. The database provides for each asteroid, orbital elements and their uncertainty, the state-vector, information about the observations, MOID, and the covariance matrix of the system, as well as magnitude information. The database is updated daily.",
+    "contributors": [
+        "J. Desmars",
+        "W. Thuillot",
+        "D. Hestroffer",
+        "P. David",
+        "P. Le Sidaner",
+        "PADC"
+    ],
+    "creator": [
+        "J. Desmars"
+    ],
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "http://podet.imcce.fr",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "Asteroid orbital database and ephemerides",
+    "shortname": "DynAstVO",
+    "schema": "dynastvo",
+    "identifier": "ivo://vopdc.obspm/imcce/dynastvo/epn"
+},
+{
+    "publisher": "Euskal Herriko Unibertsitatea, Universidad del Pais Vasco, University of the Basque Country",
+    "description": "Images, maps, photometries and other kind of planetary graphic platforms made by amateur astronomers. Data is received by the astronomers themselves and can be subject of change.",
+    "contributors": [
+        "Ricardo Hueso"
+    ],
+    "creator": [
+        "Jon Juaristi-Campillo"
+    ],
+    "logo": "http://pvol2.ehu.es:8083/static/img/logo_medium.png",
+    "referenceurl": "http://pvol2.ehu.eus/pvol2/",
+    "accessurl": "http://pvol2.ehu.eus:8083/__system__/tap/run/tap",
+    "title": "PVOL",
+    "shortname": "pvol",
+    "schema": "pvol",
+    "identifier": "ivo://pvol/pvol/q/collection"
+},
+{
+    "publisher": "The GAVO DC team",
+    "description": "The EPN-TAP 2.0 version of the complete asteroid data from the Minor Planet Center (MPC), updated once per month. The MPC operates at the Smithsonian Astrophysical Observatory under the auspices of Division III of the International Astronomical Union (IAU).  The MPC Orbit database contains orbital elements of minor planets that have been published in the Minor Planet Circulars, the Minor Planet Orbit Supplement and the Minor Planet Electronic Circulars..",
+    "contributors": [
+    ],
+    "creator": [
+        "Williams, G.",
+        "Keys, S.",
+        "Rudenko, M.",
+        "Galache"
+    ],
+    "logo": "http://dc.zah.uni-heidelberg.de/static/img/logo_medium.png",
+    "referenceurl": "http://www.minorplanetcenter.net/iau/TheIndex.html",
+    "accessurl": "http://dc.zah.uni-heidelberg.de/tap",
+    "title": "Minor Planet Center - Asteroid Orbital Data",
+    "shortname": "mpc",
+    "schema": "mpc",
+    "identifier": "ivo://org.gavo.dc/mpc/q/epn_core"
+},
+{
+    "publisher": "University College London",
+    "description": "UCL Magnetodisc Model for Jupiter and Saturn. The data consists of the magnetic field in JMAG spherical coordinates. For details and further references, see: Achilleos N. A., Guio, P. and Arridge, C. S., 2010, A model of force balance in Saturn's magnetodisc, MNRAS, 401, 2349-2371 [2010MNRAS.401.2349A]",
+    "contributors": [
+        "Nick Achilleos", "Patrick Guio"
+    ],
+    "creator": [
+        "Patrick Guio, UCL (P.guio@ucl.ac.uk)"
+    ],
+        "referenceurl": "https://www.ucl.ac.uk/star",
+    "accessurl": "http://astroweb.projects.phys.ucl.ac.uk:8000/tap",
+    "title": "UCL Magnetodisc Model for Jupiter and Saturn",
+    "shortname": "MDISC",
+    "schema": "mdisc",
+    "identifier": "ivo://astro.ucl.ac.uk/mdisc/q/collection"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "Solar survey archive Bass2000.",
+    "contributors": [
+        "Christian Renié", "PADC"
+    ],
+    "creator": [
+        "Jean Aboudarham"
+    ],
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "http://bass2000.obspm.fr/",
+    "accessurl": "http://voparis-tap-helio.obspm.fr/__system__/tap/run/tap",
+    "title": "bass2000 solar survey archive",
+    "shortname": "bass2000",
+    "schema": "bass2000",
+    "identifier": "ivo://vopdc.obspm/lesia/bass2000/epn"
+},
+{
+    "publisher": "Institut d'Astrophysique Spatiale - IDOC",
+    "description": "Omega spectral cubes from PSUP. The database contains OMEGA observations acquired with the C (short wavelength NIR) channel. Filtering processes have been implemented to remove some instrumental artefacts and observational conditions. OMEGA C channel data cubes are corrected for atmospheric and aerosol contributions. Data are available as netcdf and idl sav files.",
+    "contributors": [
+        "IDOC"
+    ],
+    "creator": [
+        "Karin Dassas"
+    ],
+    "logo": "https://idoc.ias.u-psud.fr/sites/idoc/files/IDOC_principal_small.png",
+    "referenceurl": "http://idoc-dachs.ias.u-psud.fr/__system__/tap/run/info",
+    "accessurl": "http://idoc-dachs.ias.u-psud.fr/__system__/tap/run/tap",
+    "title": "L3 Omega Cubes from PSUP",
+    "shortname": "omega_cubes",
+    "schema": "omega_cubes",
+    "identifier": "ivo://idoc/omegacube"
+},
+{
+    "publisher": "Institut d'Astrophysique Spatiale - IDOC",
+    "description": "Omega derived maps at PSUP. Mineralogical and albedo maps derived from OMEGA/Mars-Express observations, distributed as fits files.",
+    "contributors": [
+        "IDOC"
+    ],
+    "creator": [
+        "Karin Dassas"
+    ],
+    "logo": "https://idoc.ias.u-psud.fr/sites/idoc/files/IDOC_principal_small.png",
+    "referenceurl": "http://idoc-dachs.ias.u-psud.fr/__system__/tap/run/info",
+    "accessurl": "http://idoc-dachs.ias.u-psud.fr/__system__/tap/run/tap",
+    "title": "L3 Omega Maps from PSUP",
+    "shortname": "omega_maps",
+    "schema": "omega_maps",
+    "identifier": "ivo://idoc/omegamap"
+},
+{
+    "publisher": "European Space Agency",
+    "description": "The European Space Agency's Planetary Science Archive (PSA) is the central repository for all scientific and engineering data returned by ESA's Solar System missions, as well as several ground-based cometary observations. The EPN-TAP service provides links to zipped archives containing PDS data.",
+    "contributors": [
+        "ESA / PSA"
+    ],
+    "creator": [
+        "Angel Montero",
+        "Alan MacFarlane"
+    ],
+    "logo": "https://archives.esac.esa.int/psa/VAADIN/themes/npsa_ui/img/logoPSA.png",
+    "referenceurl": "https://archives.esac.esa.int/psa",
+    "accessurl": "https://archives.esac.esa.int/psa/epn-tap/tap",
+    "title": "ESA Planetary Science Archive",
+    "shortname": "PSA",
+    "schema": "psa",
+    "identifier": "ivo://esavo/psa/epntap"
+},
+{
+    "publisher": "Space Research Centre of Polish Academy of Sciences",
+    "description": "EPN-TAP access to the LOFAR JUPITER database.",
+    "creator": [
+        "Lukasz Tomasik"
+    ],
+    "logo": "http://vespa.cbk.waw.pl/static/img/logo_medium.png",
+    "referenceurl": "http://vespa.cbk.waw.pl/browse/lofar_jupiter/q",
+    "accessurl": "http://vespa.cbk.waw.pl/tap",
+    "title": "Jupiter obs. by LOFAR",
+    "shortname": "lofar_jupiter",
+    "schema": "lofar_jupiter",
+    "identifier": "ivo://src.pas/lofar_jupiter/q/collection"
+},
+{
+    "publisher": "Paris Astronomical Data Centre - LESIA",
+    "description": "HST observations of planets, dwarf planets, and satellites, extracted from the CADC database catalogue (regularly updated). Data are linked to the CADC repository, with file names common to all HST archives. Both calibrated and derived products are included. The main target is identified. Physical ephemeris and thumbnails  are provided when available. Files and previews are not accessible during the proprietary period.",
+    "contributors": [
+        "PADC", "CADC"
+    ],
+    "creator": [
+        "Stéphane Erard"
+    ],
+    "logo": "http://voparis-srv-paris.obspm.fr/logos/PADC_small.png",
+    "referenceurl": "https://sites.lesia.obspm.fr/data-services/hst-planetary-data/",
+    "accessurl": "http://voparis-tap-planeto.obspm.fr/__system__/tap/run/tap",
+    "title": "Planetary data from the Hubble Space Telescope",
+    "shortname": "hst_planeto",
+    "schema": "hst_planeto",
+    "identifier": "ivo://vopdc.obspm/lesia/hst_planeto/epn"
+}
+]
+}

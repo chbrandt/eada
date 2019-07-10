@@ -1,9 +1,12 @@
 """
 Base module for the library, where common modules/functions are loaded/defined.
 """
-from __future__ import print_function, absolute_import
+# from __future__ import print_function, absolute_import
 
-from astropy import log as logging
+from ._epntap import EPNTAP
+epntap = EPNTAP()
+
+# from astropy import log as logging
 # import logging
 
 ## Namespace to dealt with docstrings

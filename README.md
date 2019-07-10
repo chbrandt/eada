@@ -35,7 +35,19 @@ and columns to retrieve on each search.
 
 ### API
 
+Like your package manager (Apt, Yum, Brew), each service protocol (EPNTAP, SCS)
+has a set of commands to manage their resources:
+* "update": update the resources internal cache
+* "list": List all resources in cache
+* "search": Search for resources matching keywords
+* "add": Install a resource
+* "remove": Uninstall resource
+* "about": Info about a resource
+* "fetch": Fetch data from a resource
+
 ### Command line interface
+
+A command-line interface (CLI) exposes the Python API.
 
 #### List known services (per type)
 ```bash
@@ -43,7 +55,7 @@ $ vos list --help
 ```
 
 ```bash
-$ vos list epn-tap [--filter]
+$ vos list epntap [--filter]
 ```
 
 ```bash
@@ -56,11 +68,11 @@ $ vos update --help
 ```
 
 ```bash
-$ vos update {epn-tap | scs} --help
+$ vos update {epntap | scs} --help
 ```
 
 ```bash
-$ vos update epn-tap [options]
+$ vos update epntap [options]
 ```
 
 ```bash
@@ -69,15 +81,15 @@ $ vos update scs [options]
 
 #### Get info about a service (per type)
 ```bash
-$ vos info --help
+$ vos about --help
 ```
 
 ```bash
-$ vos info epn-tap <service-name>
+$ vos about epntap <service-name>
 ```
 
 ```bash
-$ vos info scs <service-name>
+$ vos about scs <service-name>
 ```
 
 #### Download data from a service
@@ -86,7 +98,7 @@ $ vos fetch --help
 ```
 
 ```bash
-$ vos fetch epn-tap --help
+$ vos fetch epntap --help
 ```
 
 ```bash
@@ -94,7 +106,7 @@ $ vos fetch scs --help
 ```
 
 ```bash
-$ vos fetch epn-tap <service-name> [options]
+$ vos fetch epntap <service-name> [options]
 ```
 
 ```bash

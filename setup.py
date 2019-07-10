@@ -30,8 +30,9 @@ DEPENDENCIES = ['Click',
                 'pyvo',
                 'timeout_decorator',
                 'pyyaml',
-                'pandas']
-                
+                'pandas',
+                'appdirs']
+
 # Get the long description from the README file
 # with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 #     long_description = f.read()
@@ -137,7 +138,7 @@ setup(
     # project page. What does your project relate to?
     #
     # Note that this is a string of words separated by whitespace, not a list.
-    keywords='astronomy vo virtual-observatory',  # Optional
+    keywords='astronomy search data-mining virtual-observatory',  # Optional
 
     # You can just specify package directories manually here if your project is
     # simple. Or you can use find_packages().
@@ -148,7 +149,7 @@ setup(
     #
     #   py_modules=["my_module"],
     #
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
+    packages=find_packages(exclude=['contrib', 'docs', 'tests', 'eada/scripts']),  # Required
 
     # Specify which Python versions you support. In contrast to the
     # 'Programming Language' classifiers above, 'pip install' will check this
@@ -221,56 +222,3 @@ setup(
         'Source': 'https://github.com/chbrandt/eada',
     },
 )
-# #!/usr/bin/env python
-#
-# from setuptools import setup, find_packages
-#
-# #A dirty hack to get around some early import/configurations ambiguities
-# if sys.version_info[0] >= 3:
-#     import builtins
-# else:
-#     import __builtin__ as builtins
-#
-# # Set affiliated package-specific settings
-# PACKAGENAME = 'eada'
-# DESCRIPTION = 'Package for dealing with astronomical data processing'
-# LONG_DESCRIPTION = """
-# Eada (External Archive Data Access) queries VO services for data based
-# on (RA,Dec) position and a radius around it.
-# The package uses PyVO and Astropy.
-# """
-#
-# AUTHOR = 'Carlos H. Brandt'
-# AUTHOR_EMAIL = 'carloshenriquebrandt@gmail.com'
-# LICENSE = 'MIT'
-#
-# # Treat everything in scripts except README.rst as a script to be installed
-# scripts = [fname for fname in glob.glob(os.path.join('scripts', '*'))]
-#
-# # A dictionary to keep track of all package data to install
-# package_data = {PACKAGENAME: [os.path.join('data','*')]}
-#
-# # A dictionary to keep track of extra packagedir mappings
-# package_dirs = {}
-#
-# import versioneer
-#
-# setup(name=PACKAGENAME,
-#       description='Query Virtual Observatory data services',
-#       version=versioneer.get_version(),
-#       cmdclass=versioneer.get_cmdclass(),
-#       url='https://github.com/chbrandt/eada',
-#       packages=find_packages(),
-#       include_package_data=True,
-#       package_data=package_data,
-#       package_dir=package_dirs,
-#       scripts=scripts,
-#       install_requires=['astropy','pyvo','timeout_decorator','pyyaml','click'],
-#       provides=['eada'],
-#       author=AUTHOR,
-#       author_email=AUTHOR_EMAIL,
-#       license=LICENSE,
-#       long_description=LONG_DESCRIPTION,
-#       zip_safe=False,
-#       use_2to3=True
-#       )

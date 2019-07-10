@@ -25,6 +25,12 @@ _NULL_INT_ = -999
 log.basicConfig(level=log.DEBUG)
 
 
+def read_registry_file(registry_file = _DEFAULT_SERVICES_LIST_):
+    # File base containing the list of VESPA services
+    #
+    with open(registry_file, 'r') as fp:
+        services_list = json.load(fp)
+    return services_list
 
 
 @timeout_decorator.timeout(_TIMEOUT_)
@@ -81,12 +87,8 @@ def fetch(schema, limit=None, percent=None, columns=None,):
     * 'percent': eturns a random sample of size ~percent of table.
     """
     option_schema = schema
-    registry_file = _DEFAULT_SERVICES_LIST_
-    # File base containing the list of VESPA services
-    #
-    services_list_filename = registry_file
-    with open(services_list_filename, 'r') as fp:
-        services_list = json.load(fp)
+
+    services_list = read_registry_file()
 
     # Schema we want to work with now
     #
@@ -156,12 +158,7 @@ def update():
     import json
     import pandas as pd
 
-    # File base containing the list of VESPA services
-    #
-    registry_file = _DEFAULT_SERVICES_LIST_
-    with open(registry_file, 'r') as fp:
-        registry_list = json.load(fp)
-
+    registry_list = read_registry_file()
     df = pd.read_json(json.dumps(registry_list['services']), orient='records')
 
     output_fields = ['schema']
@@ -190,12 +187,7 @@ def show():
     import json
     import pandas as pd
 
-    registry_file = _DEFAULT_SERVICES_LIST_
-    # File base containing the list of VESPA services
-    #
-    with open(registry_file, 'r') as fp:
-        registry_list = json.load(fp)
-
+    registry_list = read_registry_file()
     df = pd.read_json(json.dumps(registry_list['services']), orient='records')
 
     output_fields = ['schema']
