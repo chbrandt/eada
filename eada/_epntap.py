@@ -39,6 +39,8 @@ class EPNTAP(Manager):
         """
         super().add(service)
 
+    def remove(self, service):
+        super().remove(service)
 
     def list(self):
         # query_count=False, schema_only=False, registry_file=None):

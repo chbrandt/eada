@@ -28,6 +28,14 @@ def add(service):
     epntap.add(service)
 
 @cli.command()
+@click.argument('service')
+def remove(service):
+    """
+    Remove 'service' from local
+    """
+    epntap.remove(service)
+
+@cli.command()
 def update(cache_dir=_CACHE_DIR):
     """
     Update local cache of services
@@ -56,14 +64,6 @@ def fetch(service):
 def search(keyword):
     """
     Search for keyword among services metadata
-    """
-    pass
-
-@cli.command()
-@click.argument('service')
-def remove(service):
-    """
-    Remove 'service' from local
     """
     pass
 

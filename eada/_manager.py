@@ -22,6 +22,10 @@ class Manager(object):
         file_local = os.path.join(self._local.path, os.path.basename(file_cache))
         shutil.copyfile(file_cache, file_local)
 
+    def remove_service(self, service):
+        file_local = self._local.file(service)
+        os.remove(file_local)
+
     def list(self, count=False, include='all'):
         """
         Print the list available services
@@ -54,21 +58,27 @@ class Manager(object):
         """
         sl = set(self.read_dir('local'))
         if service in sl:
-            print("Service {!s} already installed")
+            print("Service {!s} already installed".format(service))
             return True
 
         sc = self.read_dir('cache')
         if service not in sc:
-            print("Service {!s} not found.")
+            print("Service {!s} not found.".format(service))
             return False
 
         return self.copy_service(service)
 
-    def remove(cls, service):
+    def remove(self, service):
         """
         Remove a service from the local list
         """
-        raise NotImplementedError
+        sl = set(self.read_dir('local'))
+        if service not in sl:
+            print("Service {!s} not installed".format(service))
+            return True
+
+        return self.remove_service(service)
+
 
     def update(cls):
         """
