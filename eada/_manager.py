@@ -17,6 +17,14 @@ class Manager(object):
             dir_ = self._cache
         return dir_.services
 
+    def read_service(self, service, repo):
+        assert repo in ('local','cache')
+        if repo == 'local':
+            dir_ = self._local
+        else:
+            dir_ = self._cache
+        return dir_.read_service(service)
+
     def copy_service(self, service, from_dir='cache', to_dir='local'):
         file_cache = self._cache.file(service)
         file_local = os.path.join(self._local.path, os.path.basename(file_cache))
@@ -79,20 +87,34 @@ class Manager(object):
 
         return self.remove_service(service)
 
-
-    def update(cls):
-        """
-        Update the cache of available services
-        """
-        raise NotImplementedError
-
-    def about(cls, service):
+    def about(self, service):
         """
         Print detailed information about a service
 
         Arguments:
         - service <string>
             Name of the service to get information about
+        """
+        content = None
+        is_installed = False
+
+        sl = set(self.read_dir('local'))
+        if service in sl:
+            is_installed = True
+            content = self.read_service(service, 'local')
+        else:
+            sc = set(self.read_dir('cache'))
+            if service in sc:
+                content = self.read_service(service, 'cache')
+
+        print('Service:', service)
+        print('Installed:', 'yes' if is_installed else 'no')
+        for k,v in sorted(content.items()):
+            print('{!s}: {!s}'.format(k,v))
+
+    def update(cls):
+        """
+        Update the cache of available services
         """
         raise NotImplementedError
 

@@ -40,7 +40,16 @@ class EPNTAP(Manager):
         super().add(service)
 
     def remove(self, service):
+        """
+        Remove a service from local
+        """
         super().remove(service)
+
+    def about(self, service):
+        """
+        Print information about a service
+        """
+        super().about(service)
 
     def list(self):
         # query_count=False, schema_only=False, registry_file=None):

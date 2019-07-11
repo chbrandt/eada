@@ -1,4 +1,5 @@
 import os
+import json
 from glob import glob
 # from appdirs import AppDirs
 
@@ -66,6 +67,12 @@ class _Dirs(object):
         if len(filename):
             return filename[0]
         return None
+
+    def read_service(self, service):
+        filename = self.file(service)
+        with open(filename, 'r') as fp:
+            js = json.load(fp)
+        return js
 
 
 class Local(_Dirs):
