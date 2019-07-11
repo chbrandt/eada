@@ -33,9 +33,15 @@ class EPNTAP(Manager):
             result_table = res.to_table()
             return result_table.to_pandas()
 
+    def add(self, service):
+        """
+        Add a service (from cache) to local
+        """
+        super().add(service)
 
-    def list(query_count=False, schema_only=False,
-                        registry_file=None):
+
+    def list(self):
+        # query_count=False, schema_only=False, registry_file=None):
         """
         List available services
         """

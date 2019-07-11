@@ -46,11 +46,26 @@ def _makedir(dirname):
 
 
 class _Dirs(object):
+    _services = None
+
     def __init__(self, service_type):
         self._dirs = AppDirs(appname=__package__, version=service_type)
 
-    def read(self):
-        return _read(self)
+    def _read(self):
+        if self._services is None:
+            self._services = [os.path.splitext(f)[0] for f in _read(self)]
+
+    @property
+    def services(self):
+        self._read()
+        return self._services
+
+    def file(self, service):
+        filename = glob(os.path.join(self.path, '.'.join([service,'json'])))
+        assert len(filename) <= 1
+        if len(filename):
+            return filename[0]
+        return None
 
 
 class Local(_Dirs):

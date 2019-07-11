@@ -1,9 +1,11 @@
 import os
+import shutil
 
 class Manager(object):
     """
     Base class for service managers
     """
+    # 'cache' and 'local' are initialized by the children class
     _cache = None   # Cache dir or cache object
     _local = None   # Local dir or local object
 
@@ -13,7 +15,12 @@ class Manager(object):
             dir_ = self._local
         else:
             dir_ = self._cache
-        return dir_.read()
+        return dir_.services
+
+    def copy_service(self, service, from_dir='cache', to_dir='local'):
+        file_cache = self._cache.file(service)
+        file_local = os.path.join(self._local.path, os.path.basename(file_cache))
+        shutil.copyfile(file_cache, file_local)
 
     def list(self, count=False, include='all'):
         """
@@ -31,16 +38,37 @@ class Manager(object):
         services_local = set(self.read_dir('local'))
         services = []
         for s in services_cache:
-            name = os.path.splitext(s)[0]
             if s in services_local:
-                services.append((name, 'Installed'))
+                services.append((s, 'Installed'))
             else:
-                services.append((name, 'Not-installed'))
+                services.append((s, 'Not-installed'))
         #TODO: check if there are services in local there are *not* in cache
 
         # print list of services
         for s in services:
             print('{:20}{!s}'.format(s[0],s[1]))
+
+    def add(self, service):
+        """
+        Add a service to the local list
+        """
+        sl = set(self.read_dir('local'))
+        if service in sl:
+            print("Service {!s} already installed")
+            return True
+
+        sc = self.read_dir('cache')
+        if service not in sc:
+            print("Service {!s} not found.")
+            return False
+
+        return self.copy_service(service)
+
+    def remove(cls, service):
+        """
+        Remove a service from the local list
+        """
+        raise NotImplementedError
 
     def update(cls):
         """
@@ -68,18 +96,6 @@ class Manager(object):
 
         Output:
         - List of service names matching 'keywords'
-        """
-        raise NotImplementedError
-
-    def add(cls, service):
-        """
-        Add a service to the local list
-        """
-        raise NotImplementedError
-
-    def remove(cls, service):
-        """
-        Remove a service from the local list
         """
         raise NotImplementedError
 

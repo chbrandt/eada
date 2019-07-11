@@ -17,8 +17,15 @@ def list():
     """
     Print local list of services
     """
-    res = epntap.list()
-    click.echo(res)
+    epntap.list()
+
+@cli.command()
+@click.argument('service')
+def add(service):
+    """
+    Add a service to local
+    """
+    epntap.add(service)
 
 @cli.command()
 def update(cache_dir=_CACHE_DIR):
@@ -49,14 +56,6 @@ def fetch(service):
 def search(keyword):
     """
     Search for keyword among services metadata
-    """
-    pass
-
-@cli.command()
-@click.argument('service')
-def add(service):
-    """
-    Add a service to local
     """
     pass
 
