@@ -48,8 +48,8 @@ def update(cache_dir=_CACHE_DIR):
     """
     Update local cache of services
     """
-    res = _epntap.update()
-    _utils.write_cache(res)
+    epntap.update()
+    # _utils.write_cache(res)
 
 @cli.command()
 @click.argument('service')

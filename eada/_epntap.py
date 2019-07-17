@@ -18,10 +18,22 @@ class EPNTAP(Manager):
         self._cache = Cache('epntap')
         self._local = Local('epntap')
 
-    def update():
+    def update(self):
         # Query registry for epntap services
 
         # write services to cache
+        import os
+        _here = os.path.dirname(os.path.abspath(__file__))
+        registry_file = os.path.join(_here, 'virtualRegistry.json')
+        with open(registry_file, 'r') as fp:
+            import json
+            js = json.load(fp)
+            services = js['services']
+        cache_dir = self._cache.path
+        for s in services:
+            filename = os.path.join(cache_dir, s['schema']+'.json')
+            with open(filename, 'w') as fp:
+                json.dump(s, fp)
 
         if False:
             accessurl = 'http://voparis-rr.obspm.fr/tap'
