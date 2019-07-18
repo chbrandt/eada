@@ -28,6 +28,9 @@ log.basicConfig(level=log.DEBUG)
 def read_registry_file(registry_file = _DEFAULT_SERVICES_LIST_):
     # File base containing the list of VESPA services
     #
+    import os
+    _here = os.path.dirname(os.path.abspath(__file__))
+    registry_file = os.path.join(_here,'..',_DEFAULT_SERVICES_LIST_)
     with open(registry_file, 'r') as fp:
         services_list = json.load(fp)
     return services_list
@@ -143,8 +146,8 @@ def fetch(schema, limit=None, percent=None, columns=None,):
         return None
 
     log.debug("Results: {:d}".format(len(vo_result)))
-
-    result_table = vo_result.to_table()
+    
+    result_table = vo_result.table
     result_df = result_table.to_pandas()
     result_df['service_schema'] = option_schema
     result_df['service_identifier'] = option_identifier

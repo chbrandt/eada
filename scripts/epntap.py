@@ -57,7 +57,7 @@ def fetch(service):
     """
     Fetch data from service
     """
-    click.echo('fetch {}'.format(service))
+    epntap.fetch(service)
 
 @cli.command()
 @click.argument('keyword')
@@ -67,13 +67,6 @@ def search(keyword):
     """
     pass
 
-@cli.command()
-@click.argument('service')
-def fetch(service):
-    """
-    Fetch data from 'service'
-    """
-    pass
 
 # if __name__ == '__main__':
 #     cli()

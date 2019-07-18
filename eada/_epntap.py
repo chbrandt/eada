@@ -5,6 +5,7 @@ from timeout_decorator import timeout_decorator
 
 from ._manager import Manager
 from .config import Cache, Local
+from .vo import epntap
 
 # _QUERY_REGISTRY = "SELECT * FROM rr.res_table WHERE table_utype = 'ivo://vopdc.obspm/std/epncore#schema-2.0'"
 # _QUERY_REGISTRY = "SELECT ivoid FROM rr.res_table WHERE table_utype LIKE 'ivo://vopdc.obspm/std/epncore%'"
@@ -19,9 +20,9 @@ class EPNTAP(Manager):
         self._local = Local('epntap')
 
     def update(self):
-        # Query registry for epntap services
-
-        # write services to cache
+        """
+        Update the list of services (in cache)
+        """
         import os
         _here = os.path.dirname(os.path.abspath(__file__))
         registry_file = os.path.join(_here, 'virtualRegistry.json')
@@ -35,6 +36,7 @@ class EPNTAP(Manager):
             with open(filename, 'w') as fp:
                 json.dump(s, fp)
 
+        # What it should -- and will some day -- do to update in-cache services
         if False:
             accessurl = 'http://voparis-rr.obspm.fr/tap'
             service = tap.TAPService(accessurl)
@@ -44,6 +46,10 @@ class EPNTAP(Manager):
 
             result_table = res.to_table()
             return result_table.to_pandas()
+
+    def fetch(self, service):
+        print(service)
+        print(epntap.fetch(service, limit=10))
 
     def add(self, service):
         """
