@@ -34,6 +34,9 @@ class Manager(object):
         file_local = self._local.file(service)
         os.remove(file_local)
 
+    def resource(self, service):
+        return self.read_service(service, repo='local')
+
     def list(self, count=False, include='all'):
         """
         Print the list available services

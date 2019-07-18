@@ -1,10 +1,52 @@
-#!/usr/bin/env python
-
 import logging as log
 import timeout_decorator
 import json
 import pandas as pd
 from pyvo import tap
+
+
+# Sometimes queries may stale, so let's define a timeout limit (seconds):
+_TIMEOUT_ = 9
+
+
+@timeout_decorator.timeout(_TIMEOUT_)
+def _run_timeout_query(serv, query):
+    return serv.search(query)
+
+
+def fetch(url, table, columns='*', limit=None, percent=None):
+    # Set the (TAP) service
+    #
+    vo_service = tap.TAPService(url)
+
+    # Get the data
+    #
+    query_expr = ['SELECT']
+
+    if limit is not None:
+        assert limit > 0, "'limit' expected to be greater than 0"
+        query_expr.append('TOP {:d}'.format(limit))
+
+    query_expr.append('{columns!s} FROM {table!s}.epn_core')
+
+    if percent is not None:
+        assert 0 < percent < 100, "'percent' expected to between (0,100)"
+        query_expr.append('WHERE rand() <= {fx:f}'.format(fx=percent/100.0))
+
+    query_expr = ' '.join(query_expr)
+    query_expr = query_expr.format(columns=columns, table=table)
+
+    log.debug("Query: {}".format(query_expr))
+
+    try:
+        vo_result = _run_timeout_query(vo_service, query_expr)
+    except:
+        return None
+
+    log.debug("Results: {:d}".format(len(vo_result)))
+
+    return vo_result.table
+
 
 # ===============================================================
 # This script is meant to download data from VO/EPN-TAP archives.
@@ -14,9 +56,6 @@ _DEFAULT_SERVICES_LIST_ = 'virtualRegistry.json'
 
 # Directory to put results:
 _OUTPUT_DIR_ = 'data'
-
-# Sometimes queries may stale, so let's define a timeout limit (seconds):
-_TIMEOUT_ = 9
 
 # For when we expect an integer but nothing is returned (e.g., service down):
 _NULL_INT_ = -999
@@ -34,11 +73,6 @@ def read_registry_file(registry_file = _DEFAULT_SERVICES_LIST_):
     with open(registry_file, 'r') as fp:
         services_list = json.load(fp)
     return services_list
-
-
-@timeout_decorator.timeout(_TIMEOUT_)
-def _query_timeout(serv, query):
-    return serv.search(query)
 
 
 def _query_serv(schema, accessurl):
@@ -65,7 +99,7 @@ def _query_serv(schema, accessurl):
     return count
 
 
-def fetch(schema, limit=None, percent=None, columns=None,):
+def run_fetch(schema, limit=None, percent=None, columns=None,):
     """
     Download data from EPN-TAP service.
     Mandatory 'option_schema' is one of the schema (i.e, service) defined in '{}'.
@@ -115,39 +149,8 @@ def fetch(schema, limit=None, percent=None, columns=None,):
 
     log.debug("Columns: {}".format(option_columns))
 
-    # Set the (TAP) service
-    #
-    vo_service = tap.TAPService(option_accessurl)
-
-    # Get the data
-    #
-    query_expr = ['SELECT']
-
-    if limit is not None:
-        assert limit > 0, "'limit' expected to be greater than 0"
-        query_expr.append('TOP {:d}'.format(limit))
-
-    query_expr.append('{cols!s} FROM {schema!s}.epn_core')
-
-    if percent is not None:
-        assert 0 < percent < 100, "'percent' expected to between (0,100)"
-        query_expr.append('WHERE rand() <= {fx:f}'.format(fx=percent/100.0))
-
-    query_expr = ' '.join(query_expr)
-    query_expr = query_expr.format(cols=option_columns,
-                                   schema=option_schema)
-
-    log.debug("Query: {}".format(query_expr))
-    # print("QUERY:", query_expr)
-
-    try:
-        vo_result = _query_timeout(vo_service, query_expr)
-    except:
-        return None
-
-    log.debug("Results: {:d}".format(len(vo_result)))
-    
-    result_table = vo_result.table
+    result_table = fetch(option_accessurl, option_schema, columns=option_columns,
+                            limit=limit, percent=percent)
     result_df = result_table.to_pandas()
     result_df['service_schema'] = option_schema
     result_df['service_identifier'] = option_identifier
@@ -203,7 +206,7 @@ def _fetch(args):
     number_records = args.limit
     fraction = args.percent
 
-    result_df = fetch(epn_schema, limit=number_records, percent=fraction)
+    result_df = run_fetch(epn_schema, limit=number_records, percent=fraction)
     if result_df is None:
         print("-----")
         print("Error retrieving from '{}' service".format(epn_schema))

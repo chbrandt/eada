@@ -70,6 +70,9 @@ class _Dirs(object):
 
     def read_service(self, service):
         filename = self.file(service)
+        if filename is None:
+            print("error: resource '{!s}' not found".format(service))
+            return None
         with open(filename, 'r') as fp:
             js = json.load(fp)
         return js

@@ -47,9 +47,12 @@ class EPNTAP(Manager):
             result_table = res.to_table()
             return result_table.to_pandas()
 
-    def fetch(self, service):
-        print(service)
-        print(epntap.fetch(service, limit=10))
+    def fetch(self, service, limit=10):
+        resource = self.resource(service)
+        # print(epntap.run_fetch(service, limit=10))
+        print(epntap.fetch(url=resource['accessurl'],
+                            table=resource['schema'],
+                            limit=limit))
 
     def add(self, service):
         """
