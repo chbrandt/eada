@@ -53,11 +53,16 @@ def update(cache_dir=_CACHE_DIR):
 
 @cli.command()
 @click.argument('service')
-def fetch(service):
+@click.option('--filename', default=None, help="Defaults to 'service' if None")
+@click.option('--format', default='csv', type=click.Choice(['csv', 'html']))
+def fetch(service, filename, format):
     """
     Fetch data from service
     """
-    epntap.fetch(service)
+    table = epntap.fetch(service)
+    if filename is None:
+        filename = '{!s}.{!s}'.format(service, format)
+    table.write(filename, format=format, overwrite=True)
 
 @cli.command()
 @click.argument('keyword')

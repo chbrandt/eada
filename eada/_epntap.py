@@ -49,10 +49,9 @@ class EPNTAP(Manager):
 
     def fetch(self, service, limit=10):
         resource = self.resource(service)
-        # print(epntap.run_fetch(service, limit=10))
-        print(epntap.fetch(url=resource['accessurl'],
+        return epntap.fetch(url=resource['accessurl'],
                             table=resource['schema'],
-                            limit=limit))
+                            limit=limit)
 
     def add(self, service):
         """
