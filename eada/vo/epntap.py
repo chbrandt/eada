@@ -14,7 +14,9 @@ def _run_timeout_query(serv, query):
     return serv.search(query)
 
 
-def fetch(url, table, columns='*', limit=None, percent=None):
+def fetch(url, table, columns=None, limit=10, random=False, where=None):
+    columns = columns or '*'
+
     # Set the (TAP) service
     #
     vo_service = tap.TAPService(url)
@@ -23,15 +25,21 @@ def fetch(url, table, columns='*', limit=None, percent=None):
     #
     query_expr = ['SELECT']
 
-    if limit is not None:
+    if limit:
         assert limit > 0, "'limit' expected to be greater than 0"
         query_expr.append('TOP {:d}'.format(limit))
 
     query_expr.append('{columns!s} FROM {table!s}.epn_core')
 
-    if percent is not None:
+    assert not random, "'random' flag not implemented yet!"
+    percent = None
+    if percent:
         assert 0 < percent < 100, "'percent' expected to between (0,100)"
         query_expr.append('WHERE rand() <= {fx:f}'.format(fx=percent/100.0))
+
+    if where:
+        where = where.replace('"',"'")
+        query_expr.append('WHERE {where!s}'.format(where=where))
 
     query_expr = ' '.join(query_expr)
     query_expr = query_expr.format(columns=columns, table=table)

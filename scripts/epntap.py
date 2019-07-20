@@ -53,13 +53,31 @@ def update(cache_dir=_CACHE_DIR):
 
 @cli.command()
 @click.argument('service')
-@click.option('--filename', default=None, help="Defaults to 'service' if None")
-@click.option('--format', default='csv', type=click.Choice(['csv', 'html']))
-def fetch(service, filename, format):
+@click.option('--filename', default=None,
+                help="Output filename. Defaults to 'service'.")
+@click.option('--format', default='csv', show_default=True,
+                type=click.Choice(['csv', 'html']),
+                help="Output file format.")
+@click.option('--limit', default=10, show_default=True,
+                help="Limit the size of records returned.")
+@click.option('--random', default=False, is_flag=True,
+                help="Random sample? Defaults to 'TOP(limit)'.")
+@click.option('--where', default=None, type=str,
+                help="A 'where' filter clause (see '--help')")
+def fetch(service, limit, random, where, filename, format):
     """
-    Fetch data from service
+    Fetch data from 'service'.
+
+    The `where` filter is a ADQL/SQL 'where' clause. For example, if you want
+    records of `dataproduct_type` "image" from the "mars" `body`, `where` is:
+    ```
+    dataproduct_type="im" & body="mars"
+    ```
     """
-    table = epntap.fetch(service)
+    table = epntap.fetch(service, limit=limit, random=random, where=where)
+    if table is None or len(table)==0:
+        print("No records found.")
+        return
     if filename is None:
         filename = '{!s}.{!s}'.format(service, format)
     table.write(filename, format=format, overwrite=True)
