@@ -40,7 +40,7 @@ def main(ra,dec,radius,url,columns=[],format=None,cachedir=None):
 
     tables = []
     for rec in ssaTab:
-        filecache = Aux.download_spec(rec,dir=cachedir)
+        filecache = Aux.download_spec(rec,dir_=cachedir)
         tab = Aux.open_spec(filecache,rec.format)
         if tab is None:
             continue
@@ -98,9 +98,9 @@ def specsearch(ra,dec,radius,url,format=None):
     from pyvo.dal import SSAService
     from pyvo.dal import query
 
-    if 'fits' in format:
+    if format == 'fits':
         format = 'image/fits'
-    elif 'votable' in format:
+    elif format == 'votable':
         format = 'votable'
     else:
         format = None

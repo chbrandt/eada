@@ -159,13 +159,15 @@ class Aux:
         return pos
 
     @staticmethod
-    def download_spec(record,dir='ssafiles'):
+    def download_spec(record,dir_='ssafiles'):
         from os import mkdir
         from os import path
         f = record.format
-        if not dir:
-            dir = 'eada_files'
-        if not path.isdir(dir):
-            mkdir(dir)
-        record.cachedataset(dir=dir)
-        return path.join(dir,record.make_dataset_filename())
+        if not dir_:
+            dir_ = 'eada_files'
+        if not path.isdir(dir_):
+            mkdir(dir_)
+        filename = path.basename(record['accref'])
+        filename = path.join(dir_,filename)
+        record.cachedataset(filename=filename)
+        return filename
