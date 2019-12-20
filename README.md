@@ -8,7 +8,7 @@ Install
 
  From inside `eada` directory, type:
  ```
- $ python setup.py install
+ $ pip install .
  ```
 
  This will install the python interface and (shell) executable scripts in the proper places.
