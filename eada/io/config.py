@@ -118,7 +118,7 @@ def read_ini( filename, *sections ):
     #
     sects = config.sections()
     if sects == []:
-        print("Config file {} is empty".format(filename))#, file=sys.stderr)
+        # print("Config file {} is empty".format(filename))#, file=sys.stderr)
         return None
 
     # Start list of tuples: [('section',section_dictionary), (,) ,...]
