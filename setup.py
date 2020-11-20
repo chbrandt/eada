@@ -1,84 +1,65 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-import sys
-import imp
-try:
-    # This incantation forces distribute to be used (over setuptools) if it is
-    # available on the path; otherwise distribute will be downloaded.
-    import pkg_resources
-    distribute = pkg_resources.get_distribution('distribute')
-    if pkg_resources.get_distribution('setuptools') != distribute:
-        sys.path.insert(1, distribute.location)
-        distribute.activate()
-        imp.reload(pkg_resources)
-except:  # There are several types of exceptions that can occur here
-    from distribute_setup import use_setuptools
-    use_setuptools()
+##########
 
-import glob
-import os
+#from setuptools import setup
+#
+#setup(
+#    entry_points = {
+#        'console_scripts': ['npt=npt.cli:main'],
+#    }
+#)
+
+##########
+
+import sys
 from setuptools import setup, find_packages
 
-#A dirty hack to get around some early import/configurations ambiguities
-if sys.version_info[0] >= 3:
-    import builtins
-else:
-    import __builtin__ as builtins
-builtins._ASTROPY_SETUP_ = True
 
-# Set affiliated package-specific settings
-PACKAGENAME = 'eada'
-DESCRIPTION = 'Package for dealing with astronomical data processing'
+PACKAGE = 'eada'
+
+URL = f"https://github.com/chbrandt/{PACKAGE}"
+
+AUTHOR = "Carlos H. Brandt"
+
+DESCRIPTION = "Look into astronomical objects in VO resources (scs/spectra)"
+
 LONG_DESCRIPTION = """
-Eada (External Archive Data Access) queries VO services for data based
-on (RA,Dec) position and a radius around it.
-The package uses PyVO and Astropy.
+    Eada (External Archive Data Access) queries VO services for data based
+    on (RA,Dec) position and a radius around it.
+    The package uses PyVO and Astropy.
 """
 
-AUTHOR = 'Carlos H. Brandt'
-AUTHOR_EMAIL = 'carlos.brandt@ssdc.asi.it'
 LICENSE = 'GPL'
-URL = ''
 
-# VERSION should be PEP386 compatible (http://www.python.org/dev/peps/pep-0386)
+
 from version import VERSION
 
-# Indicates if this version is a release version
-RELEASE = 'dev' not in VERSION
+## Treat everything in scripts except README.rst as a script to be installed
+#import glob
+#scripts = [fname for fname in glob.glob(os.path.join('scripts', '*'))]
 
-# Treat everything in scripts except README.rst as a script to be installed
-scripts = [fname for fname in glob.glob(os.path.join('scripts', '*'))]
+## A dictionary to keep track of all package data to install
+#import os
+#package_data = {PACKAGENAME: [os.path.join('data','*')]}
 
-# Additional C extensions that are not Cython-based should be added here.
-extensions = []
 
-# A dictionary to keep track of all package data to install
-package_data = {PACKAGENAME: [os.path.join('data','*')]}
-
-# A dictionary to keep track of extra packagedir mappings
-package_dirs = {}
-
-packages = find_packages()
-
-DEPENDENCIES = ['astropy<4','pyvo==0.6.1','timeout_decorator','pyyaml']
-
-setup(name=PACKAGENAME,
-    python_requires='<3',
-      version=VERSION,
-      description=DESCRIPTION,
-      packages=packages,
-      package_data=package_data,
-      package_dir=package_dirs,
-      ext_modules=extensions,
-      scripts=scripts,
-      install_requires=DEPENDENCIES,
-      provides=[PACKAGENAME],
-      author=AUTHOR,
-      author_email=AUTHOR_EMAIL,
-      license=LICENSE,
-      url=URL,
-      long_description=LONG_DESCRIPTION,
-      zip_safe=False,
-      use_2to3=True
-      )
+setup(name=PACKAGE,
+    version=VERSION,
+    description=DESCRIPTION,
+    long_description=LONG_DESCRIPTION,
+    author=AUTHOR,
+    url=URL,
+    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, <3.8',
+    install_requires=[
+        'astropy<4',
+        'pyvo==0.6.1',
+        'timeout_decorator',
+        'pyyaml'
+    ],
+    packages=find_packages(),
+    zip_safe=False,
+    use_2to3=True,
+    license=LICENSE
+)
