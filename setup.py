@@ -51,7 +51,7 @@ setup(name=PACKAGE,
     long_description=LONG_DESCRIPTION,
     author=AUTHOR,
     url=URL,
-    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, <3.8',
+    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, <4',
     install_requires=[
         'astropy<4',
         'pyvo==0.6.1',
