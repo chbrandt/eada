@@ -6,8 +6,6 @@ Tools to access VO data services
 Install
 =======
 
-> EADA runs on Python-2.
-
 You can install `eada` directly using the URL from one of the package [releases](https://github.com/chbrandt/eada/releases).
 Use the _latest_ release.
 
