@@ -44,6 +44,6 @@ WORKDIR "$WORKDIR"
 VOLUME "$WORKDIR/volume"
 
 # Install EADA
-RUN pip3 install https://github.com/chbrandt/eada/archive/refs/tags/v1.0a2.tar.gz
+RUN pip3 install https://github.com/chbrandt/eada/archive/refs/tags/v1.1.tar.gz
 
 CMD ["jupyter-lab", "--allow-root", "--no-browser", "--ip", "0.0.0.0"]
