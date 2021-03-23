@@ -44,11 +44,15 @@ RUN conda create -n "$DOCKER_USERNAME" \
 # CMD ["jupyter-lab", "--allow-root", "--no-browser", "--ip", "0.0.0.0"]
 # ENTRYPOINT ["conda", "run", "-n", "user", "jupyter-lab", "--allow-root", "--no-browser", "--ip", "0.0.0.0"]
 
-RUN echo "#!/bin/bash" > /tmp/run.sh &&\
-    echo "jupyter-lab --allow-root --no-browser --ip=0.0.0.0 &> /tmp/run.log" \
+RUN echo "#!/bin/bash" \
         > /tmp/run.sh \
+    # && echo "conda init bash && conda activate user" \
+    #     >> /tmp/run.sh \
+    && echo "jupyter-lab --allow-root --no-browser --ip=0.0.0.0 &> /dev/stdout" \
+        >> /tmp/run.sh \
     && chmod +x /tmp/run.sh
-ENTRYPOINT ["/bin/bash","-c","conda run -n user /tmp/run.sh"]
+# ENTRYPOINT exec /tmp/run.sh
+ENTRYPOINT ["/bin/bash","-c","conda run --live-stream -n user /tmp/run.sh"]
 # ENTRYPOINT exec conda run -n user /tmp/run.sh & tail -f /tmp/run.log
 
 # ENTRYPOINT exec conda run -n user conda env list
