@@ -37,8 +37,8 @@ LICENSE = 'GPL'
 from version import VERSION
 
 ## Treat everything in scripts except README.rst as a script to be installed
-#import glob
-#scripts = [fname for fname in glob.glob(os.path.join('scripts', '*'))]
+import glob
+scripts = [fname for fname in glob.glob(os.path.join('scripts', '*'))]
 
 ## A dictionary to keep track of all package data to install
 #import os
@@ -46,20 +46,21 @@ from version import VERSION
 
 
 setup(name=PACKAGE,
+    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, <4',
     version=VERSION,
     description=DESCRIPTION,
-    long_description=LONG_DESCRIPTION,
-    author=AUTHOR,
-    url=URL,
-    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, <4',
+    packages=find_packages(),
+    scripts=scripts,
     install_requires=[
         'astropy<4',
         'pyvo==0.6.1',
         'timeout_decorator',
         'pyyaml'
     ],
-    packages=find_packages(),
-    zip_safe=False,
     use_2to3=True,
+    zip_safe=False,
+    url=URL,
+    author=AUTHOR,
+    long_description=LONG_DESCRIPTION,
     license=LICENSE
 )
