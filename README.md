@@ -9,10 +9,10 @@ Install
 You can install `eada` directly using the URL from one of the package [releases](https://github.com/chbrandt/eada/releases).
 Use the _latest_ release.
 
-Currently, the latest version is `0.9.7.5`; To install it we simply do:
+Currently, the latest version is `v1.1`; To install it we simply do:
 
 ```
-$ pip install https://github.com/chbrandt/eada/archive/0.9.7.5.zip
+$ pip install https://github.com/chbrandt/eada/archive/v1.1.zip
 ```
 
  This will install the python interface and (shell) executable scripts in the proper places.
