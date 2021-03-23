@@ -1,7 +1,20 @@
-FROM continuumio/miniconda3
+FROM ubuntu
 MAINTAINER "Carlos Brandt <carloshenriquebrandt gmail"
 
-RUN conda update -y conda
+RUN DEBIAN_FRONTEND='noninteractive' \
+    apt-get update \
+    && apt-get install -y python3-pip \
+                          git-core \
+                          vim \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m pip install ipython \
+                             jupyterlab \
+                             matplotlib \
+                             numpy \
+                             pandas \
+                             scipy
 
 ARG WORKDIR="/work"
 ARG DOCKER_USERNAME="user"
@@ -30,31 +43,7 @@ WORKDIR "$WORKDIR"
 
 VOLUME "$WORKDIR/volume"
 
-# Managing envs is done with conda
-RUN conda create -n "$DOCKER_USERNAME" \
-      -c conda-forge \
-      -y python=3.8 pip jupyterlab \
-    && conda init bash
+# Install EADA
+RUN pip3 install https://github.com/chbrandt/eada/archive/refs/tags/v1.0a2.tar.gz
 
-# # Install EADA
-# RUN pip install https://github.com/chbrandt/eada/archive/refs/tags/v1.0a2.tar.gz
-#
-# ENV JUPYTER_ENABLE_LAB="yes"
-# ENTRYPOINT ["conda", "activate", "$DOCKER_USERNAME"]
-# CMD ["jupyter-lab", "--allow-root", "--no-browser", "--ip", "0.0.0.0"]
-# ENTRYPOINT ["conda", "run", "-n", "user", "jupyter-lab", "--allow-root", "--no-browser", "--ip", "0.0.0.0"]
-
-RUN echo "#!/bin/bash" \
-        > /tmp/run.sh \
-    # && echo "conda init bash && conda activate user" \
-    #     >> /tmp/run.sh \
-    && echo "jupyter-lab --allow-root --no-browser --ip=0.0.0.0 &> /dev/stdout" \
-        >> /tmp/run.sh \
-    && chmod +x /tmp/run.sh
-# ENTRYPOINT exec /tmp/run.sh
-ENTRYPOINT ["/bin/bash","-c","conda run --live-stream -n user /tmp/run.sh"]
-# ENTRYPOINT exec conda run -n user /tmp/run.sh & tail -f /tmp/run.log
-
-# ENTRYPOINT exec conda run -n user conda env list
-# ENTRYPOINT exec conda run -n user jupyter-lab --allow-root --no-browser --ip=0.0.0.0
-# CMD [ "--allow-root","--no-browser","--ip","0.0.0.0" ]
+CMD ["jupyter-lab", "--allow-root", "--no-browser", "--ip", "0.0.0.0"]
