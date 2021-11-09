@@ -17,7 +17,7 @@ from collections import OrderedDict as odict
 def _ustr(word):
     return unicode(word).encode('utf-8')
 
-import metadata
+from . import metadata
 
 # Wavebands available to search for catalogue data
 # (for convenience I relate the UCD words used)

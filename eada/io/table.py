@@ -143,7 +143,7 @@ class Aux:
         }
         if not _options.has_key(key):
             print("Don't know such option. Can be a typo or I'm missing it. Check the docs.")
-        print _options[key]
+        print(_options[key])
 
     @staticmethod
     def resolve_name(name):

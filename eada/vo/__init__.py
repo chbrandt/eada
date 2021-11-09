@@ -1,9 +1,9 @@
 import pyvo
 
-import constants
+from . import constants
 
-import registry
-import scs
+from . import registry
+from . import scs
 
 from pyvo.dal.query import DALQueryError,DALServiceError
 

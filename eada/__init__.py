@@ -45,7 +45,7 @@ class TypedList(list):
         Raise TypeError in case of non-matching item/list types
         """
         if not isinstance(item,self._type):
-            raise TypeError, "item is not of type %s" % self._type
+            raise TypeError("item is not of type %s" % self._type)
         super(TypedList,self).append(item)
 
 class StringList(TypedList):
