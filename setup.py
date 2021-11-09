@@ -32,7 +32,7 @@ LONG_DESCRIPTION = """
     The package uses PyVO and Astropy.
 """
 
-LICENSE = 'GPL'
+LICENSE = 'GPL2'
 
 
 from version import VERSION
@@ -58,7 +58,6 @@ setup(name=PACKAGE,
         'timeout_decorator',
         'pyyaml'
     ],
-    use_2to3=True,
     zip_safe=False,
     url=URL,
     author=AUTHOR,
