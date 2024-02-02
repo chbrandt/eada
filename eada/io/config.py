@@ -111,7 +111,7 @@ def read_ini( filename, *sections ):
         from configparser import ConfigParser
     except:
         from ConfigParser import ConfigParser
-    config = ConfigParser()
+    config = ConfigParser(interpolation=None) #for %2F symbols in urls we need to deactivate interpolation
     config.read(filename)
 
     # Just verify the existence of section (on a real cfg file..):
