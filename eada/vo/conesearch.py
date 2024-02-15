@@ -128,7 +128,7 @@ def main(ra,dec,radius,url,columns=[]):
 
     nobjs = len(scsTab)
 
-    tab = scsTab.votable.to_table()
+    tab = scsTab.votable.get_first_table().to_table()
     if tab is None:
         logging.error("Retrieved table is Null. Exiting")
         return None

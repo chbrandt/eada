@@ -19,7 +19,7 @@ class Doc:
         Return a functions short description
         """
         import pydoc
-        doc = foo.func_doc
+        doc = foo.__doc__
         s = pydoc.splitdoc(doc)[0]
         return s
     short = synopsis

@@ -125,7 +125,7 @@ def parseArguments(args,cp):
                 dcat = cp.get(cat)
                 if 'columns' in dcat:
                     cols = dcat.get('columns')
-                    cols = string.split(cols,',')
+                    cols = str.split(cols,',') #not string.split anymore
                 else:
                     cols = []
         else:
@@ -254,7 +254,7 @@ if __name__ == '__main__':
         sys.exit(EXIT_EMPTY)
 
     outfile = args.outfile
-    if args.outfile is '':
+    if args.outfile == '':
         logging.warning("An empty name for output filename was given.")
         outfile = str(ra)+'_'+str(dec)+'_'+str(radius)+'.csv'
         logging.warning("Filename for the output: %s" % outfile)
